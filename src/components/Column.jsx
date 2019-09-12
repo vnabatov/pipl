@@ -13,7 +13,10 @@ const Title = styled.h3`
 padding:3px;
 `
 const TaskList = styled.div`
-padding:3px'
+background-color: gray;
+padding:3px;
+min-width: 100px;
+min-height: 100px;
 `
 
 export default ({ title, tasks, column }) => {
