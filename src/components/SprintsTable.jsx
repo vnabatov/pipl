@@ -1,73 +1,67 @@
 import React from 'react'
-import Ticket from './Ticket'
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
-import initialData from '../data/initial-data'
 import use from 'react-hoox'
 
-let state = initialData
+export default ({ database, setData }) => {
+  use(database)
 
-export default ({ changeData }) => {
-    use(state)
+  // todo: add task button
 
-    //todo: get info from server
+  // todo: edit task (link to story, description, depends on)
 
-    //todo: refresh data from server periodically
+  // todo: indicate related task is after
 
-    //todo: add task
+  // todo: multiple teams
 
-    //todo: edit task (link to story, description, depends on)
+  // todo: related tasks
 
-    //todo: indicate related task is after
+  // todo: backup server
 
-    const onDragEnd = ({destination, source, draggableId}) => {
-        if(!destination) {
-            return
-        }
-
-        if(
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-        ) {
-        return
-        }
-
-        const columnStart = state.columns[source.droppableId]
-        const columnFinish = state.columns[destination.droppableId]
-
-        if(columnStart === columnFinish){
-            const newTaskIds = Array.from(columnStart.taskIds)
-            newTaskIds.splice(source.index, 1)
-            newTaskIds.splice(destination.index, 0, draggableId)
-            state.columns[columnStart.id].taskIds = newTaskIds;
-            return
-        } 
-        //different column
-        const startTaskIds = Array.from(columnStart.taskIds)
-        startTaskIds.splice(source.index, 1)
-
-        const finishTaskIds = Array.from(columnFinish.taskIds)
-        finishTaskIds.splice(destination.index, 0, draggableId)
-
-        state.columns[columnStart.id].taskIds = startTaskIds;
-        state.columns[columnFinish.id].taskIds = finishTaskIds;
-        return
-
-        //todo: send data to server
+  const onDragEnd = ({ destination, source, draggableId }) => {
+    if (!destination) {
+      return
     }
 
-    return <div>
-    <input type='range' onChange={changeData} />
-    <div className="sprint-table">
-    <DragDropContext  onDragEnd={onDragEnd}>
-    {
-        state.columnOrder.map((columnId)=>{
-            const column = state.columns[columnId]
-            const tasks = column.taskIds.map(taskId => state.tasks[taskId]);
-            return <Column key={column.id} column={column} title={column.title} tasks={tasks} />;
-        })
-    }    
-    </DragDropContext>
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return
+    }
+
+    const columnStart = database.columns[source.droppableId]
+    const columnFinish = database.columns[destination.droppableId]
+
+    if (columnStart === columnFinish) {
+      // same column
+      const newTaskIds = Array.from(columnStart.taskIds)
+      newTaskIds.splice(source.index, 1)
+      newTaskIds.splice(destination.index, 0, draggableId)
+      database.columns[columnStart.id].taskIds = newTaskIds
+    } else {
+      // different column
+      const startTaskIds = Array.from(columnStart.taskIds)
+      startTaskIds.splice(source.index, 1)
+
+      const finishTaskIds = Array.from(columnFinish.taskIds)
+      finishTaskIds.splice(destination.index, 0, draggableId)
+
+      database.columns[columnStart.id].taskIds = startTaskIds
+      database.columns[columnFinish.id].taskIds = finishTaskIds
+    }
+
+    setData(database)
+  }
+
+  return <div>
+    <div className='sprint-table'>
+      <DragDropContext onDragEnd={onDragEnd}>
+        {
+          database.columnOrder.map((columnId) => {
+            const column = database.columns[columnId]
+            const tasks = column.taskIds.map(taskId => database.tasks[taskId])
+            return <Column key={column.id} column={column} title={column.title} tasks={tasks} />
+          })
+        }
+      </DragDropContext>
     </div>
-</div>
+  </div>
 }

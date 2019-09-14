@@ -11,14 +11,13 @@ background-color: white;
 `
 
 export default ({ task, index }) => {
-    return <Draggable draggableId={task.id} index={index}>{(provided) => 
-        <Container 
-            {...provided.draggableProps} 
-            {...provided.dragHandleProps} 
-            ref={provided.innerRef}
-        >
-            {task.content}
-        </Container>
-    }</Draggable>
+  return <Draggable draggableId={task.id} index={index}>{(provided) =>
+    <Container
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      ref={provided.innerRef}
+    >
+      {task.content}
+    </Container>
+  }</Draggable>
 }
-   
