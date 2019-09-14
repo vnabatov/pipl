@@ -10,6 +10,16 @@ let state = initialData
 export default ({ changeData }) => {
     use(state)
 
+    //todo: get info from server
+
+    //todo: refresh data from server periodically
+
+    //todo: add task
+
+    //todo: edit task (link to story, description, depends on)
+
+    //todo: indicate related task is after
+
     const onDragEnd = ({destination, source, draggableId}) => {
         if(!destination) {
             return
@@ -35,13 +45,15 @@ export default ({ changeData }) => {
         //different column
         const startTaskIds = Array.from(columnStart.taskIds)
         startTaskIds.splice(source.index, 1)
-        
+
         const finishTaskIds = Array.from(columnFinish.taskIds)
         finishTaskIds.splice(destination.index, 0, draggableId)
 
         state.columns[columnStart.id].taskIds = startTaskIds;
         state.columns[columnFinish.id].taskIds = finishTaskIds;
         return
+
+        //todo: send data to server
     }
 
     return <div>
