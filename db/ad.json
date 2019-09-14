@@ -28,27 +28,28 @@
       "title": "Sprint 1",
       "taskIds": [
         "CPP0-3",
-        "CPP0-4",
-        "CPP0-5"
+        "CPP0-2"
       ]
     },
     "column-2": {
       "id": "column-2",
       "title": "Sprint 2",
       "taskIds": [
-        "CPP0-1"
+        "CPP0-4"
       ]
     },
     "column-3": {
       "id": "column-3",
       "title": "Sprint 3",
-      "taskIds": []
+      "taskIds": [
+        "CPP0-1"
+      ]
     },
     "column-4": {
       "id": "column-4",
       "title": "Sprint 4",
       "taskIds": [
-        "CPP0-2"
+        "CPP0-5"
       ]
     },
     "column-5": {
@@ -63,5 +64,6 @@
     "column-3",
     "column-4",
     "column-5"
-  ]
+  ],
+  "dirty": true
 }

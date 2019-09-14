@@ -12,12 +12,12 @@ export default class App extends Component {
     this.state = { database: null }
   }
 
-  fetchData () { axios.get(dbServer).then(({ data: database }) => { this.setState({ database }) }) }
+  fetchData () { axios.get(dbServer).then(({ data: database }) => { this.setState({ database: { ...database, dirty: false } }) }) }
   setData (body) { axios.post(dbServer, body) }
 
   componentDidMount () {
     this.fetchData()
-    this.timer = setInterval(() => this.fetchData(), 5000)
+    this.timer = setInterval(() => this.fetchData(), 3000)
   }
 
   render () {

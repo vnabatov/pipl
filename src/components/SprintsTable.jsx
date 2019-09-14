@@ -1,22 +1,30 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import use from 'react-hoox'
+import styled from 'styled-components'
+
+const TeamName = styled.h3`
+width: 100%;
+`
+const SprintTable = styled.div`
+display: flex;
+flex: 1;
+justify-content: space-between;
+`
 
 export default ({ database, setData }) => {
   use(database)
 
-  // todo: add task button
+  // todo: create task button
 
   // todo: edit task (link to story, description, depends on)
 
-  // todo: indicate related task is after
-
   // todo: multiple teams
 
-  // todo: related tasks
-
-  // todo: backup server
+  // todo: select related task
+  
+  // todo: (independend) backup server (10 last backups every 5 mins)
 
   const onDragEnd = ({ destination, source, draggableId }) => {
     if (!destination) {
@@ -48,20 +56,22 @@ export default ({ database, setData }) => {
       database.columns[columnFinish.id].taskIds = finishTaskIds
     }
 
+    database.dirty = true
     setData(database)
   }
 
-  return <div>
-    <div className='sprint-table'>
+  return <Fragment>
+    <TeamName>{database.teamName}{database.dirty ? '🔄' : ''}</TeamName>
+    <SprintTable>
       <DragDropContext onDragEnd={onDragEnd}>
         {
           database.columnOrder.map((columnId) => {
             const column = database.columns[columnId]
             const tasks = column.taskIds.map(taskId => database.tasks[taskId])
-            return <Column key={column.id} column={column} title={column.title} tasks={tasks} />
+            return <Column dirty={database.dirty} key={column.id} column={column} title={column.title} tasks={tasks} />
           })
         }
       </DragDropContext>
-    </div>
-  </div>
+    </SprintTable>
+  </Fragment>
 }

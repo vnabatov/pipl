@@ -9,11 +9,13 @@ border: 1px solid lightgrey;
 border-radius: 2px;
 width: 100%;
 `
-const Title = styled.h3`
+const Title = styled.div`
 padding:3px;
+font-size:1.2rem;
+width: 100%;
+text-align:center;
 `
 const TaskList = styled.div`
-background-color: gray;
 padding:3px;
 min-width: 100px;
 min-height: 100px;
