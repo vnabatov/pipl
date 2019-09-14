@@ -4,16 +4,27 @@ import './App.css'
 import SprintsTable from './components/SprintsTable'
 
 const dbServer = '/db'
-const setData = async (body) => axios.post(dbServer, body)
 
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { database: null }
+    this.state = { dbs: null }
   }
 
-  fetchData () { axios.get(dbServer).then(({ data: database }) => { this.setState({ database: { ...database, dirty: false } }) }) }
-  setData (body) { axios.post(dbServer, body) }
+  fetchData () {
+    axios.get(dbServer).then(({ data }) => {
+      Object.entries(data).forEach(([key, db]) => {
+        db.dirty = false
+      })
+      this.setState({ dbs: data })
+    })
+  }
+
+  setData (data, key) {
+    const { dbs } = this.state
+    dbs[key] = data
+    axios.post(dbServer, dbs)
+  }
 
   componentDidMount () {
     this.fetchData()
@@ -21,11 +32,11 @@ export default class App extends Component {
   }
 
   render () {
-    const { database } = this.state
-    return database
-      ? <div className='App'>
-        <SprintsTable database={database} setData={setData} />
-      </div>
+    const { dbs } = this.state
+    return dbs
+      ? Object.entries(dbs).map(([key, db]) => <div className='App'>
+        <SprintsTable key={key} database={db} setData={(data, key) => this.setData(data, key)} />
+      </div>)
       : <div>loading...</div>
   }
 }

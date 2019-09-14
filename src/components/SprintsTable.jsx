@@ -15,15 +15,12 @@ justify-content: space-between;
 
 export default ({ database, setData }) => {
   use(database)
-
   // todo: create task button
 
   // todo: edit task (link to story, description, depends on)
 
-  // todo: multiple teams
+  // todo: link related task
 
-  // todo: select related task
-  
   // todo: (independend) backup server (10 last backups every 5 mins)
 
   const onDragEnd = ({ destination, source, draggableId }) => {
@@ -57,7 +54,8 @@ export default ({ database, setData }) => {
     }
 
     database.dirty = true
-    setData(database)
+    
+    setData(database, database.teamName)
   }
 
   return <Fragment>
