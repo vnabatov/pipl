@@ -29,47 +29,19 @@ export default ({ changeData }) => {
             const newTaskIds = Array.from(columnStart.taskIds)
             newTaskIds.splice(source.index, 1)
             newTaskIds.splice(destination.index, 0, draggableId)
-    
-            const newColoumn = {
-                ...columnStart, 
-                taskIds: newTaskIds
-            }
-    
-            state = { ...state, columns: {
-                ...state.columns, 
-                [newColoumn.id]: newColoumn
-            }}
+            state.columns[columnStart.id].taskIds = newTaskIds;
             return
-
-            console.log(state, newTaskIds)
-
         } 
         //different column
-
         const startTaskIds = Array.from(columnStart.taskIds)
         startTaskIds.splice(source.index, 1)
-       
-        const newColumnStart = {
-            ...columnStart,
-            taskIds: startTaskIds
-        }
-
+        
         const finishTaskIds = Array.from(columnFinish.taskIds)
         finishTaskIds.splice(destination.index, 0, draggableId)
 
-        const newColumnFinish = {
-            ...columnFinish,
-            taskIds: finishTaskIds
-        }
-
-        state = { ...state, columns: {
-            ...state.columns, 
-            [newColumnStart.id]: newColumnStart,
-            [newColumnFinish.id]: newColumnFinish
-        }}
+        state.columns[columnStart.id].taskIds = startTaskIds;
+        state.columns[columnFinish.id].taskIds = finishTaskIds;
         return
-        
-
     }
 
     return <div>
