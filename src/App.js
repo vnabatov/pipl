@@ -1,29 +1,50 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 import './App.css'
 import SprintsTable from './components/SprintsTable'
 
-const dbServer = '/db'
+const api = { db: '/db', tasks: '/tasks', sprints: '/sprints' }
+const defaultForm = { id: 'CPP0-', teamName: 'Already Done', summary: '', related: '', sp: '0', story: '' }
 
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { dbs: null }
+    this.state = { dbs: null, form: { ...defaultForm } }
   }
 
   fetchData () {
-    axios.get(dbServer).then(({ data }) => {
-      Object.entries(data).forEach(([key, db]) => {
-        db.dirty = false
+    axios.get(api.db).then(({ data }) => {
+      data.sprints.forEach(sprint => {
+        sprint.dirty = false
       })
       this.setState({ dbs: data })
     })
   }
 
-  setData (data, key) {
-    const { dbs } = this.state
-    dbs[key] = data
-    axios.post(dbServer, dbs)
+  setData (data) {
+    axios.patch(api.sprints, data)
+  }
+
+  selectTask (taskData) {
+    this.setState({ form: { ...taskData } })
+  }
+
+  createTask () {
+    const { form } = this.state
+    axios.post(api.tasks, form)
+    this.setState({ form: { ...defaultForm } })
+  }
+
+  updateTask () {
+    const { form } = this.state
+    axios.patch(api.tasks + '/' + form.id, form)
+    this.setState({ form: { ...defaultForm } })
+  }
+
+  deleteTask (id) {
+    const { form } = this.state
+    axios.delete(api.tasks + '/' + id || form.id)
+    this.setState({ form: { ...defaultForm } })
   }
 
   componentDidMount () {
@@ -31,12 +52,29 @@ export default class App extends Component {
     this.timer = setInterval(() => this.fetchData(), 3000)
   }
 
+  updateForm (field, value) {
+    console.log(field, value)
+    this.setState({ form: { ...this.state.form, [field]: value } })
+  }
+
   render () {
-    const { dbs } = this.state
-    return dbs
-      ? Object.entries(dbs).map(([key, db]) => <div className='App'>
-        <SprintsTable key={key} database={db} setData={(data, key) => this.setData(data, key)} />
-      </div>)
-      : <div>loading...</div>
+    const { dbs, form } = this.state
+    return <Fragment>
+      <div>Create Task</div>
+      id:<input type='text' value={form.id} onChange={e => this.updateForm('id', e.target.value)} /><br />
+      summary:<input type='text' value={form.summary} onChange={e => this.updateForm('summary', e.target.value)} /><br />
+      teamName:<input type='text' value={form.teamName} onChange={e => this.updateForm('teamName', e.target.value)} /><br />
+      related:<input type='text' value={form.related} onChange={e => this.updateForm('related', e.target.value)} /><br />
+      sp:<input type='text' value={form.sp} onChange={e => this.updateForm('sp', e.target.value)} /><br />
+      story:<input type='text' value={form.story} onChange={e => this.updateForm('story', e.target.value)} /><br />
+      <input type='button' value='Create' onClick={() => this.createTask()} /><br />
+      <input type='button' value='Update' onClick={() => this.updateTask()} /><br />
+      <input type='button' value='Delete' onClick={() => this.deleteTask()} />
+      {dbs
+        ? dbs.sprints.map((sprint, key) => <div className='App'>
+          <SprintsTable deleteTask={id => this.deleteTask(id)} selectTask={taskData => this.selectTask(taskData)} key={key} tasksDb={dbs.tasks} sprintDb={sprint} setData={(data, key) => this.setData(data, key)} />
+        </div>)
+        : <div>loading...</div>}
+    </Fragment>
   }
 }

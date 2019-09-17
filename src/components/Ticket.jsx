@@ -10,14 +10,21 @@ border-radius: 2px;
 background-color: white;
 `
 
-export default ({ task, index }) => {
+export default ({ task, index, selectTask, deleteTask }) => {
   return <Draggable draggableId={task.id} index={index}>{(provided) =>
     <Container
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       ref={provided.innerRef}
     >
-      {task.content}
+      <div onClick={() => selectTask(task.id ? task : { id: task })} >
+        {task.id || task}
+        {task.summary}
+        {task.sp}
+        {task.story}
+        {task.related}
+        <div onClick={() => deleteTask(task.id)}>&times;</div>
+      </div>
     </Container>
   }</Draggable>
 }

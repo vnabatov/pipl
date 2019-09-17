@@ -1,56 +1,176 @@
 {
+  "tasks": [
+    {
+      "id": "CPP0-1",
+      "summary": "test1",
+      "sp": "2",
+      "related": "CPP0-6",
+      "story": "CPP0-213"
+    },
+    {
+      "id": "CPP0-2",
+      "summary": "test1",
+      "sp": "1"
+    },
+    {
+      "id": "CPP0-3",
+      "summary": "test1",
+      "sp": "1"
+    },
+    {
+      "id": "CPP0-4",
+      "summary": "test1",
+      "sp": "1"
+    },
+    {
+      "id": "CPP0-5",
+      "summary": "test1",
+      "sp": "2"
+    },
+    {
+      "id": "CPP0-6",
+      "summary": "123123",
+      "sp": "4"
+    }
+  ],
+  "sprints": [
+    {
+      "id": "0",
+      "teamName": "Already Done",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Sprint 0",
+          "taskIds": [
+            "CPP0-4",
+            "CPP0-2",
+            "CPP0-5",
+            "CPP0-3"
+          ]
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "taskIds": [
+            "CPP0-6"
+          ]
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "taskIds": [
+            "CPP0-1"
+          ]
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "taskIds": []
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "taskIds": []
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "taskIds": []
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    },
+    {
+      "id": "1",
+      "teamName": "Challenge accepted",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Sprint 0",
+          "taskIds": [
+            "CPP0-4",
+            "CPP0-3",
+            "CPP0-2",
+            "CPP0-5"
+          ]
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "taskIds": []
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "taskIds": [
+            "CPP0-6"
+          ]
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "taskIds": [
+            "CPP0-1"
+          ]
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "taskIds": []
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "taskIds": []
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    }
+  ],
   "Already Done": {
     "teamName": "Already Done",
-    "tasks": {
-      "CPP0-1": {
-        "id": "CPP0-1",
-        "content": "test1"
-      },
-      "CPP0-2": {
-        "id": "CPP0-2",
-        "content": "test2"
-      },
-      "CPP0-3": {
-        "id": "CPP0-3",
-        "content": "test3"
-      },
-      "CPP0-4": {
-        "id": "CPP0-4",
-        "content": "test4"
-      },
-      "CPP0-5": {
-        "id": "CPP0-5",
-        "content": "test5"
-      }
-    },
     "columns": {
       "column-1": {
         "id": "column-1",
         "title": "Sprint 1",
-        "taskIds": [
-          "CPP0-3",
-          "CPP0-2",
-          "CPP0-4"
-        ]
+        "taskIds": []
       },
       "column-2": {
         "id": "column-2",
         "title": "Sprint 2",
-        "taskIds": []
+        "taskIds": [
+          "CPP0-4",
+          "CPP0-3",
+          "CPP0-1",
+          "CPP0-5",
+          "CPP0-2"
+        ]
       },
       "column-3": {
         "id": "column-3",
         "title": "Sprint 3",
-        "taskIds": [
-          "CPP0-1"
-        ]
+        "taskIds": []
       },
       "column-4": {
         "id": "column-4",
         "title": "Sprint 4",
-        "taskIds": [
-          "CPP0-5"
-        ]
+        "taskIds": []
       },
       "column-5": {
         "id": "column-5",
@@ -65,60 +185,38 @@
       "column-4",
       "column-5"
     ],
-    "dirty": false
+    "dirty": true
   },
   "Challenge accepted": {
     "teamName": "Challenge accepted",
-    "tasks": {
-      "CPP0-1": {
-        "id": "CPP0-1",
-        "content": "test1"
-      },
-      "CPP0-2": {
-        "id": "CPP0-2",
-        "content": "test2"
-      },
-      "CPP0-3": {
-        "id": "CPP0-3",
-        "content": "test3"
-      },
-      "CPP0-4": {
-        "id": "CPP0-4",
-        "content": "test4"
-      },
-      "CPP0-5": {
-        "id": "CPP0-5",
-        "content": "test5"
-      }
-    },
     "columns": {
       "column-1": {
         "id": "column-1",
         "title": "Sprint 1",
         "taskIds": [
-          "CPP0-3",
-          "CPP0-2"
+          "CPP0-1"
         ]
       },
       "column-2": {
         "id": "column-2",
         "title": "Sprint 2",
         "taskIds": [
-          "CPP0-4"
+          "CPP0-2",
+          "CPP0-4",
+          "CPP0-5"
         ]
       },
       "column-3": {
         "id": "column-3",
         "title": "Sprint 3",
-        "taskIds": []
+        "taskIds": [
+          "CPP0-3"
+        ]
       },
       "column-4": {
         "id": "column-4",
         "title": "Sprint 4",
-        "taskIds": [
-          "CPP0-5",
-          "CPP0-1"
-        ]
+        "taskIds": []
       },
       "column-5": {
         "id": "column-5",

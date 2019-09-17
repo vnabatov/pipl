@@ -21,15 +21,15 @@ min-width: 100px;
 min-height: 100px;
 `
 
-export default ({ title, tasks, column }) => {
+export default ({ title, tasks, column, selectTask, deleteTask }) => {
   return <Container>
-    <Title>{title}</Title>
+    <Title>{title} SP:{tasks.reduce((acc, val) => acc + parseInt(val.sp, 10), 0)}</Title>
     <Droppable droppableId={column.id}>
       {(provided) => <TaskList
         ref={provided.innerRef}
         {...provided.droppableProps}
       >
-        {tasks.map((task, index) => <Ticket key={task.id} index={index} task={task} />)}
+        {tasks.map((task, index) => <Ticket deleteTask={deleteTask} selectTask={selectTask} key={task.id} index={index} task={task} />)}
         {provided.placeholder}
       </TaskList>
       }

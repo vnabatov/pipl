@@ -13,13 +13,25 @@ flex: 1;
 justify-content: space-between;
 `
 
-export default ({ database, setData }) => {
-  use(database)
-  // todo: create task button
+export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
+  use(sprintDb)
+  use(tasksDb)
 
-  // todo: edit task (link to story, description, depends on)
+  // todo: display task all data in sprints (design)
 
-  // todo: link related task
+  // todo: fix form design
+
+  // todo: link related task select with search (click to link)
+
+  // todo: click to delete from sprint
+ 
+  // todo: story select with search
+
+  // todo: set max for column
+
+  // todo: show restrictions (max for column, related are after)
+
+  // todo: list of stories
 
   // todo: (independend) backup server (10 last backups every 5 mins)
 
@@ -32,15 +44,15 @@ export default ({ database, setData }) => {
       return
     }
 
-    const columnStart = database.columns[source.droppableId]
-    const columnFinish = database.columns[destination.droppableId]
+    const columnStart = sprintDb.columns[source.droppableId]
+    const columnFinish = sprintDb.columns[destination.droppableId]
 
     if (columnStart === columnFinish) {
       // same column
       const newTaskIds = Array.from(columnStart.taskIds)
       newTaskIds.splice(source.index, 1)
       newTaskIds.splice(destination.index, 0, draggableId)
-      database.columns[columnStart.id].taskIds = newTaskIds
+      sprintDb.columns[columnStart.id].taskIds = newTaskIds
     } else {
       // different column
       const startTaskIds = Array.from(columnStart.taskIds)
@@ -49,24 +61,24 @@ export default ({ database, setData }) => {
       const finishTaskIds = Array.from(columnFinish.taskIds)
       finishTaskIds.splice(destination.index, 0, draggableId)
 
-      database.columns[columnStart.id].taskIds = startTaskIds
-      database.columns[columnFinish.id].taskIds = finishTaskIds
+      sprintDb.columns[columnStart.id].taskIds = startTaskIds
+      sprintDb.columns[columnFinish.id].taskIds = finishTaskIds
     }
 
-    database.dirty = true
-    
-    setData(database, database.teamName)
+    sprintDb.dirty = true
+
+    setData(sprintDb, sprintDb.teamName)
   }
 
   return <Fragment>
-    <TeamName>{database.teamName}{database.dirty ? '🔄' : ''}</TeamName>
+    <TeamName>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</TeamName>
     <SprintTable>
       <DragDropContext onDragEnd={onDragEnd}>
         {
-          database.columnOrder.map((columnId) => {
-            const column = database.columns[columnId]
-            const tasks = column.taskIds.map(taskId => database.tasks[taskId])
-            return <Column dirty={database.dirty} key={column.id} column={column} title={column.title} tasks={tasks} />
+          sprintDb.columnOrder.map((columnId) => {
+            const column = sprintDb.columns[columnId]
+            const tasks = column.taskIds.map(taskId => tasksDb.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
+            return <Column deleteTask={deleteTask} selectTask={selectTask} dirty={sprintDb.dirty} key={column.id} column={column} title={column.title} tasks={tasks} />
           })
         }
       </DragDropContext>
