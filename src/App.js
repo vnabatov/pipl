@@ -1,80 +1,74 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import axios from 'axios'
+import use from 'react-hoox'
+
 import './App.css'
+
 import SprintsTable from './components/SprintsTable'
+import TaskForm from './components/TaskForm'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints' }
 const defaultForm = { id: 'CPP0-', teamName: 'Already Done', summary: '', related: '', sp: '0', story: '' }
 
-export default class App extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { dbs: null, form: { ...defaultForm } }
-  }
+let form = { ...defaultForm }
+let dbs
 
-  fetchData () {
+const App = () => {
+  use(() => form)
+  use(() => dbs)
+
+  const fetchData = () => {
     axios.get(api.db).then(({ data }) => {
       data.sprints.forEach(sprint => {
         sprint.dirty = false
       })
-      this.setState({ dbs: data })
+      dbs = data
+      console.log(dbs)
     })
   }
 
-  setData (data) {
+  const setData = (data) => {
     axios.patch(api.sprints, data)
   }
 
-  selectTask (taskData) {
-    this.setState({ form: { ...taskData } })
+  const selectTask = (taskData) => {
+    form = taskData
   }
 
-  createTask () {
-    const { form } = this.state
+  const createTask = () => {
     axios.post(api.tasks, form)
-    this.setState({ form: { ...defaultForm } })
+    form = defaultForm
   }
 
-  updateTask () {
-    const { form } = this.state
+  const updateTask = () => {
     axios.patch(api.tasks + '/' + form.id, form)
-    this.setState({ form: { ...defaultForm } })
+    form = defaultForm
   }
 
-  deleteTask (id) {
-    const { form } = this.state
+  const deleteTask = (id) => {
     axios.delete(api.tasks + '/' + id || form.id)
-    this.setState({ form: { ...defaultForm } })
+    form = defaultForm
   }
 
-  componentDidMount () {
-    this.fetchData()
-    this.timer = setInterval(() => this.fetchData(), 3000)
-  }
+  useEffect(() => {
+    fetchData()
+    setInterval(() => fetchData(), 3000)
+  }, [])
 
-  updateForm (field, value) {
-    console.log(field, value)
-    this.setState({ form: { ...this.state.form, [field]: value } })
-  }
-
-  render () {
-    const { dbs, form } = this.state
-    return <Fragment>
-      <div>Create Task</div>
-      id:<input type='text' value={form.id} onChange={e => this.updateForm('id', e.target.value)} /><br />
-      summary:<input type='text' value={form.summary} onChange={e => this.updateForm('summary', e.target.value)} /><br />
-      teamName:<input type='text' value={form.teamName} onChange={e => this.updateForm('teamName', e.target.value)} /><br />
-      related:<input type='text' value={form.related} onChange={e => this.updateForm('related', e.target.value)} /><br />
-      sp:<input type='text' value={form.sp} onChange={e => this.updateForm('sp', e.target.value)} /><br />
-      story:<input type='text' value={form.story} onChange={e => this.updateForm('story', e.target.value)} /><br />
-      <input type='button' value='Create' onClick={() => this.createTask()} /><br />
-      <input type='button' value='Update' onClick={() => this.updateTask()} /><br />
-      <input type='button' value='Delete' onClick={() => this.deleteTask()} />
-      {dbs
-        ? dbs.sprints.map((sprint, key) => <div className='App'>
-          <SprintsTable deleteTask={id => this.deleteTask(id)} selectTask={taskData => this.selectTask(taskData)} key={key} tasksDb={dbs.tasks} sprintDb={sprint} setData={(data, key) => this.setData(data, key)} />
-        </div>)
-        : <div>loading...</div>}
-    </Fragment>
-  }
+  return <Fragment>
+    <TaskForm form={form} createTask={createTask} updateTask={updateTask} deleteTask={deleteTask} />
+    {dbs
+      ? dbs.sprints.map((sprint, key) => <div className='App'>
+        <SprintsTable
+          tasksDb={dbs.tasks}
+          sprintDb={sprint}
+          setData={setData}
+          key={key}
+          deleteTask={deleteTask}
+          selectTask={selectTask}
+        />
+      </div>)
+      : <div>loading...</div>}
+  </Fragment>
 }
+export default App

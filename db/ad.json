@@ -9,16 +9,11 @@
     },
     {
       "id": "CPP0-2",
-      "summary": "test1",
+      "summary": "fsdfsdfsdfsdfsd",
       "sp": "1"
     },
     {
       "id": "CPP0-3",
-      "summary": "test1",
-      "sp": "1"
-    },
-    {
-      "id": "CPP0-4",
       "summary": "test1",
       "sp": "1"
     },
@@ -31,6 +26,11 @@
       "id": "CPP0-6",
       "summary": "123123",
       "sp": "4"
+    },
+    {
+      "id": "CPP0-4",
+      "summary": "sdfdsfsdfsdf",
+      "sp": "123"
     }
   ],
   "sprints": [
@@ -42,8 +42,6 @@
           "id": "column-1",
           "title": "Sprint 0",
           "taskIds": [
-            "CPP0-4",
-            "CPP0-2",
             "CPP0-5",
             "CPP0-3"
           ]
@@ -52,20 +50,21 @@
           "id": "column-2",
           "title": "Sprint 1",
           "taskIds": [
-            "CPP0-6"
+            "CPP0-6",
+            "CPP0-2"
           ]
         },
         "column-3": {
           "id": "column-3",
           "title": "Sprint 2",
-          "taskIds": [
-            "CPP0-1"
-          ]
+          "taskIds": []
         },
         "column-4": {
           "id": "column-4",
           "title": "Sprint 3",
-          "taskIds": []
+          "taskIds": [
+            "CPP0-4"
+          ]
         },
         "column-5": {
           "id": "column-5",
@@ -75,7 +74,9 @@
         "column-6": {
           "id": "column-6",
           "title": "Sprint 5",
-          "taskIds": []
+          "taskIds": [
+            "CPP0-1"
+          ]
         }
       },
       "columnOrder": [
@@ -117,14 +118,14 @@
         "column-4": {
           "id": "column-4",
           "title": "Sprint 3",
-          "taskIds": [
-            "CPP0-1"
-          ]
+          "taskIds": []
         },
         "column-5": {
           "id": "column-5",
           "title": "Sprint 4",
-          "taskIds": []
+          "taskIds": [
+            "CPP0-1"
+          ]
         },
         "column-6": {
           "id": "column-6",
