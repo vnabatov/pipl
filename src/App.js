@@ -1,15 +1,19 @@
 import React, { Component, Fragment } from 'react'
+import use from 'react-hoox'
+
 import axios from 'axios'
 import './App.css'
 import SprintsTable from './components/SprintsTable'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints' }
 const defaultForm = { id: 'CPP0-', teamName: 'Already Done', summary: '', related: '', sp: '0', story: '' }
+const form = defaultForm;
 
 export default class App extends Component {
   constructor (props) {
+    use(form)
     super(props)
-    this.state = { dbs: null, form: { ...defaultForm } }
+    this.state = { dbs: null }
   }
 
   fetchData () {
@@ -26,25 +30,22 @@ export default class App extends Component {
   }
 
   selectTask (taskData) {
-    this.setState({ form: { ...taskData } })
+    form = taskData
   }
 
   createTask () {
-    const { form } = this.state
     axios.post(api.tasks, form)
-    this.setState({ form: { ...defaultForm } })
+    form = defaultForm;
   }
 
   updateTask () {
-    const { form } = this.state
     axios.patch(api.tasks + '/' + form.id, form)
-    this.setState({ form: { ...defaultForm } })
+    form = defaultForm;
   }
 
   deleteTask (id) {
-    const { form } = this.state
     axios.delete(api.tasks + '/' + id || form.id)
-    this.setState({ form: { ...defaultForm } })
+    form = defaultForm;
   }
 
   componentDidMount () {
@@ -53,12 +54,11 @@ export default class App extends Component {
   }
 
   updateForm (field, value) {
-    console.log(field, value)
-    this.setState({ form: { ...this.state.form, [field]: value } })
+    form[field] = value
   }
 
   render () {
-    const { dbs, form } = this.state
+    const { dbs } = this.state
     return <Fragment>
       <div>Create Task</div>
       id:<input type='text' value={form.id} onChange={e => this.updateForm('id', e.target.value)} /><br />
