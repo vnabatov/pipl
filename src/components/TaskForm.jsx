@@ -4,7 +4,6 @@ export default ({ form, createTask, updateTask, deleteTask }) => {
   const updateForm = (field, value) => {
     form[field] = value
   }
-
   return <Fragment>
     <div>Create Task</div>
       id:<input type='text' value={form.id} onChange={e => updateForm('id', e.target.value)} /><br />
