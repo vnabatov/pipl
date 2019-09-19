@@ -7,7 +7,7 @@ import SprintsTable from './components/SprintsTable'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints' }
 const defaultForm = { id: 'CPP0-', teamName: 'Already Done', summary: '', related: '', sp: '0', story: '' }
-const form = defaultForm;
+let form = defaultForm;
 
 export default class App extends Component {
   constructor (props) {
