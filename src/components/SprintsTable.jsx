@@ -15,9 +15,10 @@ justify-content: space-between;
 
 export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
   use(sprintDb)
-  use(tasksDb)
 
   // todo: display task all data in sprints (design)
+
+  // todo: confirm removing
 
   // todo: fix form design
 
@@ -32,6 +33,8 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
   // todo: show restrictions (max for column, related are after)
 
   // todo: list of stories
+
+  // todo: fix npm audit
 
   // todo: (independend) backup server (10 last backups every 5 mins)
 

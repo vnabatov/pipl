@@ -1,11 +1,5 @@
 {
-  "tasks": [
-    {
-      "id": "CPP0-1",
-      "summary": "Test",
-      "sp": "1"
-    }
-  ],
+  "tasks": [],
   "sprints": [
     {
       "id": "0",
@@ -14,14 +8,14 @@
         "column-1": {
           "id": "column-1",
           "title": "Sprint 0",
-          "taskIds": [
-            "CPP0-1"
-          ]
+          "taskIds": []
         },
         "column-2": {
           "id": "column-2",
           "title": "Sprint 1",
-          "taskIds": []
+          "taskIds": [
+            "CPP0-1"
+          ]
         },
         "column-3": {
           "id": "column-3",

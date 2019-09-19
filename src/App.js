@@ -23,7 +23,6 @@ const App = () => {
         sprint.dirty = false
       })
       dbs = data
-      console.log(dbs)
     })
   }
 
