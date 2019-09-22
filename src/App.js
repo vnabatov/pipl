@@ -8,7 +8,7 @@ import SprintsTable from './components/SprintsTable'
 import TaskForm from './components/TaskForm'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints' }
-const defaultForm = { id: 'CPP0-', teamName: 'Already Done', summary: '', related: '', sp: '0', story: '' }
+const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
 
 let form = { ...defaultForm }
 let dbs
@@ -34,19 +34,21 @@ const App = () => {
     form = taskData
   }
 
-  const createTask = () => {
-    axios.post(api.tasks, form)
+  const clearForm = () => {
     form = defaultForm
   }
 
   const updateTask = () => {
-    axios.patch(api.tasks + '/' + form.id, form)
-    form = defaultForm
+    axios.post(api.tasks, form)
+    clearForm()
   }
 
   const deleteTask = (id) => {
-    axios.delete(api.tasks + '/' + id || form.id)
-    form = defaultForm
+    // eslint-disable-next-line no-undef
+    if (window.confirm('sure?')) {
+      axios.delete(api.tasks + '/' + (id || form.id))
+      clearForm()
+    }
   }
 
   useEffect(() => {
@@ -55,7 +57,7 @@ const App = () => {
   }, [])
 
   return <Fragment>
-    <TaskForm form={form} createTask={createTask} updateTask={updateTask} deleteTask={deleteTask} />
+    <TaskForm form={form} updateTask={updateTask} deleteTask={deleteTask} clearForm={clearForm} />
     {dbs
       ? dbs.sprints.map((sprint, key) => <div className='App'>
         <SprintsTable

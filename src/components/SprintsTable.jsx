@@ -15,20 +15,15 @@ justify-content: space-between;
 
 export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
   use(sprintDb)
+  use(tasksDb)
 
-  // todo: display task all data in sprints (design)
+  // todo: remove base from git (copy if file don't exists on start)
 
-  // todo: confirm removing
+  // todo: related task select with search
 
-  // todo: fix form design
-
-  // todo: link related task select with search (click to link)
-
-  // todo: click to delete from sprint
- 
   // todo: story select with search
 
-  // todo: set max for column
+  // todo: set max for column (capacity)
 
   // todo: show restrictions (max for column, related are after)
 
@@ -36,7 +31,7 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
 
   // todo: fix npm audit
 
-  // todo: (independend) backup server (10 last backups every 5 mins)
+  // todo: backup server (10 last backups every 5 mins)
 
   const onDragEnd = ({ destination, source, draggableId }) => {
     if (!destination) {

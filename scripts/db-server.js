@@ -3,7 +3,7 @@ const express = require('express')
 const FileSync = require('lowdb/adapters/FileSync')
 var bodyParser = require('body-parser')
 
-const adapter = new FileSync('db/ad.json')
+const adapter = new FileSync('db/lowdb.json')
 const db = lowdb(adapter)
 
 var app = express()
@@ -33,33 +33,60 @@ app.patch('/sprints', function (req, res) {
 })
 
 app.post('/tasks', function (req, res) {
-  db.get('tasks')
-    .push(req.body)
-    .write()
+  const newTaskId = req.body.id.toString()
+  const tasks = db.get('tasks')
+  const task = tasks
+    .find({ id: newTaskId })
 
-  db.get('sprints')
-    .find({ teamName: req.body.teamName })
-    .get('columns.column-1.taskIds')
-    .push(req.body.id)
-    .write()
+  if (tasks.value().length && task.value()) {
+    task
+      .assign(req.body)
+      .write()
+  } else {
+    const newTask = req.body
+    newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id)) + 1 : 1).toString()
 
-  res.send(db.getState())
-})
+    db.get('tasks')
+      .push(newTask)
+      .write()
 
-app.patch('/tasks/:taskId', function (req, res) {
-  db.get('tasks')
-    .find({ id: req.params.taskId })
-    .assign(req.body)
-    .write()
-  res.send(db.getState())
+    db.get('sprints')
+      .find({ teamName: newTask.teamName })
+      .get('columns.column-1.taskIds')
+      .push(newTask.id)
+      .write()
+
+    res.send(newTask)
+  }
 })
 
 app.delete('/tasks/:taskId', function (req, res) {
+  const toRemoveTaskId = req.params.taskId.toString()
+
   db.get('tasks')
-    .remove({ id: req.params.taskId })
+    .remove({ id: toRemoveTaskId })
     .write()
 
-  res.send(db.getState())
+  const sprints = db.get('sprints').value()
+
+  const toRemove = []
+  sprints.forEach(sprint => {
+    const teamName = sprint.teamName
+    const columns = sprint.columns
+    Object.entries(columns).forEach(([colId, column]) => {
+      if (column.taskIds.includes(toRemoveTaskId)) {
+        toRemove.push({ columnId: column.id, teamName })
+      }
+    })
+  })
+  toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
+    db.get('sprints')
+      .find({ teamName })
+      .get(`columns.${columnId}.taskIds`)
+      .pull(toRemoveTaskId)
+      .write()
+  })
+  res.send(toRemove)
 })
 
 const port = 3001

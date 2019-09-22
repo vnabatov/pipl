@@ -8,6 +8,7 @@ margin:3px;
 border: 1px solid lightgrey;
 border-radius: 2px;
 width: 100%;
+overflow: hidden;
 `
 const Title = styled.div`
 padding:3px;
@@ -18,7 +19,7 @@ text-align:center;
 const TaskList = styled.div`
 padding:3px;
 min-width: 100px;
-min-height: 100px;
+min-height: 100%;
 `
 
 export default ({ title, tasks, column, selectTask, deleteTask }) => {
