@@ -25,7 +25,7 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
   // todo: link related task select with search (click to link)
 
   // todo: click to delete from sprint
- 
+
   // todo: story select with search
 
   // todo: set max for column
