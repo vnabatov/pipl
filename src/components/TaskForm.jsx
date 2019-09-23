@@ -75,6 +75,7 @@ export default ({ form, updateTask, deleteTask, clearForm, teamNames = [], stori
               key={JSON.stringify(relatedTasks)}
               multiple
               value={relatedTasks}
+              height={100}
               onChange={e => updateForm('related', e.length ? e.map(selected => selected.value).join(',') : '')}
             />
           </p>
