@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 
+import 'bulma/css/bulma.css'
 import './App.css'
 
 import SprintsTable from './components/SprintsTable'
@@ -56,7 +57,7 @@ const App = () => {
     setInterval(() => fetchData(), 3000)
   }, [])
 
-  return <Fragment>
+  return <div className='container is-widescreen'>
     <TaskForm form={form} updateTask={updateTask} deleteTask={deleteTask} clearForm={clearForm} />
     {dbs
       ? dbs.sprints.map((sprint, key) => <div className='App'>
@@ -70,6 +71,6 @@ const App = () => {
         />
       </div>)
       : <div>loading...</div>}
-  </Fragment>
+  </div>
 }
 export default App

@@ -23,17 +23,6 @@ text-transform: capitalize;
 padding-right: 10px;
 `
 
-const Del = styled.div`
-padding: 3px;
-text-align:right;
-text-transform: capitalize;
-padding-right: 10px;
-&:hover {
-  background-color: palevioletred;
-  color: white;
-}
-`
-
 export default ({ task, index, selectTask, deleteTask }) => {
   return <Draggable draggableId={task.id} index={index}>{(provided) =>
     <Container
@@ -51,7 +40,7 @@ export default ({ task, index, selectTask, deleteTask }) => {
 
         </Grid>
       </div>
-      <Del onClick={() => deleteTask(task.id)}>&times;</Del>
+      <input className='button' type='button' value='&times;' onClick={() => deleteTask(task.id)} />
     </Container>
   }</Draggable>
 }

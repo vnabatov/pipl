@@ -9,6 +9,7 @@ border: 1px solid lightgrey;
 border-radius: 2px;
 width: 100%;
 overflow: hidden;
+background: rgba(255,255,255,.8);
 `
 const Title = styled.div`
 padding:3px;
