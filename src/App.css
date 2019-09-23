@@ -25,7 +25,6 @@ body {
     border-radius: 4px;
     box-shadow: none;
     overflow: hidden;
-    border: 1px solid lightgray;
 }
 
 .select-search-box::after {
@@ -145,7 +144,8 @@ input[type='search']::-webkit-search-cancel-button, input[type='search']::-webki
 .select-search-box--multiple .select-search-box__select {
     display: block;
     position: static;
-    border-top: 1px solid #eee;
+    border: 1px solid #eee;
+    border-top: none;
     border-radius: 0;
     box-shadow: none;
 }

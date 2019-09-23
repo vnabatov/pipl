@@ -67,7 +67,7 @@ const App = () => {
       relatedTasks1={form.related}
       teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
       stories={dbs ? dbs.stories.map(story => ({ value: story.id, name: story.summary })) : []}
-      tasks={dbs ? dbs.tasks.map(task => ({ value: task.id, name: `# ${task.id}: ${task.summary}` })) : []}
+      tasks={dbs ? dbs.tasks.map(task => ({ value: task.id, name: `#${task.id}: ${task.summary}` })) : []}
       updateTask={updateTask}
       deleteTask={deleteTask}
       clearForm={clearForm}
