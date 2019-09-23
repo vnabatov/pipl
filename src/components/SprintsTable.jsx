@@ -17,8 +17,6 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
   use(sprintDb)
   use(tasksDb)
 
-  // todo: remove base from git (copy if file don't exists on start)
-
   // todo: related task select with search
 
   // todo: story select with search
