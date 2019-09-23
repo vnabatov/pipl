@@ -12,15 +12,14 @@ background-color: white;
 const Grid = styled.div`
 display: grid;
 grid-template-rows: 1fr;
-grid-template-columns: 1fr 2fr;
+grid-template-columns: 1fr 1fr;
 grid-row-gap: 3px;
 `
 
 const Label = styled.div`
-padding: 3px;
 text-align:right;
+word-break: break-word;
 text-transform: capitalize;
-padding-right: 10px;
 `
 
 export default ({ task, index, selectTask, deleteTask }) => {
@@ -31,16 +30,16 @@ export default ({ task, index, selectTask, deleteTask }) => {
       ref={provided.innerRef}
     >
       <div onClick={() => selectTask(task.id ? task : { id: task })} >
-        <Grid>
-          <Label><strong>#{task.id}&nbsp;/&nbsp;{task.sp}SP</strong></Label>
-          <Label>{task.summary}</Label>
+        <Label><strong>#{task.id}&nbsp;/&nbsp;{task.sp}SP</strong> <input className='button is-small' type='button' value='&times;' onClick={() => deleteTask(task.id)} /> </Label>
 
+        <Label>{task.summary}</Label>
+
+        <Grid>
           <Label>Story:[{task.story}]</Label>
           <Label>Rel:[{task.related}]</Label>
-
         </Grid>
       </div>
-      <input className='button' type='button' value='&times;' onClick={() => deleteTask(task.id)} />
+
     </Container>
   }</Draggable>
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import SelectSearch from 'react-select-search'
 
 const Form = styled.div`
 width: 40%;
@@ -9,12 +10,20 @@ const Button = styled.input`
 margin-right: 0.5rem;
 `
 
-const fields = ['id', 'summary', 'teamName', 'related', 'sp', 'story']
+const fields = ['id', 'summary', 'sp']
 
-export default ({ form, updateTask, deleteTask, clearForm }) => {
+export default ({ form, updateTask, deleteTask, clearForm, teamNames = [], stories = [], tasks = [] }) => {
   const updateForm = (field, value) => {
+    console.log('updateForm', field, value)
     form[field] = value
   }
+
+  console.log('related', form.related)
+
+  const relatedTasks = form.related ? form.related.split(',') : null
+
+  console.log('relatedTasks', relatedTasks)
+
   return <Form className='hero'>
     {fields.map(field => <div className='field is-horizontal'>
       <div className='field-label is-small'>
@@ -28,6 +37,50 @@ export default ({ form, updateTask, deleteTask, clearForm }) => {
         </div>
       </div>
     </div>)}
+
+    {teamNames.length && <div className='field is-horizontal'>
+      <div className='field-label is-small'>
+        <label className='label'>teamName</label>
+      </div>
+      <div className='field-body'>
+        <div className='field'>
+          <p className='control'>
+            <SelectSearch options={teamNames} value={form['teamName']} onChange={e => updateForm('teamName', e.value)} />
+          </p>
+        </div>
+      </div>
+    </div>}
+
+    {stories.length && <div className='field is-horizontal'>
+      <div className='field-label is-small'>
+        <label className='label'>story</label>
+      </div>
+      <div className='field-body'>
+        <div className='field'>
+          <p className='control'>
+            <SelectSearch options={stories} value={form['story']} onChange={e => updateForm('story', e.value)} />
+          </p>
+        </div>
+      </div>
+    </div>}
+
+    {tasks.length && <div className='field is-horizontal'>
+      <div className='field-label is-small'>
+        <label className='label'>related</label>
+      </div>
+      <div className='field-body'>
+        <div className='field'>
+          <p className='control'>
+            <SelectSearch options={tasks}
+              key={JSON.stringify(relatedTasks)}
+              multiple
+              value={relatedTasks}
+              onChange={e => updateForm('related', e.length ? e.map(selected => selected.value).join(',') : '')}
+            />
+          </p>
+        </div>
+      </div>
+    </div>}
 
     <div className='field is-horizontal'>
       <div className='field-label is-normal' />

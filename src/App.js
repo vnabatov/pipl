@@ -8,7 +8,7 @@ import './App.css'
 import SprintsTable from './components/SprintsTable'
 import TaskForm from './components/TaskForm'
 
-const api = { db: '/db', tasks: '/tasks', sprints: '/sprints' }
+const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
 const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
 
 let form = { ...defaultForm }
@@ -52,16 +52,30 @@ const App = () => {
     }
   }
 
+  const updateColumnCount = (columnId, teamName, size) => {
+    axios.patch(api.columns + '/' + columnId, { teamName, size })
+  }
+
   useEffect(() => {
     fetchData()
     setInterval(() => fetchData(), 3000)
   }, [])
 
   return <div className='container is-widescreen'>
-    <TaskForm form={form} updateTask={updateTask} deleteTask={deleteTask} clearForm={clearForm} />
+    <TaskForm
+      form={form}
+      relatedTasks1={form.related}
+      teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
+      stories={dbs ? dbs.stories.map(story => ({ value: story.id, name: story.summary })) : []}
+      tasks={dbs ? dbs.tasks.map(task => ({ value: task.id, name: task.summary })) : []}
+      updateTask={updateTask}
+      deleteTask={deleteTask}
+      clearForm={clearForm}
+    />
     {dbs
       ? dbs.sprints.map((sprint, key) => <div className='App'>
         <SprintsTable
+          updateColumnCount={updateColumnCount}
           tasksDb={dbs.tasks}
           sprintDb={sprint}
           setData={setData}

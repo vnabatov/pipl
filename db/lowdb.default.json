@@ -1,4 +1,18 @@
 {
+  "stories": [
+    {
+      "id": "S1",
+      "summary": "Develop PI Helper"
+    },
+    {
+      "id": "S2",
+      "summary": "Improve PI Helper"
+    },
+    {
+      "id": "S3",
+      "summary": "Fix Bug PI Helper"
+    }
+  ],
   "tasks": [
     {
       "id": "1",
@@ -14,6 +28,7 @@
         "column-1": {
           "id": "column-1",
           "title": "Sprint 0",
+          "size":"40",
           "taskIds": [
             "1"
           ]
@@ -21,26 +36,31 @@
         "column-2": {
           "id": "column-2",
           "title": "Sprint 1",
+          "size":"40",
           "taskIds": []
         },
         "column-3": {
           "id": "column-3",
           "title": "Sprint 2",
+          "size":"40",
           "taskIds": []
         },
         "column-4": {
           "id": "column-4",
           "title": "Sprint 3",
+          "size":"40",
           "taskIds": []
         },
         "column-5": {
           "id": "column-5",
           "title": "Sprint 4",
+          "size":"40",
           "taskIds": []
         },
         "column-6": {
           "id": "column-6",
           "title": "Sprint 5",
+          "size":"40",
           "taskIds": []
         }
       },
@@ -61,32 +81,38 @@
         "column-1": {
           "id": "column-1",
           "title": "Sprint 0",
+          "size":"40",
           "taskIds": []
         },
         "column-2": {
           "id": "column-2",
           "title": "Sprint 1",
+          "size":"40",
           "taskIds": []
         },
         "column-3": {
           "id": "column-3",
           "title": "Sprint 2",
+          "size":"40",
           "taskIds": []
         },
         "column-4": {
           "id": "column-4",
           "title": "Sprint 3",
+          "size":"40",
           "taskIds": []
         },
         "column-5": {
           "id": "column-5",
           "title": "Sprint 4",
+          "size":"40",
           "taskIds": [
           ]
         },
         "column-6": {
           "id": "column-6",
           "title": "Sprint 5",
+          "size":"40",
           "taskIds": []
         }
       },

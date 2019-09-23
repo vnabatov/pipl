@@ -13,19 +13,23 @@ flex: 1;
 justify-content: space-between;
 `
 
-export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
+export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColumnCount }) => {
   use(sprintDb)
   use(tasksDb)
 
-  // todo: related task select with search
+  // MVP
 
-  // todo: story select with search
+  // todo: arrow to selected (with on/off)
 
-  // todo: set max for column (capacity)
+  // todo: list of stories to select
 
-  // todo: show restrictions (max for column, related are after)
+  // todo: select related task
 
-  // todo: list of stories
+  // todo: show restrictions (related are after)
+
+  // ---
+
+  // todo: improve design
 
   // todo: fix npm audit
 
@@ -74,7 +78,16 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask }) => {
           sprintDb.columnOrder.map((columnId) => {
             const column = sprintDb.columns[columnId]
             const tasks = column.taskIds.map(taskId => tasksDb.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
-            return <Column deleteTask={deleteTask} selectTask={selectTask} dirty={sprintDb.dirty} key={column.id} column={column} title={column.title} tasks={tasks} />
+            return <Column
+              updateColumnCount={updateColumnCount}
+              deleteTask={deleteTask}
+              selectTask={selectTask}
+              dirty={sprintDb.dirty}
+              teamName={sprintDb.teamName}
+              key={column.id}
+              column={column}
+              title={column.title}
+              tasks={tasks} />
           })
         }
       </DragDropContext>

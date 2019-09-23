@@ -42,6 +42,7 @@ app.post('/tasks', function (req, res) {
     task
       .assign(req.body)
       .write()
+    res.send(task, req.body)
   } else {
     const newTask = req.body
     newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id)) + 1 : 1).toString()
@@ -58,6 +59,19 @@ app.post('/tasks', function (req, res) {
 
     res.send(newTask)
   }
+})
+
+app.patch('/columns/:columnId', function (req, res) {
+  const columnId = req.params.columnId.toString()
+  const { teamName, size } = req.body
+
+  db.get('sprints')
+    .find({ teamName })
+    .get(`columns.${columnId}`)
+    .assign({ size })
+    .write()
+
+  res.send({ teamName, columnId, size })
 })
 
 app.delete('/tasks/:taskId', function (req, res) {
