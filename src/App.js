@@ -67,7 +67,7 @@ const App = () => {
       borderWidth: 2
     }
     return task !== link
-      ? <LineTo fromAnchor='center' toAnchor='center' {...style} from={`task${link}`} to={`task${task}`} />
+      ? <LineTo fromAnchor='right' toAnchor='left' {...style} from={`task${link}`} to={`task${task}`} />
       : ''
   }
 
