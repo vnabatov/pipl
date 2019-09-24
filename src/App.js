@@ -3,6 +3,7 @@ import axios from 'axios'
 import use from 'react-hoox'
 
 import 'bulma/css/bulma.css'
+import 'font-awesome/*'
 import './App.css'
 
 import SprintsTable from './components/SprintsTable'
