@@ -7,15 +7,18 @@ import './App.css'
 
 import SprintsTable from './components/SprintsTable'
 import TaskForm from './components/TaskForm'
+import Stories from './components/Stories'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
 const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
 
 let form = { ...defaultForm }
+let selectedStory = ''
 let dbs
 
 const App = () => {
   use(() => form)
+  use(() => selectedStory)
   use(() => dbs)
 
   const fetchData = () => {
@@ -96,9 +99,9 @@ const App = () => {
     setInterval(() => fetchData(), 3000)
   }, [])
 
-  return <div className='container is-widescreen'>
-    <div className='A'>Element A</div>
+  if (!dbs) return 'Loading'
 
+  return <div className='container is-widescreen'>
     <TaskForm
       form={form}
       relatedTasks1={form.related}
@@ -109,19 +112,23 @@ const App = () => {
       deleteTask={deleteTask}
       clearForm={clearForm}
     />
-    {dbs
-      ? dbs.sprints.map((sprint, key) => <div className='App'>
-        <SprintsTable
-          updateColumnCount={updateColumnCount}
-          tasksDb={dbs.tasks}
-          sprintDb={sprint}
-          setData={setData}
-          key={key}
-          deleteTask={deleteTask}
-          selectTask={selectTask}
-        />
-      </div>)
-      : <div>loading...</div>}
+
+    <h3>Stories</h3>
+    <Stories selectStory={story => (selectedStory = (selectedStory !== story ? story : ''))} stories={dbs.stories} />
+
+    {dbs.sprints.map((sprint, key) => <div className='App'>
+      <SprintsTable
+        selectedStory={selectedStory}
+        updateColumnCount={updateColumnCount}
+        tasksDb={dbs.tasks}
+        sprintDb={sprint}
+        setData={setData}
+        key={key}
+        deleteTask={deleteTask}
+        selectTask={selectTask}
+      />
+    </div>)}
+
     {renderLines()}
   </div>
 }

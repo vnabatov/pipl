@@ -3,26 +3,47 @@ import styled from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 
 const Container = styled.div`
-margin:3px;
 padding:3px;
-border: 1px solid lightgrey;
-border-radius: 2px;
-background-color: white;
 `
+
 const Grid = styled.div`
 display: grid;
 grid-template-rows: 1fr;
 grid-template-columns: 1fr 1fr;
 grid-row-gap: 3px;
+grid-column-gap: 3px;
 `
 
 const Label = styled.div`
-text-align:right;
+text-align:center;
 word-break: break-word;
 text-transform: capitalize;
 `
 
-export default ({ task, index, selectTask, deleteTask }) => {
+const Ticket = styled.div`
+height: 100px;
+border: 1px solid lightgray;
+background: rgba(255,255,255, .7);
+`
+const TicketHeader = styled.div`
+align-items: center;
+background-color: ${({ selected }) => selected ? '#3273dc' : '#23d160'};
+border-radius: 4px 4px 0 0;
+color: #fff;
+display: -ms-flexbox;
+display: flex;
+font-weight: 700;
+justify-content: space-between;
+line-height: 1.25;
+padding: 0.75em 1em;
+position: relative;
+`
+const TicketBody = styled.div`
+padding: 3px;
+word-break: break-word;
+`
+
+export default ({ task, index, selectTask, deleteTask, selectedStory }) => {
   return <Draggable draggableId={task.id} index={index}>{(provided) =>
     <Container
       className={'task' + task.id}
@@ -30,16 +51,21 @@ export default ({ task, index, selectTask, deleteTask }) => {
       {...provided.dragHandleProps}
       ref={provided.innerRef}
     >
-      <div onClick={() => selectTask(task.id ? task : { id: task })} >
-        <Label><strong>#{task.id}&nbsp;/&nbsp;{task.sp}SP</strong> <input className='button is-small' type='button' value='&times;' onClick={() => deleteTask(task.id)} /> </Label>
 
-        <Label>{task.summary}</Label>
+      <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
+        <TicketHeader selected={selectedStory && selectedStory === task.story}>
+          <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
+          <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+        </TicketHeader>
+        <TicketBody>
+          {task.summary}
+          <Grid>
+            <Label>Story:[{task.story}]</Label>
+            <Label>Rel:[{task.related}]</Label>
+          </Grid>
+        </TicketBody>
+      </Ticket>
 
-        <Grid>
-          <Label>Story:[{task.story}]</Label>
-          <Label>Rel:[{task.related}]</Label>
-        </Grid>
-      </div>
     </Container>
 
   }</Draggable>

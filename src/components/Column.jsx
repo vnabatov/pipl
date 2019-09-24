@@ -24,7 +24,7 @@ min-width: 100px;
 min-height: 100%;
 `
 
-export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCount, teamName }) => {
+export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCount, teamName, selectedStory }) => {
   const spSum = tasks.reduce((acc, val) => acc + parseInt(val.sp, 10), 0)
   return <Container>
     <Title error={parseInt(column.size, 10) < spSum} fit={parseInt(column.size, 10) === spSum}>
@@ -46,7 +46,7 @@ export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCoun
         ref={provided.innerRef}
         {...provided.droppableProps}
       >
-        {tasks.map((task, index) => <Ticket deleteTask={deleteTask} selectTask={selectTask} key={task.id} index={index} task={task} />)}
+        {tasks.map((task, index) => <Ticket selectedStory={selectedStory} deleteTask={deleteTask} selectTask={selectTask} key={task.id} index={index} task={task} />)}
         {provided.placeholder}
       </TaskList>
       }

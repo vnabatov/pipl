@@ -13,27 +13,27 @@ flex: 1;
 justify-content: space-between;
 `
 
-export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColumnCount }) => {
+export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColumnCount, selectedStory }) => {
   use(sprintDb)
   use(tasksDb)
 
   // MVP
 
-  // todo: list of stories to select
-
-  // todo: line to stories
-
-  // todo: use context instead of passing params
-
-  // todo: select related task to link/unlink
-
-  // todo: clear all links for this task when removing the task
+  // todo: demo for microconf (mini pi with ready stories)
 
   // todo: show restrictions (related are in further sprint)
 
-  // todo: filter by story
+  // todo: clear all links for this task when removing the task
 
   // ---
+
+  // todo: import stories
+
+  // todo: select related task to link/unlink
+
+  // todo: use context instead of passing params
+
+  // todo: clear all links for this task when removing the task
 
   // todo: improve design
 
@@ -85,6 +85,7 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColu
             const column = sprintDb.columns[columnId]
             const tasks = column.taskIds.map(taskId => tasksDb.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
             return <Column
+              selectedStory={selectedStory}
               updateColumnCount={updateColumnCount}
               deleteTask={deleteTask}
               selectTask={selectTask}
