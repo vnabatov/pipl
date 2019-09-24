@@ -29,12 +29,11 @@ export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCoun
   return <Container>
     <Title error={parseInt(column.size, 10) < spSum} fit={parseInt(column.size, 10) === spSum}>
       {title}
-      <div class='field has-addons '>
-
-        <p class='control'>
+      <div className='field has-addons '>
+        <p className='control'>
           <input className='input is-small' defaultValue={column.size} type='text' onChange={(e) => updateColumnCount(column.id, teamName, e.target.value)} />
         </p>
-        <p class='control'>
+        <p className='control'>
           <a className='button is-small is-static'>
             - {spSum} =&nbsp;<strong> {column.size - spSum}</strong>
           </a>

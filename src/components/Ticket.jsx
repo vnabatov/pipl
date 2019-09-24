@@ -25,6 +25,7 @@ text-transform: capitalize;
 export default ({ task, index, selectTask, deleteTask }) => {
   return <Draggable draggableId={task.id} index={index}>{(provided) =>
     <Container
+      className={'task' + task.id}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       ref={provided.innerRef}
@@ -39,7 +40,7 @@ export default ({ task, index, selectTask, deleteTask }) => {
           <Label>Rel:[{task.related}]</Label>
         </Grid>
       </div>
-
     </Container>
+
   }</Draggable>
 }

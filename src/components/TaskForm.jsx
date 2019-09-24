@@ -18,11 +18,7 @@ export default ({ form, updateTask, deleteTask, clearForm, teamNames = [], stori
     form[field] = value
   }
 
-  console.log('related', form.related)
-
   const relatedTasks = form.related ? form.related.split(',') : null
-
-  console.log('relatedTasks', relatedTasks)
 
   return <Form className='hero'>
     {fields.map(field => <div className='field is-horizontal'>
@@ -91,6 +87,7 @@ export default ({ form, updateTask, deleteTask, clearForm, teamNames = [], stori
             <Button className='button is-primary' type='button' value='Save' onClick={updateTask} />
             <Button className='button is-warning' type='button' value='Delete' onClick={() => deleteTask()} />
             <Button className='button' type='button' value='Clear' onClick={clearForm} />
+            <Button className='button is-light' type='button' value='Relations' onClick={() => updateForm('id', 'all')} />
           </p>
         </div>
       </div>

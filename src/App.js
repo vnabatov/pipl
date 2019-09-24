@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
-
+import LineTo from 'react-lineto'
 import 'bulma/css/bulma.css'
-import 'font-awesome/*'
 import './App.css'
 
 import SprintsTable from './components/SprintsTable'
@@ -57,12 +56,50 @@ const App = () => {
     axios.patch(api.columns + '/' + columnId, { teamName, size })
   }
 
+  const showRelationForTask = (link, task, color = 'red') => {
+    console.log(task, link)
+    const style = {
+      delay: true,
+      borderColor: color,
+      borderStyle: 'solid',
+      borderWidth: 2
+    }
+    return task !== link
+      ? <LineTo fromAnchor='center' toAnchor='center' {...style} from={`task${link}`} to={`task${task}`} />
+      : ''
+  }
+
+  const renderLines = () => {
+    const isBlockedBy = []
+    const blocks = []
+    return dbs && dbs.tasks.map(task => {
+      if (task.related) {
+        const isSelected = form.id === 'all' || form.id === task.id
+        const hasRelationsToSelected = !isSelected && task.related.split(',').includes(form.id)
+        if (isSelected) {
+          isBlockedBy.push(task.related.split(',').map((link) => showRelationForTask(link, task.id, 'red')))
+        }
+        if (hasRelationsToSelected) {
+          blocks.push(task.related.split(',').map((link) => link === form.id ? showRelationForTask(link, task.id, 'green') : ''))
+        }
+        if (hasRelationsToSelected) {
+          blocks.push(task.related.split(',').map((link) => link !== form.id ? showRelationForTask(link, task.id, 'gray') : ''))
+        }
+        return [...isBlockedBy, ...blocks]
+      } else {
+        return ''
+      }
+    })
+  }
+
   useEffect(() => {
     fetchData()
     setInterval(() => fetchData(), 3000)
   }, [])
 
   return <div className='container is-widescreen'>
+    <div className='A'>Element A</div>
+
     <TaskForm
       form={form}
       relatedTasks1={form.related}
@@ -86,6 +123,7 @@ const App = () => {
         />
       </div>)
       : <div>loading...</div>}
+    {renderLines()}
   </div>
 }
 export default App
