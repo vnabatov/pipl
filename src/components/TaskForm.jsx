@@ -14,7 +14,6 @@ const fields = ['id', 'summary', 'sp']
 
 export default ({ form, updateTask, deleteTask, clearForm, teamNames = [], stories = [], tasks = [] }) => {
   const updateForm = (field, value) => {
-    console.log('updateForm', field, value)
     form[field] = value
   }
 

@@ -19,11 +19,15 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColu
 
   // MVP
 
-  // todo: arrow to selected (with on/off) with npm i connection-line
-
   // todo: list of stories to select
 
+  // todo: line to stories
+
+  // todo: use context instead of passing params
+
   // todo: select related task to link/unlink
+
+  // todo: clear all links for this task when removing the task
 
   // todo: show restrictions (related are in further sprint)
 

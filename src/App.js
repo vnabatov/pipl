@@ -57,7 +57,6 @@ const App = () => {
   }
 
   const showRelationForTask = (link, task, color = 'red') => {
-    console.log(task, link)
     const style = {
       delay: true,
       borderColor: color,
