@@ -12,6 +12,7 @@ overflow: hidden;
 background: rgba(255,255,255,.8);
 `
 const Title = styled.div`
+transition: all .2s;
 padding:3px;
 font-size:1.2rem;
 width: 100%;
@@ -39,7 +40,6 @@ export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCoun
           </a>
         </p>
       </div>
-
     </Title>
     <Droppable droppableId={column.id}>
       {(provided) => <TaskList

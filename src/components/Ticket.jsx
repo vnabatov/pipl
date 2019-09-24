@@ -26,6 +26,7 @@ border: 1px solid lightgray;
 background: rgba(255,255,255, .7);
 `
 const TicketHeader = styled.div`
+transition: all .2s;
 align-items: center;
 background-color: ${({ selected }) => selected ? '#3273dc' : '#23d160'};
 border-radius: 4px 4px 0 0;
