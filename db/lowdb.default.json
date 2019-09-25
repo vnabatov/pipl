@@ -27,7 +27,7 @@
       "columns": {
         "column-1": {
           "id": "column-1",
-          "title": "Sprint 0",
+          "title": "Backlog",
           "size":"40",
           "taskIds": [
             "1"
@@ -80,7 +80,7 @@
       "columns": {
         "column-1": {
           "id": "column-1",
-          "title": "Sprint 0",
+          "title": "Backlog",
           "size":"40",
           "taskIds": []
         },

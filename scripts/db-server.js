@@ -42,6 +42,7 @@ app.post('/tasks', function (req, res) {
     task
       .assign(req.body)
       .write()
+    
     res.send(task, req.body)
   } else {
     const newTask = req.body

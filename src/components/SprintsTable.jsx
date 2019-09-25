@@ -20,7 +20,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
 
   // MVP
 
-  // todo: demo for microconf (mini pi with ready stories)
+  // todo: separate table for relateions
 
   // todo: show restrictions (related are in further sprint)
 
@@ -28,9 +28,11 @@ export default ({ sprintDb, setData, tasksDb }) => {
 
   // todo: clear all links for this task when removing the task
 
-  // ---
+  // todo: import stories from the Jira
 
-  // todo: import stories
+  // todo: demo for microconf (mini pi with ready stories)
+
+  // ---
 
   // todo: select related task to link/unlink
 
