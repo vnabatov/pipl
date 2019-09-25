@@ -50,9 +50,15 @@ const App = () => {
   }
 
   const deleteTask = (id) => {
+    const taskToRemoveId = id || form.id
+    if (dbs.dependendTasks[taskToRemoveId] && dbs.dependendTasks[taskToRemoveId].length) {
     // eslint-disable-next-line no-undef
-    if (window.confirm('sure?')) {
-      axios.delete(api.tasks + '/' + (id || form.id))
+      alert(`please clear relations with ${dbs.dependendTasks[taskToRemoveId]}`)
+      return
+    }
+    // eslint-disable-next-line no-undef
+    if (confirm('sure?')) {
+      axios.delete(`${api.tasks}/${taskToRemoveId}`)
       clearForm()
     }
   }
@@ -60,6 +66,8 @@ const App = () => {
   const updateColumnCount = (columnId, teamName, size) => {
     axios.patch(api.columns + '/' + columnId, { teamName, size })
   }
+
+  const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))
 
   useEffect(() => {
     fetchData()
@@ -69,7 +77,17 @@ const App = () => {
   if (!dbs) return 'Loading'
 
   return <div className='container is-widescreen'>
-    <AppContext.Provider value={{ deleteTask, updateTask, selectedStory, updateColumnCount, setData, selectTask, clearForm, taskPostionsCache: dbs.taskPostionsCache }}>
+    <AppContext.Provider value={{
+      selectStory,
+      deleteTask,
+      updateTask,
+      updateColumnCount,
+      setData,
+      selectTask,
+      clearForm,
+      selectedStory,
+      taskPostionsCache: dbs.taskPostionsCache
+    }}>
       <TaskForm
         form={form}
         teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
@@ -78,7 +96,6 @@ const App = () => {
       />
 
       <Stories
-        selectStory={story => (selectedStory = (selectedStory !== story ? story : ''))}
         stories={dbs.stories}
       />
 

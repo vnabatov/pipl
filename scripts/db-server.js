@@ -21,7 +21,19 @@ app.get('/db', function (req, res) {
       })
     })
   })
-  res.send({ ...state, taskPostionsCache })
+
+  const dependendTasks = {}
+  state.tasks.forEach(task => {
+    if (task.related) {
+      task.related.split(',').forEach(related => {
+        if (!dependendTasks[related]) {
+          dependendTasks[related] = []
+        }
+        dependendTasks[related].push(task.id)
+      })
+    }
+  })
+  res.send({ ...state, taskPostionsCache, dependendTasks })
 })
 
 app.post('/db', function (req, res) {

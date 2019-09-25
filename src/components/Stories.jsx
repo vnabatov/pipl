@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import AppContext from '../AppContext'
 
 const Container = styled.div`
 display: flex;
@@ -15,7 +16,7 @@ background: rgba(255,255,255, .7);
 `
 const StoryHeader = styled.div`
 align-items: center;
-background-color: #3273dc;
+background-color: ${({ selected }) => selected ? '#3273dc' : '#662C91'};
 border-radius: 4px 4px 0 0;
 color: #fff;
 display: -ms-flexbox;
@@ -30,17 +31,18 @@ const StoryBody = styled.div`
 padding: 6px;
 `
 
-export default ({ stories, selectStory }) => {
-  return <div>
+export default ({ stories }) => {
+  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
     <h3>Stories</h3>
     <Container>
       {stories.length && stories.map(({ id, summary }) => <Story onClick={() => selectStory(id)} className='message is-small'>
-        <StoryHeader>
+        <StoryHeader selected={id === selectedStory}>
           <p>#{id} </p>
         </StoryHeader>
         <StoryBody>
           {summary}
         </StoryBody>
       </Story>)}
-    </Container></div>
+    </Container></div>)}
+  </AppContext.Consumer>
 }

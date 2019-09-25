@@ -74,7 +74,7 @@ const areRelatedTaskPositionsForbidden = (taskPostionsCache, taskId, taskRelated
 }
 
 export default ({ task, index }) => {
-  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, taskPostionsCache }) => (
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache }) => (
     <Draggable draggableId={task.id} index={index}>{(provided) => (
       <Container
         className={'task' + task.id}
@@ -93,8 +93,8 @@ export default ({ task, index }) => {
           <TicketBody>
             {task.summary}
             <Grid>
-              <Label>Story:[{task.story}]</Label>
-              <Label>Rel:[{task.related}]</Label>
+              <Label onClick={() => selectStory(task.story)}>Story:[{task.story}]</Label>
+              <Label>DepOn:[{task.related}]</Label>
             </Grid>
           </TicketBody>
         </Ticket>
