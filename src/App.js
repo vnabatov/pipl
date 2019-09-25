@@ -73,8 +73,8 @@ const App = () => {
       <TaskForm
         form={form}
         teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
-        stories={dbs ? dbs.stories.map(story => ({ value: story.id, name: story.summary })) : []}
-        tasks={dbs ? dbs.tasks.map(task => ({ value: task.id, name: `#${task.id}: ${task.summary}` })) : []}
+        stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
+        tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
       />
 
       <Stories

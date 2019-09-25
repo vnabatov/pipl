@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Ticket from './Ticket'
 import { Droppable } from 'react-beautiful-dnd'
+import AppContext from '../AppContext'
 
 const Container = styled.div`
 margin:3px;
@@ -25,9 +26,9 @@ min-width: 100px;
 min-height: 100%;
 `
 
-export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCount, teamName, selectedStory }) => {
+export default ({ title, tasks, column, teamName }) => {
   const spSum = tasks.reduce((acc, val) => acc + parseInt(val.sp, 10), 0)
-  return <Container>
+  return <AppContext.Consumer>{({ updateColumnCount }) => (<Container>
     <Title error={parseInt(column.size, 10) < spSum} fit={parseInt(column.size, 10) === spSum}>
       {title}
       <div className='field has-addons '>
@@ -46,10 +47,10 @@ export default ({ title, tasks, column, selectTask, deleteTask, updateColumnCoun
         ref={provided.innerRef}
         {...provided.droppableProps}
       >
-        {tasks.map((task, index) => <Ticket selectedStory={selectedStory} deleteTask={deleteTask} selectTask={selectTask} key={task.id} index={index} task={task} />)}
+        {tasks.map((task, index) => <Ticket key={task.id} index={index} task={task} />)}
         {provided.placeholder}
       </TaskList>
       }
     </Droppable>
-  </Container>
+  </Container>)}</AppContext.Consumer>
 }

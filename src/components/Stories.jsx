@@ -23,7 +23,7 @@ display: flex;
 font-weight: 700;
 justify-content: space-between;
 line-height: 1.25;
-padding: 0.75em 1em;
+padding: 4px;
 position: relative;
 `
 const StoryBody = styled.div`
@@ -36,7 +36,7 @@ export default ({ stories, selectStory }) => {
     <Container>
       {stories.length && stories.map(({ id, summary }) => <Story onClick={() => selectStory(id)} className='message is-small'>
         <StoryHeader>
-          <p>Story: #{id} </p>
+          <p>#{id} </p>
         </StoryHeader>
         <StoryBody>
           {summary}

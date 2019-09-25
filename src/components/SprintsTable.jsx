@@ -80,7 +80,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
   }
 
   return (
-    <AppContext.Consumer>{({ deleteTask, selectedStory, updateColumnCount, selectTask }) => (
+    <AppContext.Consumer>{() => (
       <Fragment>
         <TeamName>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</TeamName>
         <SprintTable>
@@ -90,10 +90,6 @@ export default ({ sprintDb, setData, tasksDb }) => {
                 const column = sprintDb.columns[columnId]
                 const tasks = column.taskIds.map(taskId => tasksDb.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
                 return <Column
-                  selectedStory={selectedStory}
-                  updateColumnCount={updateColumnCount}
-                  deleteTask={deleteTask}
-                  selectTask={selectTask}
                   dirty={sprintDb.dirty}
                   teamName={sprintDb.teamName}
                   key={column.id}

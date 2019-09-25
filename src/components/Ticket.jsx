@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
+import AppContext from '../AppContext'
 
 const Container = styled.div`
 padding:3px;
@@ -36,7 +37,7 @@ display: flex;
 font-weight: 700;
 justify-content: space-between;
 line-height: 1.25;
-padding: 0.75em 1em;
+padding: 4px;
 position: relative;
 `
 const TicketBody = styled.div`
@@ -44,30 +45,31 @@ padding: 3px;
 word-break: break-word;
 `
 
-export default ({ task, index, selectTask, deleteTask, selectedStory }) => {
-  return <Draggable draggableId={task.id} index={index}>{(provided) =>
-    <Container
-      className={'task' + task.id}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-      ref={provided.innerRef}
-    >
-
-      <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
-        <TicketHeader selected={selectedStory && selectedStory === task.story}>
-          <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
-          <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
-        </TicketHeader>
-        <TicketBody>
-          {task.summary}
-          <Grid>
-            <Label>Story:[{task.story}]</Label>
-            <Label>Rel:[{task.related}]</Label>
-          </Grid>
-        </TicketBody>
-      </Ticket>
-
-    </Container>
-
-  }</Draggable>
+export default ({ task, index }) => {
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask }) => (
+    <Draggable draggableId={task.id} index={index}>{(provided) => (
+      <Container
+        className={'task' + task.id}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        ref={provided.innerRef}
+      >
+        <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
+          <TicketHeader selected={selectedStory && selectedStory === task.story}>
+            <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
+            <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+          </TicketHeader>
+          <TicketBody>
+            {task.summary}
+            <Grid>
+              <Label>Story:[{task.story}]</Label>
+              <Label>Rel:[{task.related}]</Label>
+            </Grid>
+          </TicketBody>
+        </Ticket>
+      </Container>
+    )}
+    </Draggable>
+  )}
+  </AppContext.Consumer>
 }
