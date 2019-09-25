@@ -23,6 +23,8 @@ export default ({ sprintDb, setData, tasksDb }) => {
   // todo: demo for microconf (mini pi with ready stories)
 
   // todo: show restrictions (related are in further sprint)
+  
+  // todo: related -> dependsOn rename
 
   // todo: add arrow to the line
 
