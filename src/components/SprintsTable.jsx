@@ -3,6 +3,7 @@ import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import use from 'react-hoox'
 import styled from 'styled-components'
+import AppContext from '../AppContext'
 
 const TeamName = styled.h3`
 width: 100%;
@@ -13,7 +14,7 @@ flex: 1;
 justify-content: space-between;
 `
 
-export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColumnCount, selectedStory }) => {
+export default ({ sprintDb, setData, tasksDb }) => {
   use(sprintDb)
   use(tasksDb)
 
@@ -76,28 +77,33 @@ export default ({ sprintDb, setData, tasksDb, selectTask, deleteTask, updateColu
     setData(sprintDb, sprintDb.teamName)
   }
 
-  return <Fragment>
-    <TeamName>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</TeamName>
-    <SprintTable>
-      <DragDropContext onDragEnd={onDragEnd}>
-        {
-          sprintDb.columnOrder.map((columnId) => {
-            const column = sprintDb.columns[columnId]
-            const tasks = column.taskIds.map(taskId => tasksDb.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
-            return <Column
-              selectedStory={selectedStory}
-              updateColumnCount={updateColumnCount}
-              deleteTask={deleteTask}
-              selectTask={selectTask}
-              dirty={sprintDb.dirty}
-              teamName={sprintDb.teamName}
-              key={column.id}
-              column={column}
-              title={column.title}
-              tasks={tasks} />
-          })
-        }
-      </DragDropContext>
-    </SprintTable>
-  </Fragment>
+  return (
+    <AppContext.Consumer>{({ deleteTask, selectedStory, updateColumnCount, selectTask }) => (
+      <Fragment>
+        <TeamName>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</TeamName>
+        <SprintTable>
+          <DragDropContext onDragEnd={onDragEnd}>
+            {
+              sprintDb.columnOrder.map((columnId) => {
+                const column = sprintDb.columns[columnId]
+                const tasks = column.taskIds.map(taskId => tasksDb.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
+                return <Column
+                  selectedStory={selectedStory}
+                  updateColumnCount={updateColumnCount}
+                  deleteTask={deleteTask}
+                  selectTask={selectTask}
+                  dirty={sprintDb.dirty}
+                  teamName={sprintDb.teamName}
+                  key={column.id}
+                  column={column}
+                  title={column.title}
+                  tasks={tasks} />
+              })
+            }
+          </DragDropContext>
+        </SprintTable>
+      </Fragment>
+    )}
+    </AppContext.Consumer>
+  )
 }

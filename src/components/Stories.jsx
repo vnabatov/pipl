@@ -31,14 +31,16 @@ padding: 6px;
 `
 
 export default ({ stories, selectStory }) => {
-  return <Container>
-    {stories.length && stories.map(({ id, summary }) => <Story onClick={() => selectStory(id)} className='message is-small'>
-      <StoryHeader>
-        <p>Story: #{id} </p>
-      </StoryHeader>
-      <StoryBody>
-        {summary}
-      </StoryBody>
-    </Story>)}
-  </Container>
+  return <div>
+    <h3>Stories</h3>
+    <Container>
+      {stories.length && stories.map(({ id, summary }) => <Story onClick={() => selectStory(id)} className='message is-small'>
+        <StoryHeader>
+          <p>Story: #{id} </p>
+        </StoryHeader>
+        <StoryBody>
+          {summary}
+        </StoryBody>
+      </Story>)}
+    </Container></div>
 }

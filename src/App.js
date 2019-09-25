@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react'
+ntextoimport React, { useEffect } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
-import LineTo from 'react-lineto'
-import 'bulma/css/bulma.css'
-import './App.css'
 
-import SprintsTable from './components/SprintsTable'
+import Sprints from './components/Sprints'
 import TaskForm from './components/TaskForm'
 import Stories from './components/Stories'
+import AppContext from './AppContext'
+import Relations from './components/Relations'
+
+import 'bulma/css/bulma.css'
+import './App.css'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
 const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
@@ -59,41 +61,6 @@ const App = () => {
     axios.patch(api.columns + '/' + columnId, { teamName, size })
   }
 
-  const showRelationForTask = (link, task, color = 'red') => {
-    const style = {
-      delay: true,
-      borderColor: color,
-      borderStyle: 'solid',
-      borderWidth: 2
-    }
-    return task !== link
-      ? <LineTo fromAnchor='right' toAnchor='left' {...style} from={`task${link}`} to={`task${task}`} />
-      : ''
-  }
-
-  const renderLines = () => {
-    const isBlockedBy = []
-    const blocks = []
-    return dbs && dbs.tasks.map(task => {
-      if (task.related) {
-        const isSelected = form.id === 'all' || form.id === task.id
-        const hasRelationsToSelected = !isSelected && task.related.split(',').includes(form.id)
-        if (isSelected) {
-          isBlockedBy.push(task.related.split(',').map((link) => showRelationForTask(link, task.id, 'red')))
-        }
-        if (hasRelationsToSelected) {
-          blocks.push(task.related.split(',').map((link) => link === form.id ? showRelationForTask(link, task.id, 'green') : ''))
-        }
-        if (hasRelationsToSelected) {
-          blocks.push(task.related.split(',').map((link) => link !== form.id ? showRelationForTask(link, task.id, 'gray') : ''))
-        }
-        return [...isBlockedBy, ...blocks]
-      } else {
-        return ''
-      }
-    })
-  }
-
   useEffect(() => {
     fetchData()
     setInterval(() => fetchData(), 3000)
@@ -102,34 +69,23 @@ const App = () => {
   if (!dbs) return 'Loading'
 
   return <div className='container is-widescreen'>
-    <TaskForm
-      form={form}
-      relatedTasks1={form.related}
-      teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
-      stories={dbs ? dbs.stories.map(story => ({ value: story.id, name: story.summary })) : []}
-      tasks={dbs ? dbs.tasks.map(task => ({ value: task.id, name: `#${task.id}: ${task.summary}` })) : []}
-      updateTask={updateTask}
-      deleteTask={deleteTask}
-      clearForm={clearForm}
-    />
-
-    <h3>Stories</h3>
-    <Stories selectStory={story => (selectedStory = (selectedStory !== story ? story : ''))} stories={dbs.stories} />
-
-    {dbs.sprints.map((sprint, key) => <div className='App'>
-      <SprintsTable
-        selectedStory={selectedStory}
-        updateColumnCount={updateColumnCount}
-        tasksDb={dbs.tasks}
-        sprintDb={sprint}
-        setData={setData}
-        key={key}
-        deleteTask={deleteTask}
-        selectTask={selectTask}
+    <AppContext.Provider value={{ deleteTask, updateTask, selectedStory, updateColumnCount, setData, selectTask, clearForm }}>
+      <TaskForm
+        form={form}
+        teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
+        stories={dbs ? dbs.stories.map(story => ({ value: story.id, name: story.summary })) : []}
+        tasks={dbs ? dbs.tasks.map(task => ({ value: task.id, name: `#${task.id}: ${task.summary}` })) : []}
       />
-    </div>)}
 
-    {renderLines()}
+      <Stories
+        selectStory={story => (selectedStory = (selectedStory !== story ? story : ''))}
+        stories={dbs.stories}
+      />
+
+      <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+
+      <Relations tasks={dbs.tasks} selectedId={form.id} />
+    </AppContext.Provider>
   </div>
 }
 export default App
