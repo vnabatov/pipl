@@ -29,8 +29,23 @@ background: rgba(255,255,255, .7);
 const TicketHeader = styled.div`
 transition: all .2s;
 align-items: center;
-background-color: ${({ selected }) => selected ? '#3273dc' : '#23d160'};
 border-radius: 4px 4px 0 0;
+${({ relationWarning, selected }) => {
+    if (relationWarning) {
+      if (selected) {
+        return 'background-color: #AB23D1;'
+      } else {
+        return 'background-color: #D12341;'
+      }
+    } else {
+      if (selected) {
+        return 'background-color: #3273DC;'
+      } else {
+        return 'background-color: #23D160;'
+      }
+    }
+  }
+}
 color: #fff;
 display: -ms-flexbox;
 display: flex;
@@ -45,8 +60,21 @@ padding: 3px;
 word-break: break-word;
 `
 
+const areRelatedTaskPositionsForbidden = (taskPostionsCache, taskId, taskRelated) => {
+  let errorFound = false
+
+  if (!taskRelated) return false
+
+  taskRelated.split(',').forEach(related => {
+    if (taskPostionsCache[related] >= taskPostionsCache[taskId]) {
+      errorFound = true
+    }
+  })
+  return errorFound
+}
+
 export default ({ task, index }) => {
-  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask }) => (
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, taskPostionsCache }) => (
     <Draggable draggableId={task.id} index={index}>{(provided) => (
       <Container
         className={'task' + task.id}
@@ -55,7 +83,10 @@ export default ({ task, index }) => {
         ref={provided.innerRef}
       >
         <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
-          <TicketHeader selected={selectedStory && selectedStory === task.story}>
+          <TicketHeader
+            selected={selectedStory && selectedStory === task.story}
+            relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
+          >
             <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>

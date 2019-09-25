@@ -64,7 +64,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
 
         {tasks.length && <div className='field is-horizontal'>
           <div className='field-label is-small'>
-            <label className='label'>related</label>
+            <label className='label'>Depends On</label>
           </div>
           <div className='field-body'>
             <div className='field'>

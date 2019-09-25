@@ -69,7 +69,7 @@ const App = () => {
   if (!dbs) return 'Loading'
 
   return <div className='container is-widescreen'>
-    <AppContext.Provider value={{ deleteTask, updateTask, selectedStory, updateColumnCount, setData, selectTask, clearForm }}>
+    <AppContext.Provider value={{ deleteTask, updateTask, selectedStory, updateColumnCount, setData, selectTask, clearForm, taskPostionsCache: dbs.taskPostionsCache }}>
       <TaskForm
         form={form}
         teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}

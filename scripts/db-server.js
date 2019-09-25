@@ -11,7 +11,17 @@ var app = express()
 app.use(bodyParser.json())
 
 app.get('/db', function (req, res) {
-  res.send(db.getState())
+  const state = db.getState()
+
+  const taskPostionsCache = {}
+  state.sprints.forEach((sprint) => {
+    Object.entries(sprint.columns).forEach(([key, column]) => {
+      column.taskIds.forEach(task => {
+        taskPostionsCache[task] = parseInt(key.replace('column-', ''), 10)
+      })
+    })
+  })
+  res.send({ ...state, taskPostionsCache })
 })
 
 app.post('/db', function (req, res) {
@@ -29,6 +39,7 @@ app.patch('/sprints', function (req, res) {
     .find({ id: req.body.id })
     .assign(req.body)
     .write()
+
   res.send(db.getState())
 })
 
@@ -42,7 +53,6 @@ app.post('/tasks', function (req, res) {
     task
       .assign(req.body)
       .write()
-    
     res.send(task, req.body)
   } else {
     const newTask = req.body

@@ -20,12 +20,6 @@ export default ({ sprintDb, setData, tasksDb }) => {
 
   // MVP
 
-  // todo: separate table for relateions
-
-  // todo: show restrictions (related are in further sprint)
-  
-  // todo: related -> dependsOn rename
-
   // todo: add arrow to the line
 
   // todo: clear all links for this task when removing the task
