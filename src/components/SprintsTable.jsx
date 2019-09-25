@@ -20,9 +20,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
 
   // MVP
 
-  // todo: add arrow to the line
-
-  // todo: clear all links for this task when removing the task
+  // todo: add arrow to the line / more beautiful line
 
   // todo: import stories from the Jira
 
