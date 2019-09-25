@@ -1,4 +1,4 @@
-ntextoimport React, { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 
