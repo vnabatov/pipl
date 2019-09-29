@@ -6,6 +6,8 @@
 # testing
 /coverage
 
+/scripts/config/jira.config.json
+
 # production
 /build
 /db/lowdb.json

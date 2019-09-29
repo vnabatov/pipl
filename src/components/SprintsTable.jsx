@@ -1,13 +1,10 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import use from 'react-hoox'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 
-const TeamName = styled.h3`
-width: 100%;
-`
 const SprintTable = styled.div`
 display: flex;
 flex: 1;
@@ -77,8 +74,8 @@ export default ({ sprintDb, setData, tasksDb }) => {
 
   return (
     <AppContext.Consumer>{() => (
-      <Fragment>
-        <TeamName>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</TeamName>
+      <details open>
+        <summary>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</summary>
         <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
             {
@@ -96,7 +93,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
             }
           </DragDropContext>
         </SprintTable>
-      </Fragment>
+      </details>
     )}
     </AppContext.Consumer>
   )

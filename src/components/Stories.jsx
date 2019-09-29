@@ -3,16 +3,18 @@ import styled from 'styled-components'
 import AppContext from '../AppContext'
 
 const Container = styled.div`
-display: flex;
-flex: 1;
-flex-direction: row;
-justify-content: left;
+display: grid;
+grid-template-rows: 1fr;
+grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+grid-row-gap: 3px;
+grid-column-gap: 3px;
 `
 const Story = styled.div`
-margin-right: 10px;
-height: 100px;
+height: 50px;
 border: 1px solid lightgray;
 background: rgba(255,255,255, .7);
+overflow: hidden;
+margin: 0 !important;
 `
 const StoryHeader = styled.div`
 align-items: center;
@@ -32,17 +34,18 @@ padding: 6px;
 `
 
 export default ({ stories }) => {
-  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
-    <h3>Stories</h3>
+  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<details>
+    <summary>Stories</summary>
     <Container>
-      {stories.length && stories.map(({ id, summary }) => <Story onClick={() => selectStory(id)} className='message is-small'>
+      {stories.length && stories.map(({ id, summary }) => <Story title={summary} onClick={() => selectStory(id)} className='message is-small'>
         <StoryHeader selected={id === selectedStory}>
-          <p>#{id} </p>
+          <a href={`https://jira.wiley.com/browse/${id}`}>#{id} </a>
         </StoryHeader>
         <StoryBody>
           {summary}
         </StoryBody>
       </Story>)}
-    </Container></div>)}
+    </Container>
+  </details>)}
   </AppContext.Consumer>
 }

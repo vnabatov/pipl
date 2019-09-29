@@ -21,7 +21,8 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
   const relatedTasks = form.related ? form.related.split(',') : null
 
   return (
-    <AppContext.Consumer>{({ deleteTask, updateTask, clearForm }) =>
+    <AppContext.Consumer>{({ deleteTask, updateTask, clearForm }) => <details open>
+      <summary>Form</summary>
       <Form className='hero'>
         {fields.map(field => <div className='field is-horizontal'>
           <div className='field-label is-small'>
@@ -95,6 +96,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
           </div>
         </div>
       </Form>
+    </details>
     }
     </AppContext.Consumer>
   )
