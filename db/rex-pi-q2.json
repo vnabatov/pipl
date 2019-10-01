@@ -1,0 +1,774 @@
+{
+  "stories": [
+    {
+      "id": "CPP0-1504",
+      "summary": "As a vendor I want to master data extracted from the supplied vendor package"
+    },
+    {
+      "id": "CPP0-1500",
+      "summary": "Technical Design for Printer Delivery"
+    },
+    {
+      "id": "CPP0-1462",
+      "summary": "Read book from GBPM and put it into Product API"
+    },
+    {
+      "id": "CPP0-1452",
+      "summary": "Foundation work for RCM Content Exchange Service"
+    },
+    {
+      "id": "CPP0-1424",
+      "summary": "As a PE I want to see a visual representation of the article at 'production complete' stage unassigned to issue so that to distinguish from those assigned"
+    },
+    {
+      "id": "CPP0-1411",
+      "summary": "As a vendor I want the Deviation File to be newer than the associated primary article PDF"
+    },
+    {
+      "id": "CPP0-1407",
+      "summary": "Implement 'Market Representation' (PR.25) section of ONIX2.1"
+    },
+    {
+      "id": "CPP0-1397",
+      "summary": "Implement  'Links to Images, Audio, Video' (PR.16) section of ONIX2.1"
+    },
+    {
+      "id": "CPP0-1341",
+      "summary": " As a PE, I want to identify content differences in vendor supplied package against current version so DCM can be notified"
+    },
+    {
+      "id": "CPP0-1328",
+      "summary": "Include new ONIX3 tags, required to support Canadian ONIX"
+    },
+    {
+      "id": "CPP0-1278",
+      "summary": "As an Author I want the system to attempt to automatically verify my affiliations so the author is aware (enhanced functionality)"
+    },
+    {
+      "id": "CPP0-1269",
+      "summary": "As a Product Owner I need to restrict access to PDH data, so it can be decommissioned"
+    },
+    {
+      "id": "CPP0-1264",
+      "summary": "Validate Journal Type, DOI, Society Name, Subscription Type in PDH"
+    },
+    {
+      "id": "CPP0-1241",
+      "summary": "Vault and BPA Production Support - S8"
+    },
+    {
+      "id": "CPP0-1227",
+      "summary": "As a PE I want to know that a new package has been successfully stored in DCM so that work can continue"
+    },
+    {
+      "id": "CPP0-1226",
+      "summary": "As a PE I want to update the metadata and version data in DCM when a new package is stored so that the record is up to date"
+    },
+    {
+      "id": "CPP0-1151",
+      "summary": "Implement 'Publishing Status, Date, Copyright' (PR.20) section of ONIX2.1 "
+    },
+    {
+      "id": "CPP0-1072",
+      "summary": "As a PE I want issue publication to be recognised so that my dashboard reflects my real working priorities"
+    },
+    {
+      "id": "CPP0-1058",
+      "summary": "As a PE I want vendor package to be technically validated so that I can ensure package is complete"
+    },
+    {
+      "id": "CPP0-1047",
+      "summary": "XDPS: XDPS content flow adjustments to receive Editorials in WML 3G"
+    },
+    {
+      "id": "CPP0-1042",
+      "summary": "Authored oBook Google discoverability - end-to-end testing"
+    },
+    {
+      "id": "CPP0-1033",
+      "summary": "Implement 'Description' (PR.15) section of ONIX2.1"
+    },
+    {
+      "id": "CPP0-1032",
+      "summary": "Embedded Rich Media: update to convertors/formats for customers unable to receive rich media"
+    },
+    {
+      "id": "CPP0-1031",
+      "summary": "Embedded Rich Media: WOL package update for delivery of media files"
+    },
+    {
+      "id": "CPP0-1030",
+      "summary": "Embedded Rich Media: Loader and WCR update to store media files"
+    },
+    {
+      "id": "CPP0-1022",
+      "summary": "As a PE I want to filter my search results so that I can contrast published articles and issues"
+    },
+    {
+      "id": "CPP0-978",
+      "summary": "XDPS: Create Cochrane CDSR PDFs in Spanish (ES)"
+    },
+    {
+      "id": "CPP0-952",
+      "summary": "As a Cogito Studio user, I need to convert WML files to COGX"
+    },
+    {
+      "id": "CPP0-942",
+      "summary": "As a vendor I want to deliver content containing embedded rich media so that it can publish"
+    },
+    {
+      "id": "CPP0-896",
+      "summary": "As a KE user, I want to know which taxonomy an extracted/classified concept comes from on the Article page"
+    },
+    {
+      "id": "CPP0-876",
+      "summary": "Book print file delivery to QUAD"
+    },
+    {
+      "id": "CPP0-844",
+      "summary": "As a vendor I want to know if validation of a package I supplied has succeeded so that I can close out the stage"
+    },
+    {
+      "id": "CPP0-826",
+      "summary": "As a PE I want to be able to access a read only view of a content file associated with a version of my article so that I can check if it is correct"
+    },
+    {
+      "id": "CPP0-825",
+      "summary": "As a PE I want to check the metadata that was held against a specific version of an article so that I can check if it is correct"
+    },
+    {
+      "id": "CPP0-750",
+      "summary": "Decommissioning the CQA application"
+    },
+    {
+      "id": "CPP0-718",
+      "summary": "XDPS: Add additional CDSR information to Kibana dashboard"
+    },
+    {
+      "id": "CPP0-698",
+      "summary": "Cannot get the ART_ISS_PUBL_ONL_DT value in PDH from JPCMS. UAT env."
+    },
+    {
+      "id": "CPP0-656",
+      "summary": "As a Publicist I want to know who the current Production Editors for a journal are, so I can quickly contact them to pause production of an article"
+    },
+    {
+      "id": "CPP0-521",
+      "summary": "As a PE I want the EO files to be validated before the VBA is notified to collect"
+    },
+    {
+      "id": "CPP0-483",
+      "summary": "As a vendor I want to supply a package to Wiley so that I can complete work on a a production step"
+    },
+    {
+      "id": "CPP0-315",
+      "summary": "As a PE, I want affiliation data for corresponding author to be displayed in the dashboard"
+    },
+    {
+      "id": "CPP0-275",
+      "summary": "As a PE I want to be able to see the different versions of an article held in the CMS so that I can compare and contrast"
+    },
+    {
+      "id": "CPP0-265",
+      "summary": "As a PE I want the publication year of an issue to be reflected correctly for reporting"
+    },
+    {
+      "id": "CPP0-226",
+      "summary": "In order to have package delivery information the successful delivery must be recorded before the package validation"
+    },
+    {
+      "id": "CPP0-225",
+      "summary": "As a Vendor I want to correct the identification of an asset so that we have a correct record of source files"
+    },
+    {
+      "id": "CPP0-161",
+      "summary": "Cochrane Library Header and References metadata to NLM- Cochrane"
+    },
+    {
+      "id": "CPP0-149",
+      "summary": "As a PE I want to know whether an article has content in the CMS or not so that I can take appropriate action"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "teamName": "Rex Machine",
+      "summary": "1",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "2",
+      "teamName": "Outer",
+      "summary": "2",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "8",
+      "teamName": "Outer",
+      "summary": "4",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "9",
+      "teamName": "Outer",
+      "summary": "3",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "10",
+      "teamName": "Outer",
+      "summary": "5",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "11",
+      "teamName": "Outer",
+      "summary": "9",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "12",
+      "teamName": "Outer",
+      "summary": "11",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "13",
+      "teamName": "Outer",
+      "summary": "12",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "14",
+      "teamName": "Outer",
+      "summary": "13",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "15",
+      "teamName": "Outer",
+      "summary": "14",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "16",
+      "teamName": "Outer",
+      "summary": "17",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "17",
+      "teamName": "Outer",
+      "summary": "18",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "18",
+      "teamName": "Outer",
+      "summary": "19",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "19",
+      "teamName": "Manuscript Transformation",
+      "summary": "10",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "20",
+      "teamName": "Manuscript Transformation",
+      "summary": "15",
+      "related": "36",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "21",
+      "teamName": "Manuscript Transformation",
+      "summary": "16",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "22",
+      "teamName": "Rex Machine",
+      "summary": "22",
+      "related": "8",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "23",
+      "teamName": "Rex Machine",
+      "summary": "24",
+      "related": "11",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "24",
+      "teamName": "Rex Machine",
+      "summary": "25",
+      "related": "35",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "25",
+      "teamName": "Rex Machine",
+      "summary": "27",
+      "related": "13",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "27",
+      "teamName": "Rex Machine",
+      "summary": "31",
+      "related": "17",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "28",
+      "teamName": "Rex Machine",
+      "summary": "32",
+      "related": "21",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "29",
+      "teamName": "Rex Machine",
+      "summary": "33",
+      "related": "16",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "30",
+      "teamName": "Rex Machine",
+      "summary": "34",
+      "related": "14",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "31",
+      "teamName": "REX Pistols",
+      "summary": "20",
+      "related": "9,1",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "32",
+      "teamName": "REX Pistols",
+      "summary": "21",
+      "related": "1,9",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "33",
+      "teamName": "REX Pistols",
+      "summary": "8",
+      "related": "1,9",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "34",
+      "teamName": "REX Pistols",
+      "summary": "26",
+      "related": "35",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "35",
+      "teamName": "REX UP",
+      "summary": "6",
+      "related": "2",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "36",
+      "teamName": "REX UP",
+      "summary": "7",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "37",
+      "teamName": "REX UP",
+      "summary": "23",
+      "related": "33",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "38",
+      "teamName": "REX UP",
+      "summary": "28",
+      "related": "19,15,12",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "39",
+      "teamName": "REX UP",
+      "summary": "29",
+      "related": "",
+      "sp": "1",
+      "story": ""
+    },
+    {
+      "id": "40",
+      "teamName": "Rex Machine",
+      "summary": "30",
+      "related": "13",
+      "sp": "1",
+      "story": ""
+    }
+  ],
+  "sprints": [
+    {
+      "id": "0",
+      "teamName": "REX UP",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Backlog",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "size": "40",
+          "taskIds": [
+            "35",
+            "36"
+          ]
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "size": "40",
+          "taskIds": [
+            "37"
+          ]
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "size": "40",
+          "taskIds": [
+            "38",
+            "39"
+          ]
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    },
+    {
+      "id": "1",
+      "teamName": "REX Pistols",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Backlog",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "size": "40",
+          "taskIds": [
+            "33",
+            "31",
+            "32"
+          ]
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "size": "40",
+          "taskIds": [
+            "34"
+          ]
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "size": "40",
+          "taskIds": []
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    },
+    {
+      "id": "2",
+      "teamName": "Rex Machine",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Backlog",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "size": "40",
+          "taskIds": [
+            "1"
+          ]
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "size": "40",
+          "taskIds": [
+            "22"
+          ]
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "size": "40",
+          "taskIds": [
+            "23",
+            "24"
+          ]
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "size": "40",
+          "taskIds": [
+            "25"
+          ]
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "size": "40",
+          "taskIds": [
+            "40",
+            "27",
+            "28",
+            "29",
+            "30"
+          ]
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    },
+    {
+      "id": "3",
+      "teamName": "Manuscript Transformation",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Backlog",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "size": "40",
+          "taskIds": [
+            "19"
+          ]
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "size": "40",
+          "taskIds": [
+            "20",
+            "21"
+          ]
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "size": "40",
+          "taskIds": []
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    },
+    {
+      "id": "4",
+      "teamName": "Outer",
+      "columns": {
+        "column-1": {
+          "id": "column-1",
+          "title": "Backlog",
+          "size": "40",
+          "taskIds": []
+        },
+        "column-2": {
+          "id": "column-2",
+          "title": "Sprint 1",
+          "size": "40",
+          "taskIds": [
+            "10",
+            "8",
+            "9",
+            "2"
+          ]
+        },
+        "column-3": {
+          "id": "column-3",
+          "title": "Sprint 2",
+          "size": "40",
+          "taskIds": [
+            "11"
+          ]
+        },
+        "column-4": {
+          "id": "column-4",
+          "title": "Sprint 3",
+          "size": "40",
+          "taskIds": [
+            "12",
+            "13",
+            "14",
+            "15"
+          ]
+        },
+        "column-5": {
+          "id": "column-5",
+          "title": "Sprint 4",
+          "size": "40",
+          "taskIds": [
+            "16",
+            "17"
+          ]
+        },
+        "column-6": {
+          "id": "column-6",
+          "title": "Sprint 5",
+          "size": "40",
+          "taskIds": [
+            "18"
+          ]
+        }
+      },
+      "columnOrder": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4",
+        "column-5",
+        "column-6"
+      ],
+      "dirty": true
+    }
+  ]
+}
