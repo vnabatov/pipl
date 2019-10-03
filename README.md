@@ -1,4 +1,4 @@
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![react-hoox](https://img.shields.io/badge/react--hoox-enlightened-orange)](https://www.npmjs.com/package/react-hoox)
 
 # pi-planning app
 done with create-react-app + hoox + lowdb + react-beautiful-dnd
