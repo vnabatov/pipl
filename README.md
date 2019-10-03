@@ -6,4 +6,4 @@ done with create-react-app + hoox + lowdb + react-beautiful-dnd
 `npm i && npm start` 
 
 http://localhost:3000/ opens automatically
-(3001 port is ised for db)
+(3001 port is used for db)
