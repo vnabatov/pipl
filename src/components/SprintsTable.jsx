@@ -15,28 +15,6 @@ export default ({ sprintDb, setData, tasksDb }) => {
   use(sprintDb)
   use(tasksDb)
 
-  // MVP
-
-  // todo: add arrow to the line / more beautiful line
-
-  // todo: import stories from the Jira
-
-  // todo: demo for microconf (mini pi with ready stories)
-
-  // ---
-
-  // todo: select related task to link/unlink
-
-  // todo: use context instead of passing params
-
-  // todo: clear all links for this task when removing the task
-
-  // todo: improve design
-
-  // todo: fix npm audit
-
-  // todo: backup server (10 last backups every 5 mins)
-
   const onDragEnd = ({ destination, source, draggableId }) => {
     if (!destination) {
       return
