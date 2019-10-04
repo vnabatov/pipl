@@ -11,4 +11,4 @@ http://localhost:3000/ opens automatically
 # contribution
 check this public project board
 tasks are sorted by priority
-https://github.com/users/vnabatov/projects/1
+https://github.com/vnabatov/pipl/projects/1
