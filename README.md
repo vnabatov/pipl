@@ -7,3 +7,8 @@ done with create-react-app + hoox + lowdb + react-beautiful-dnd
 
 http://localhost:3000/ opens automatically
 (3001 port is used for db)
+
+# contribution
+check this public project board
+tasks are sorted by priority
+https://github.com/users/vnabatov/projects/1
