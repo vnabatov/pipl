@@ -41,7 +41,7 @@ const App = () => {
   }
 
   const clearForm = () => {
-    form = defaultForm
+    form = { ...defaultForm }
   }
 
   const updateTask = () => {
