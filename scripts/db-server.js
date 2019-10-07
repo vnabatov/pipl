@@ -65,7 +65,7 @@ app.post('/tasks', function (req, res) {
     task
       .assign(req.body)
       .write()
-    res.send(task, req.body)
+    res.send(req.body)
   } else {
     const newTask = req.body
     newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id)) + 1 : 1).toString()
