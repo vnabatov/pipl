@@ -13,6 +13,11 @@ h1 {
     left: 0;
     border-bottom: 1px dotted lightgray;
 }
+
+.navbar-dropdown {
+    border: 1px dotted lightgray;
+}
+
 .sprint-table {
     display: flex;
     flex: 1;

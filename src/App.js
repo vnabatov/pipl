@@ -93,15 +93,22 @@ const App = () => {
       taskPostionsCache: dbs.taskPostionsCache
     }}>
 
-      <nav className='navbar has-dropdown'>
+      <nav className='navbar'>
         <div class='navbar-start'>
           <h1>PI Planning Helper</h1>
         </div>
         <div className='navbar-end'>
+
+          <div class='navbar-item'>
+            <div class='navbar-link is-arrowless' onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
+              Relations
+            </div>
+          </div>
+
           <div class={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
 
             <div class='navbar-link' onClick={() => (isMenuOpen = !isMenuOpen)}>
-          Create/Edit
+              Create/Edit
             </div>
 
             <div class='navbar-dropdown is-right'>

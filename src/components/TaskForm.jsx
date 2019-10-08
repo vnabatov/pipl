@@ -62,7 +62,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
 
       {tasks.length && <div className='field is-horizontal'>
         <div className='field-label is-small'>
-          <label className='label'>Depends On</label>
+          <label className='label'>Depends On {relatedTasks && relatedTasks.length && relatedTasks.join(', ')}</label>
         </div>
         <div className='field-body'>
           <div className='field'>
@@ -87,7 +87,6 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
               <Button className='button is-primary' type='button' value='Save' onClick={updateTask} />
               <Button className='button is-warning' type='button' value='Delete' onClick={() => deleteTask()} />
               <Button className='button' type='button' value='Clear' onClick={clearForm} />
-              <Button className='button is-light' type='button' value='Relations' onClick={() => updateForm('id', 'all')} />
             </p>
           </div>
         </div>
