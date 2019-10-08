@@ -15,11 +15,13 @@ const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/column
 const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
 
 let form = { ...defaultForm }
+let isMenuOpen = false
 let selectedStory = ''
 let dbs
 
 const App = () => {
   use(() => form)
+  use(() => isMenuOpen)
   use(() => selectedStory)
   use(() => dbs)
 
@@ -37,11 +39,13 @@ const App = () => {
   }
 
   const selectTask = (taskData) => {
+    isMenuOpen = true
     form = taskData
   }
 
   const clearForm = () => {
     form = { ...defaultForm }
+    isMenuOpen = false
   }
 
   const updateTask = () => {
@@ -88,20 +92,39 @@ const App = () => {
       selectedStory,
       taskPostionsCache: dbs.taskPostionsCache
     }}>
-      <TaskForm
-        form={form}
-        teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
-        stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
-        tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
-      />
 
-      <Stories
-        stories={dbs.stories}
-      />
+      <nav className='navbar has-dropdown'>
+        <div class='navbar-start'>
+          <h1>PI Planning Helper</h1>
+        </div>
+        <div className='navbar-end'>
+          <div class={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
 
-      <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+            <div class='navbar-link' onClick={() => (isMenuOpen = !isMenuOpen)}>
+          Create/Edit
+            </div>
 
-      <Relations tasks={dbs.tasks} selectedId={form.id} />
+            <div class='navbar-dropdown is-right'>
+              <TaskForm
+                form={form}
+                teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
+                stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
+                tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
+              />
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className='content'>
+        <Stories
+          stories={dbs.stories}
+        />
+
+        <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+
+        <Relations tasks={dbs.tasks} selectedId={form.id} />
+      </div>
     </AppContext.Provider>
   </div>
 }

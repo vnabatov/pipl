@@ -2,6 +2,17 @@
     outline: none;
 }
 
+h1 {
+    font-size: 2rem;
+    padding-left: 1rem;
+}
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    border-bottom: 1px dotted lightgray;
+}
 .sprint-table {
     display: flex;
     flex: 1;
@@ -9,6 +20,15 @@
     user-select: none;
 }
 
+.content {
+    padding-top: 4rem;
+}   
+
+.navbar-dropdown {
+    width: 500px;
+}
+
+/* <select> */
 .select-search-box {
     position: relative;
     background: #fff;
@@ -199,3 +219,4 @@ input[type='search']::-webkit-search-cancel-button, input[type='search']::-webki
     color: rgba(0, 0, 0, 0.5);
     font-size: 12px;
 }
+/* </select> */
