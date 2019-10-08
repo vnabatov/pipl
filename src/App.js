@@ -90,6 +90,7 @@ const App = () => {
       selectTask,
       clearForm,
       selectedStory,
+      dependendTasks: dbs.dependendTasks,
       taskPostionsCache: dbs.taskPostionsCache
     }}>
 

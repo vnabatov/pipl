@@ -10,9 +10,11 @@ padding:3px;
 const Grid = styled.div`
 display: grid;
 grid-template-rows: 1fr;
-grid-template-columns: 1fr 1fr;
+grid-template-columns: 1fr 1fr 1fr ;
 grid-row-gap: 3px;
 grid-column-gap: 3px;
+justify-content: center;
+  align-items: center;
 `
 
 const Label = styled.div`
@@ -22,7 +24,7 @@ text-transform: capitalize;
 `
 
 const Ticket = styled.div`
-height: 100px;
+min-height: 100px;
 border: 1px solid lightgray;
 background: rgba(255,255,255, .7);
 `
@@ -74,7 +76,7 @@ const areRelatedTaskPositionsForbidden = (taskPostionsCache, taskId, taskRelated
 }
 
 export default ({ task, index }) => {
-  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache }) => (
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks }) => (
     <Draggable draggableId={task.id} index={index}>{(provided) => (
       <Container
         className={'task' + task.id}
@@ -88,13 +90,15 @@ export default ({ task, index }) => {
             relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
           >
             <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
-            <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+            <button className='delete' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>
           <TicketBody>
             {task.summary}
+
             <Grid>
-              <Label onClick={() => selectStory(task.story)}>Story:[{task.story}]</Label>
-              <Label>DepOn:[{task.related}]</Label>
+              <Label title='depends on'>{task.related}</Label>
+              <Label title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
+              <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
             </Grid>
           </TicketBody>
         </Ticket>

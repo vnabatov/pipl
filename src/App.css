@@ -33,6 +33,11 @@ h1 {
     width: 500px;
 }
 
+.delete {
+    width: 10px;
+    min-width: 10px;
+}
+
 /* <select> */
 .select-search-box {
     position: relative;
