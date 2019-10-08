@@ -75,7 +75,7 @@ const App = () => {
 
   useEffect(() => {
     fetchData()
-    setInterval(() => fetchData(), 3000)
+    setInterval(() => fetchData(), 500)
   }, [])
 
   if (!dbs) return 'Loading'
