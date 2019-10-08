@@ -92,7 +92,7 @@ export default ({ task, index }) => {
             relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
           >
             <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
-            <button className='delete' aria-label='delete' onClick={() => deleteTask(task.id)} />
+            <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>
           <TicketBody>
             {task.summary}
@@ -110,7 +110,7 @@ export default ({ task, index }) => {
           relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
         >
           <p>#{task.id} / {task.summary} / {task.sp}SP</p>
-          <button className='delete' aria-label='delete' onClick={() => deleteTask(task.id)} />
+          <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
         </TicketHeader>}
       </Container>
     )}

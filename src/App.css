@@ -34,8 +34,8 @@ h1 {
 }
 
 .delete {
-    width: 10px;
-    min-width: 10px;
+    width: 6px !important;
+    min-width: 6px !important;
 }
 
 /* <select> */
