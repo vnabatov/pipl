@@ -31,7 +31,7 @@ background: rgba(255,255,255, .7);
 const TicketHeader = styled.div`
 transition: all .2s;
 align-items: center;
-border-radius: 4px 4px 0 0;
+border-radius: 4px 4px ${({ isSmall }) => isSmall ? '4px 4px' : '0 0'};
 ${({ relationWarning, selected }) => {
     if (relationWarning) {
       if (selected) {
@@ -56,6 +56,8 @@ justify-content: space-between;
 line-height: 1.25;
 padding: 4px;
 position: relative;
+word-break: break-word;
+${({ isSmall }) => isSmall ? 'font-size: 0.7rem;' : ''}
 `
 const TicketBody = styled.div`
 padding: 3px;
@@ -76,7 +78,7 @@ const areRelatedTaskPositionsForbidden = (taskPostionsCache, taskId, taskRelated
 }
 
 export default ({ task, index }) => {
-  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks }) => (
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact }) => (
     <Draggable draggableId={task.id} index={index}>{(provided) => (
       <Container
         className={'task' + task.id}
@@ -84,7 +86,7 @@ export default ({ task, index }) => {
         {...provided.dragHandleProps}
         ref={provided.innerRef}
       >
-        <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
+        {!isCompact ? <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}
             relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
@@ -101,7 +103,15 @@ export default ({ task, index }) => {
               <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
             </Grid>
           </TicketBody>
-        </Ticket>
+        </Ticket> : <TicketHeader
+          isSmall
+          onClick={() => selectTask(task.id ? task : { id: task })}
+          selected={selectedStory && selectedStory === task.story}
+          relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
+        >
+          <p>#{task.id} / {task.summary} / {task.sp}SP</p>
+          <button className='delete' aria-label='delete' onClick={() => deleteTask(task.id)} />
+        </TicketHeader>}
       </Container>
     )}
     </Draggable>

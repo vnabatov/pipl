@@ -16,12 +16,14 @@ const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: ''
 
 let form = { ...defaultForm }
 let isMenuOpen = false
+let isCompact = false
 let selectedStory = ''
 let dbs
 
 const App = () => {
   use(() => form)
   use(() => isMenuOpen)
+  use(() => isCompact)
   use(() => selectedStory)
   use(() => dbs)
 
@@ -91,7 +93,8 @@ const App = () => {
       clearForm,
       selectedStory,
       dependendTasks: dbs.dependendTasks,
-      taskPostionsCache: dbs.taskPostionsCache
+      taskPostionsCache: dbs.taskPostionsCache,
+      isCompact
     }}>
 
       <nav className='navbar'>
@@ -99,6 +102,12 @@ const App = () => {
           <h1>PI Planning Helper</h1>
         </div>
         <div className='navbar-end'>
+
+          <div class='navbar-item'>
+            <div class='navbar-link is-arrowless' onClick={() => (isCompact = !isCompact)}>
+              Compact
+            </div>
+          </div>
 
           <div class='navbar-item'>
             <div class='navbar-link is-arrowless' onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
