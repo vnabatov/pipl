@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import SelectSearch from 'react-select-search'
+import ReactSelect from 'react-select'
 import AppContext from '../AppContext'
 
 const Form = styled.div`
@@ -17,19 +17,22 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
     form[field] = value
   }
 
-  const relatedTasks = form.related ? form.related.split(',') : null
+  const relatedTasks = form.related ? form.related.split(',') : []
+  // todo: rid from string implementation of relatedTasks
+  const relatedTasksSelected = tasks.filter(i => relatedTasks.includes(i.value))
 
   return (
-    <AppContext.Consumer>{({ deleteTask, updateTask, clearForm }) => <Form>
-      {fields.map(field => <div className='field is-horizontal'>
+    <AppContext.Consumer>
+      {({ deleteTask, updateTask, clearForm }) => <Form>
+      {fields.map(field => <div className='field is-horizontal' key={field}>
         <div className='field-label is-small'>
           <label className='label'>{field}</label>
         </div>
         <div className='field-body'>
           <div className='field'>
-            <p className='control'>
+            <div className='control'>
               <input className='input is-small' type='text' value={form[field]} onChange={e => updateForm(field, e.target.value)} />
-            </p>
+            </div>
           </div>
         </div>
       </div>)}
@@ -40,9 +43,13 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
         </div>
         <div className='field-body'>
           <div className='field'>
-            <p className='control'>
-              <SelectSearch options={teamNames} value={form['teamName']} onChange={e => updateForm('teamName', e.value)} />
-            </p>
+            <div className='control'>
+              <ReactSelect
+                options={teamNames}
+                value={form['teamName']}
+                onChange={selectedOption => updateForm('teamName',selectedOption)}
+              />
+            </div>
           </div>
         </div>
       </div>}
@@ -53,9 +60,13 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
         </div>
         <div className='field-body'>
           <div className='field'>
-            <p className='control'>
-              <SelectSearch options={stories} value={form['story']} onChange={e => updateForm('story', e.value)} />
-            </p>
+            <div className='control'>
+              <ReactSelect
+                options={stories}
+                value={form['story']}
+                onChange={selectedOption => updateForm('story',selectedOption)}
+              />
+            </div>
           </div>
         </div>
       </div>}
@@ -66,15 +77,17 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
         </div>
         <div className='field-body'>
           <div className='field'>
-            <p className='control'>
-              <SelectSearch options={tasks}
-                key={JSON.stringify(relatedTasks)}
-                multiple
-                value={relatedTasks}
-                height={100}
-                onChange={e => updateForm('related', e.length ? e.map(selected => selected.value).join(',') : '')}
+            <div className='control'>
+              <ReactSelect
+                options={tasks.filter(i => i.value !== form['id'])}
+                isMulti
+                value={relatedTasksSelected}
+                onChange={selectedOption => updateForm(
+                  'related',
+                  selectedOption.length ? selectedOption.map(selected => selected.value).join(',') : '')
+                }
               />
-            </p>
+            </div>
           </div>
         </div>
       </div>}
