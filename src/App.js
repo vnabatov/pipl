@@ -104,13 +104,13 @@ const App = () => {
         <div className='navbar-end'>
 
           <div className='navbar-item'>
-            <div className='navbar-link is-arrowless' onClick={() => (isCompact = !isCompact)}>
+            <div className={`button navbar-link is-arrowless ${isCompact ? 'is-success' : ''}`} onClick={() => (isCompact = !isCompact)}>
               Compact
             </div>
           </div>
 
           <div className='navbar-item'>
-            <div className='navbar-link is-arrowless' onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
+            <div className={`button navbar-link is-arrowless ${form.id === 'all' ? 'is-success' : ''}`} onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
               Relations
             </div>
           </div>
