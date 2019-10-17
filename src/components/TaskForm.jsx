@@ -13,15 +13,11 @@ margin-right: 0.5rem;
 const fields = ['id', 'summary', 'sp']
 
 export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
-  const updateForm = (field, value) => {
-    z
-    form[field] = value
-  }
+  const updateForm = (field, value) => (form[field] = value)
 
   const relatedTasks = form.related ? form.related.split(',') : []
   // todo: rid from string implementation of relatedTasks
   const relatedTasksSelected = tasks.filter(i => relatedTasks.includes(i.value))
-
   return (
     <AppContext.Consumer>
       {({ deleteTask, updateTask, clearForm }) => <Form>
@@ -47,8 +43,8 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
               <div className='control'>
                 <ReactSelect
                   options={teamNames}
-                  value={form['teamName']}
-                  onChange={selectedOption => updateForm('teamName', selectedOption)}
+                  value={{ value: form['teamName'], label: form['teamName'] }}
+                  onChange={selectedOption => updateForm('teamName', selectedOption.value)}
                 />
               </div>
             </div>
@@ -64,8 +60,8 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
               <div className='control'>
                 <ReactSelect
                   options={stories}
-                  value={form['story']}
-                  onChange={selectedOption => updateForm('story', selectedOption)}
+                  value={{ value: form['story'], label: form['story'] ? stories.find(story => story.value === form['story']).label : '' }}
+                  onChange={selectedOption => updateForm('story', selectedOption.value)}
                 />
               </div>
             </div>
