@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import SelectSearch from 'react-select-search'
+import ReactSelect from 'react-select'
 import AppContext from '../AppContext'
 
 const Form = styled.div`
@@ -13,86 +13,97 @@ margin-right: 0.5rem;
 const fields = ['id', 'summary', 'sp']
 
 export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
-  const updateForm = (field, value) => {
-    form[field] = value
-  }
+  const updateForm = (field, value) => (form[field] = value)
 
-  const relatedTasks = form.related ? form.related.split(',') : null
-
+  const relatedTasks = form.related ? form.related.split(',') : []
+  // todo: rid from string implementation of relatedTasks
+  const relatedTasksSelected = tasks.filter(i => relatedTasks.includes(i.value))
   return (
-    <AppContext.Consumer>{({ deleteTask, updateTask, clearForm }) => <Form>
-      {fields.map(field => <div className='field is-horizontal'>
-        <div className='field-label is-small'>
-          <label className='label'>{field}</label>
-        </div>
-        <div className='field-body'>
-          <div className='field'>
-            <p className='control'>
-              <input className='input is-small' type='text' value={form[field]} onChange={e => updateForm(field, e.target.value)} />
-            </p>
+    <AppContext.Consumer>
+      {({ deleteTask, updateTask, clearForm }) => <Form>
+        {fields.map(field => <div className='field is-horizontal' key={field}>
+          <div className='field-label is-small'>
+            <label className='label'>{field}</label>
           </div>
-        </div>
-      </div>)}
+          <div className='field-body'>
+            <div className='field'>
+              <div className='control'>
+                <input className='input is-small' type='text' value={form[field]} onChange={e => updateForm(field, e.target.value)} />
+              </div>
+            </div>
+          </div>
+        </div>)}
 
-      {teamNames.length && <div className='field is-horizontal'>
-        <div className='field-label is-small'>
-          <label className='label'>teamName</label>
-        </div>
-        <div className='field-body'>
-          <div className='field'>
-            <p className='control'>
-              <SelectSearch options={teamNames} value={form['teamName']} onChange={e => updateForm('teamName', e.value)} />
-            </p>
+        {teamNames.length && <div className='field is-horizontal'>
+          <div className='field-label is-small'>
+            <label className='label'>teamName</label>
           </div>
-        </div>
-      </div>}
+          <div className='field-body'>
+            <div className='field'>
+              <div className='control'>
+                <ReactSelect
+                  isDisabled={form['id']}
+                  options={teamNames}
+                  value={{ value: form['teamName'], label: form['teamName'] }}
+                  onChange={selectedOption => updateForm('teamName', selectedOption.value)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>}
 
-      {stories.length && <div className='field is-horizontal'>
-        <div className='field-label is-small'>
-          <label className='label'>story</label>
-        </div>
-        <div className='field-body'>
-          <div className='field'>
-            <p className='control'>
-              <SelectSearch options={stories} value={form['story']} onChange={e => updateForm('story', e.value)} />
-            </p>
+        {stories.length && <div className='field is-horizontal'>
+          <div className='field-label is-small'>
+            <label className='label'>story</label>
           </div>
-        </div>
-      </div>}
+          <div className='field-body'>
+            <div className='field'>
+              <div className='control'>
+                <ReactSelect
+                  options={stories}
+                  value={{ value: form['story'], label: form['story'] ? stories.find(story => story.value === form['story']).label : '' }}
+                  onChange={selectedOption => updateForm('story', selectedOption.value)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>}
 
-      {tasks.length && <div className='field is-horizontal'>
-        <div className='field-label is-small'>
-          <label className='label'>Depends On {relatedTasks && relatedTasks.length && relatedTasks.join(', ')}</label>
-        </div>
-        <div className='field-body'>
-          <div className='field'>
-            <p className='control'>
-              <SelectSearch options={tasks}
-                key={JSON.stringify(relatedTasks)}
-                multiple
-                value={relatedTasks}
-                height={100}
-                onChange={e => updateForm('related', e.length ? e.map(selected => selected.value).join(',') : '')}
-              />
-            </p>
+        {tasks.length && <div className='field is-horizontal'>
+          <div className='field-label is-small'>
+            <label className='label'>Depends On</label>
           </div>
-        </div>
-      </div>}
+          <div className='field-body'>
+            <div className='field'>
+              <div className='control'>
+                <ReactSelect
+                  options={tasks.filter(i => i.value !== form['id'])}
+                  isMulti
+                  value={relatedTasksSelected}
+                  onChange={selectedOption => updateForm(
+                    'related',
+                    selectedOption.length ? selectedOption.map(selected => selected.value).join(',') : '')
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>}
 
-      <div className='field is-horizontal'>
-        <div className='field-label is-normal' />
-        <div className='field-body'>
-          <div className='field'>
-            <p className='control'>
-              <Button className='button is-primary' type='button' value='Save' onClick={updateTask} />
-              <Button className='button is-warning' type='button' value='Delete' onClick={() => deleteTask()} />
-              <Button className='button' type='button' value='Clear' onClick={clearForm} />
-            </p>
+        <div className='field is-horizontal'>
+          <div className='field-label is-normal' />
+          <div className='field-body'>
+            <div className='field'>
+              <p className='control'>
+                <Button className='button is-primary' type='button' value='Save' onClick={updateTask} />
+                <Button className='button is-warning' type='button' value='Delete' onClick={() => deleteTask()} />
+                <Button className='button' type='button' value='Clear' onClick={clearForm} />
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </Form>
-    }
+      </Form>
+      }
     </AppContext.Consumer>
   )
 }

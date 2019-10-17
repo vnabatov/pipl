@@ -98,35 +98,35 @@ const App = () => {
     }}>
 
       <nav className='navbar'>
-        <div class='navbar-start'>
+        <div className='navbar-start'>
           <h1>PI Planning Helper</h1>
         </div>
         <div className='navbar-end'>
 
-          <div class='navbar-item'>
-            <div class='navbar-link is-arrowless' onClick={() => (isCompact = !isCompact)}>
+          <div className='navbar-item'>
+            <div className='navbar-link is-arrowless' onClick={() => (isCompact = !isCompact)}>
               Compact
             </div>
           </div>
 
-          <div class='navbar-item'>
-            <div class='navbar-link is-arrowless' onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
+          <div className='navbar-item'>
+            <div className='navbar-link is-arrowless' onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
               Relations
             </div>
           </div>
 
-          <div class={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
+          <div className={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
 
-            <div class='navbar-link' onClick={() => (isMenuOpen = !isMenuOpen)}>
+            <div className='navbar-link' onClick={() => (isMenuOpen = !isMenuOpen)}>
               Create/Edit
             </div>
 
-            <div class='navbar-dropdown is-right'>
+            <div className='navbar-dropdown is-right'>
               <TaskForm
                 form={form}
-                teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, name: sprint.teamName })) : []}
-                stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
-                tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, name: `#${id}: ${summary}` })) : []}
+                teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, label: sprint.teamName })) : []}
+                stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary}` })) : []}
+                tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary}` })) : []}
               />
             </div>
           </div>
