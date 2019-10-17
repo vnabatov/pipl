@@ -10,6 +10,7 @@ import Relations from './components/Relations'
 
 import 'bulma/css/bulma.css'
 import './App.css'
+import ProgramBoard from './components/ProgramBoard'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
 const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
@@ -138,9 +139,11 @@ const App = () => {
           stories={dbs.stories}
         />
 
-        <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+        {<Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />}
 
         <Relations tasks={dbs.tasks} selectedId={form.id} />
+
+        <ProgramBoard stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
       </div>
     </AppContext.Provider>
   </div>
