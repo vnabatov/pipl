@@ -14,6 +14,7 @@ const fields = ['id', 'summary', 'sp']
 
 export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
   const updateForm = (field, value) => (form[field] = value)
+  const storyTicket = stories.find(story => story.value === form['story'])
 
   const relatedTasks = form.related ? form.related.split(',') : []
   // todo: rid from string implementation of relatedTasks
@@ -61,7 +62,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
               <div className='control'>
                 <ReactSelect
                   options={stories}
-                  value={{ value: form['story'], label: form['story'] ? stories.find(story => story.value === form['story']).label : '' }}
+                  value={{ value: form['story'], label: form['story'] && storyTicket ? storyTicket.label : '' }}
                   onChange={selectedOption => updateForm('story', selectedOption.value)}
                 />
               </div>
