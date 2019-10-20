@@ -8,6 +8,9 @@ display: flex;
 flex: 1;
 justify-content: space-between;
 `
+const TeamName = styled.div`
+min-width:150px
+`
 
 export default ({ stories, tasks, sprints }) => {
   return (
@@ -15,7 +18,7 @@ export default ({ stories, tasks, sprints }) => {
       <details open>
         <summary>Program board</summary>
         <div>
-          {sprints && tasks && sprints.map(sprint => <div><h1>{sprint.teamName}</h1><SprintTable>{sprint.columnOrder.map((columnId) => {
+          {sprints && tasks && sprints.map(sprint => <div><SprintTable><TeamName>{sprint.teamName}</TeamName>{sprint.columnOrder.map((columnId) => {
             const column = sprint.columns[columnId]
             const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
             return <ProgramBoardColumn

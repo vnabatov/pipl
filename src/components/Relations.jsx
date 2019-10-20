@@ -4,20 +4,21 @@ import LineTo from 'react-lineto'
 
 const showRelationForTask = (link, task, color = 'red') => {
   const style = {
-    delay: true,
     borderColor: color,
     borderStyle: 'solid',
     borderWidth: 2
   }
-  return task !== link && document.querySelector(`.task${link}`) && document.querySelector(`.task${link}`)
+  return task !== link && document.querySelector(`.task${link}`) && document.querySelector(`.task${task}`)
     ? <LineTo fromAnchor='right' toAnchor='left' {...style} from={`task${link}`} to={`task${task}`} />
     : ''
 }
 
 export default ({ tasks, selectedId }) => {
-  const isBlockedBy = []
-  const blocks = []
+  let isBlockedBy = []
+  let blocks = []
   return tasks.map(task => {
+    isBlockedBy = []
+    blocks = []
     if (task.related) {
       const isSelected = selectedId === 'all' || selectedId === task.id
       const hasRelationsToSelected = !isSelected && task.related.split(',').includes(selectedId)

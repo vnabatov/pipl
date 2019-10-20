@@ -7,6 +7,7 @@ import TaskForm from './components/TaskForm'
 import Stories from './components/Stories'
 import AppContext from './AppContext'
 import Relations from './components/Relations'
+import RelationsProgramBoard from './components/RelationsProgramBoard'
 
 import 'bulma/css/bulma.css'
 import './App.css'
@@ -139,11 +140,13 @@ const App = () => {
           stories={dbs.stories}
         />
 
-        {<Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />}
+        <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <Relations tasks={dbs.tasks} selectedId={form.id} />
 
         <ProgramBoard stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
+
+        <RelationsProgramBoard tasks={dbs.tasks} />
       </div>
     </AppContext.Provider>
   </div>
