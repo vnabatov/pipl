@@ -190,7 +190,7 @@ const App = () => {
 
         <ProgramBoard stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
-        <RelationsProgramBoard tasks={dbs.tasks} />
+        <RelationsProgramBoard tasks={dbs.tasks} selectedStory={selectedStory} />
       </div>}
     </AppContext.Provider>
   </div>

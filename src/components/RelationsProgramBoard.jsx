@@ -13,12 +13,15 @@ const showRelationForTask = (link, task, color = 'red') => {
     : ''
 }
 
-export default ({ tasks }) => {
+export default ({ tasks, selectedStory }) => {
   let isBlockedBy
   return tasks.map(task => {
     isBlockedBy = []
     if (task.related) {
-      isBlockedBy.push(task.related.split(',').map((link) => showRelationForTask(link, task.id, 'red')))
+      console.log(selectedStory, task.story)
+      if (!selectedStory || task.story === selectedStory) {
+        isBlockedBy.push(task.related.split(',').map((link) => showRelationForTask(link, task.id, selectedStory ? 'green' : 'red')))
+      }
       return [...isBlockedBy]
     } else {
       return ''
