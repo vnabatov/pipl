@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import AppContext from '../AppContext'
 
 const Story = styled.div`
+transition: .2s all;
 max-height: 50px;
 border: 1px solid lightgray;
 overflow: hidden;
 margin: 0 !important;
-background-color: ${({ selected }) => selected ? '#3273dc' : 'none'} !important;
+background-color: ${({ selected }) => selected ? 'rgba(50, 115, 220, .7)' : 'none'} !important;
 `
 
 const Container = styled.div`

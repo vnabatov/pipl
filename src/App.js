@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
+import { format } from 'date-fns'
 
 import Sprints from './components/Sprints'
 import TaskForm from './components/TaskForm'
@@ -82,7 +83,17 @@ const App = () => {
     setInterval(() => fetchData(), 500)
   }, [])
 
-  if (!dbs) return 'Loading'
+  const downloadDb = () => {
+    function downloadURI (uri, name) {
+      var link = document.createElement('a')
+      link.download = name
+      link.href = uri
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    downloadURI('db', format(new Date(), 'yyyy-MM-dd_HH_mm_ss') + '-db.json')
+  }
 
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
@@ -94,8 +105,8 @@ const App = () => {
       selectTask,
       clearForm,
       selectedStory,
-      dependendTasks: dbs.dependendTasks,
-      taskPostionsCache: dbs.taskPostionsCache,
+      dependendTasks: dbs && dbs.dependendTasks,
+      taskPostionsCache: dbs && dbs.taskPostionsCache,
       isCompact
     }}>
 
@@ -104,6 +115,39 @@ const App = () => {
           <h1>PI Planning Helper</h1>
         </div>
         <div className='navbar-end'>
+
+          <div className='navbar-item'>
+            <div className={`button navbar-link is-arrowless`} onClick={downloadDb}>
+              Download
+            </div>
+          </div>
+
+          <form
+            action='/upload'
+            style={{ display: 'inherit' }}
+            method='post'
+            encType='multipart/form-data'>
+
+            <div className='navbar-item'>
+              <div>
+                <div className='file'>
+                  <label className='file-label'>
+                    <input className='file-input' type='file'name='dbFile' />
+                    <span className='file-cta'>
+                      <span className='file-label'>
+                      Choose a file…
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className='navbar-item'>
+              <input className='button' type='submit' value='Upload' />
+            </div>
+
+          </form>
 
           <div className='navbar-item'>
             <div className={`button navbar-link is-arrowless ${isCompact ? 'is-success' : ''}`} onClick={() => (isCompact = !isCompact)}>
@@ -135,7 +179,7 @@ const App = () => {
         </div>
       </nav>
 
-      <div className='content'>
+      {(!dbs) ? 'Loading' : <div className='content'>
         <Stories
           stories={dbs.stories}
         />
@@ -147,7 +191,7 @@ const App = () => {
         <ProgramBoard stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <RelationsProgramBoard tasks={dbs.tasks} />
-      </div>
+      </div>}
     </AppContext.Provider>
   </div>
 }

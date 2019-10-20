@@ -1,13 +1,13 @@
 const lowdb = require('lowdb')
 const express = require('express')
 const FileSync = require('lowdb/adapters/FileSync')
-var bodyParser = require('body-parser')
-
+const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload')
 const adapter = new FileSync('db/lowdb.json')
 const db = lowdb(adapter)
 
-var app = express()
-
+const app = express()
+app.use(fileUpload())
 app.use(bodyParser.json())
 
 app.get('/db', function (req, res) {
@@ -124,6 +124,27 @@ app.delete('/tasks/:taskId', function (req, res) {
       .write()
   })
   res.send(toRemove)
+})
+
+app.post('/upload', function (req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.')
+  }
+  let newDB
+  let newDBParsed
+  let error = ''
+  try {
+    newDB = req.files.dbFile.data.toString('utf8')
+    newDBParsed = JSON.parse(newDB)
+  } catch (e) {
+    error = e
+  }
+  if (newDBParsed && newDB.length) {
+    db.setState(newDBParsed).write()
+    res.redirect('/')
+  } else {
+    res.write(error, newDB)
+  }
 })
 
 const port = 3001
