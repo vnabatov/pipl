@@ -180,9 +180,7 @@ const App = () => {
       </nav>
 
       {(!dbs) ? 'Loading' : <div className='content'>
-        <Stories
-          stories={dbs.stories}
-        />
+        <Stories tasks={dbs.tasks} stories={dbs.stories} />
 
         <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 

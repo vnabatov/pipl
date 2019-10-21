@@ -15,6 +15,8 @@ border: 1px solid lightgray;
 background: rgba(255,255,255, .7);
 overflow: hidden;
 margin: 0 !important;
+border-radius: 4px;
+${({ noTasks }) => noTasks ? 'border: 2px solid red !important;' : ''};
 `
 const StoryHeader = styled.div`
 align-items: center;
@@ -32,19 +34,24 @@ position: relative;
 const StoryBody = styled.div`
 padding: 6px;
 `
+const getTaskCountForStory = (tasks, story) => tasks.filter(task => task.story === story).length
 
-export default ({ stories }) => {
+export default ({ stories, tasks }) => {
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<details>
     <summary>Stories</summary>
     <Container>
-      {stories.length && stories.map(({ id, summary }) => <Story title={summary} onClick={() => selectStory(id)} className='message is-small'>
-        <StoryHeader selected={id === selectedStory}>
-          <a href={`https://jira.wiley.com/browse/${id}`}>#{id} </a>
-        </StoryHeader>
-        <StoryBody>
-          {summary}
-        </StoryBody>
-      </Story>)}
+      {stories.length && stories.map(({ id, summary }) => {
+        const taskCount = getTaskCountForStory(tasks, id)
+
+        return <Story noTasks={taskCount === 0} title={summary} onClick={() => selectStory(id)} className='message is-small'>
+          <StoryHeader selected={id === selectedStory}>
+            <a href={`https://jira.wiley.com/browse/${id}`}>#{id} {taskCount ? `(${taskCount})` : ''}</a>
+          </StoryHeader>
+          <StoryBody>
+            {summary}
+          </StoryBody>
+        </Story>
+      })}
     </Container>
   </details>)}
   </AppContext.Consumer>
