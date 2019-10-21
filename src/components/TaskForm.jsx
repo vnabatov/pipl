@@ -10,7 +10,7 @@ const Button = styled.input`
 margin-right: 0.5rem;
 `
 
-const fields = ['id', 'summary', 'sp']
+const fields = ['id', 'summary', 'sp', 'description']
 
 export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
   const updateForm = (field, value) => (form[field] = value)

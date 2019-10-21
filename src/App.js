@@ -15,7 +15,7 @@ import './App.css'
 import ProgramBoard from './components/ProgramBoard'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
-const defaultForm = { id: '', teamName: 'Already Done', summary: '', related: '', sp: '', story: '' }
+const defaultForm = { id: '', description: 'empty', teamName: '', summary: '', related: '', sp: '', story: '' }
 
 let form = { ...defaultForm }
 let isMenuOpen = false
