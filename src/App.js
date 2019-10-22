@@ -22,6 +22,7 @@ let isMenuOpen = false
 let isCompact = false
 let selectedStory = ''
 let dbs
+let storiesFilter = {}
 
 const App = () => {
   use(() => form)
@@ -29,6 +30,7 @@ const App = () => {
   use(() => isCompact)
   use(() => selectedStory)
   use(() => dbs)
+  use(() => storiesFilter)
 
   const fetchData = () => {
     axios.get(api.db).then(({ data }) => {
@@ -180,7 +182,7 @@ const App = () => {
       </nav>
 
       {(!dbs) ? 'Loading' : <div className='content'>
-        <Stories tasks={dbs.tasks} stories={dbs.stories} />
+        <Stories storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
         <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 

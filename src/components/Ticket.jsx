@@ -48,6 +48,12 @@ ${({ relationWarning, selected }) => {
     }
   }
 }
+${({ noStory }) => {
+    if (noStory) {
+      return 'border: 3px solid #AB23D1;'
+    }
+  }
+}
 color: #fff;
 display: -ms-flexbox;
 display: flex;
@@ -89,6 +95,7 @@ export default ({ task, index }) => {
         {!isCompact ? <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}
+            noStory={!task.story}
             relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
           >
             <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
