@@ -83,7 +83,7 @@ const areRelatedTaskPositionsForbidden = (taskPostionsCache, taskId, taskRelated
   return errorFound
 }
 
-export default ({ task, index }) => {
+export default ({ key, task, index }) => {
   return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact }) => (
     <Draggable draggableId={task.id} index={index}>{(provided) => (
       <Container
@@ -91,7 +91,7 @@ export default ({ task, index }) => {
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         ref={provided.innerRef}
-      >
+      >{key}
         {!isCompact ? <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}

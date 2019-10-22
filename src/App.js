@@ -25,7 +25,6 @@ let dbs
 let storiesFilter = {}
 
 const App = () => {
-  use(() => form)
   use(() => isMenuOpen)
   use(() => isCompact)
   use(() => selectedStory)
@@ -55,13 +54,13 @@ const App = () => {
     isMenuOpen = false
   }
 
-  const updateTask = () => {
-    axios.post(api.tasks, form)
+  const updateTask = ({ id, description, related, sp, story, summary, teamName }) => {
+    axios.post(api.tasks, { id, description, related, sp, story, summary, teamName })
     clearForm()
   }
 
   const deleteTask = (id) => {
-    const taskToRemoveId = id || form.id
+    const taskToRemoveId = id
     if (dbs.dependendTasks[taskToRemoveId] && dbs.dependendTasks[taskToRemoveId].length) {
     // eslint-disable-next-line no-undef
       alert(`please clear relations with ${dbs.dependendTasks[taskToRemoveId]}`)
@@ -170,12 +169,13 @@ const App = () => {
             </div>
 
             <div className='navbar-dropdown is-right'>
-              <TaskForm
+              {isMenuOpen ? <TaskForm
+                key={form.id + '-form'}
                 form={form}
                 teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, label: sprint.teamName })) : []}
                 stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary}` })) : []}
                 tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary}` })) : []}
-              />
+              /> : ''}
             </div>
           </div>
         </div>

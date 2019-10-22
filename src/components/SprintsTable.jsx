@@ -63,7 +63,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
                 return <Column
                   dirty={sprintDb.dirty}
                   teamName={sprintDb.teamName}
-                  key={column.id}
+                  key={sprintDb.teamName + column.id}
                   column={column}
                   title={column.title}
                   tasks={tasks} />

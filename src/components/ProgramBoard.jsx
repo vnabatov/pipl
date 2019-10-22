@@ -84,7 +84,6 @@ export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
             {storySprint.columnOrder.map((columnId) => {
               const column = storySprint.columns[columnId]
               const sprintStories = column.taskIds.map(storyId => storyIndex[storyId])
-              console.log(sprintStories)
               return <ProgramBoardColumnStories
                 key={columnId}
                 title={column.title}

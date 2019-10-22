@@ -15,6 +15,7 @@ const main = async () => {
   console.log(result)
   dbJSON.stories = result.issues.map(({ key, fields: { summary, customfield_11220: epicId } }) => ({ id: key, summary, epicId }))
   if (loadTasks) {
+    const alreadyAdded = []
     result.issues.forEach(issue => {
       const tasks = issue.fields.issuelinks.filter(link => link.type.name === 'Task' && link.inwardIssue).map(link => ({
         id: link.inwardIssue.key,
@@ -29,8 +30,11 @@ const main = async () => {
         const sprint = dbJSON.sprints.find(({ id }) => id === teamId)
         console.log(teamId, sprint && sprint.teamName)
         if (sprint) {
-          dbJSON.tasks.push({ ...task, teamName: sprint.teamName })
-          sprint.columns['column-1'].taskIds.push(task.id)
+          if (!alreadyAdded.includes(task.id)) {
+            dbJSON.tasks.push({ ...task, teamName: sprint.teamName })
+            sprint.columns['column-1'].taskIds.push(task.id)
+            alreadyAdded.push(task.id)
+          }
         }
       })
     })
