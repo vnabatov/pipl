@@ -38,13 +38,11 @@ export default ({ tasks, title, stories }) => (
   <AppContext.Consumer>
     {({ selectStory, selectedStory }) => (
       <Container><Title>{title}</Title><TaskList>
-        {tasks.map(({ story, id }, index) => {
-          const storyTicket = stories.find(s => s.id === story)
-          return story && <Story selected={selectedStory === story} onClick={() => selectStory(story)}key={index} className={`message is-small story${id}`}>
-            <a href={`https://jira.wiley.com/browse/${story}`}>#{story}</a> {storyTicket ? storyTicket.summary : '[not found]'}
+        {tasks.map(({ story, id, summary }, index) => {
+          return <Story selected={selectedStory === story} onClick={() => selectStory(story)}key={index} className={`message is-small story${id}`}>
+            <a href={`https://jira.wiley.com/browse/${story}`}>#{id}</a> {summary}
           </Story>
-        }
-        )}
+        })}
       </TaskList></Container>)}
   </AppContext.Consumer>
 )

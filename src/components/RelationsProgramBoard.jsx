@@ -18,7 +18,6 @@ export default ({ tasks, selectedStory }) => {
   return tasks.map(task => {
     isBlockedBy = []
     if (task.related) {
-      console.log(selectedStory, task.story)
       if (!selectedStory || task.story === selectedStory) {
         isBlockedBy.push(task.related.split(',').map((link) => showRelationForTask(link, task.id, selectedStory ? 'green' : 'red')))
       }

@@ -184,9 +184,7 @@ const App = () => {
       {(!dbs) ? 'Loading' : <div className='content'>
         <Stories storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
-        <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
-
-        <Relations tasks={dbs.tasks} selectedId={form.id} />
+ 
 
         <ProgramBoard stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
