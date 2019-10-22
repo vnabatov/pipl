@@ -9,9 +9,10 @@ const { host, username, password } = require('./config/jira.config.json')
 const jira = new JiraClient({ host, basic_auth: { username, password } })
 
 const getIssuesByFilter = async (jql) => jira.search.search({ jql, maxResults })
-console.log(maxResults, loadTasks)
+console.log({ maxResults, loadTasks })
 const main = async () => {
-  const result = await getIssuesByFilter(jql || 'project=CPP0 and issuetype=Story')
+  const result = await getIssuesByFilter(jql || 'project = CPP0 AND issuetype = Story AND "Planned In" = FY20-Q3 AND status not in (Closed)')
+  console.log(result)
   dbJSON.stories = result.issues.map(({ key, fields: { summary, customfield_11220: epicId } }) => ({ id: key, summary, epicId }))
   if (loadTasks) {
     result.issues.forEach(issue => {

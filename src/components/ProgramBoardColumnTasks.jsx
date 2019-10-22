@@ -4,7 +4,8 @@ import AppContext from '../AppContext'
 
 const Story = styled.div`
 transition: .2s all;
-max-height: 50px;
+padding: 4px;
+max-height: 70px;
 border: 1px solid lightgray;
 overflow: hidden;
 margin: 0 !important;
@@ -33,6 +34,10 @@ const TaskList = styled.div`
 padding:3px;
 min-width: 100px;
 `
+const TaskLink = styled.a`
+text-decoration: none !important;
+font-size:14px;
+`
 
 export default ({ tasks, title, stories }) => (
   <AppContext.Consumer>
@@ -40,7 +45,7 @@ export default ({ tasks, title, stories }) => (
       <Container><Title>{title}</Title><TaskList>
         {tasks.map(({ story, id, summary }, index) => {
           return <Story selected={selectedStory === story} onClick={() => selectStory(story)}key={index} className={`message is-small story${id}`}>
-            <a href={`https://jira.wiley.com/browse/${story}`}>#{id}</a> {summary}
+            <TaskLink href={`https://jira.wiley.com/browse/${story}`}>T&nbsp;/&nbsp;{id}&nbsp;({story || ' NO STORY '})</TaskLink><div>{summary}</div>
           </Story>
         })}
       </TaskList></Container>)}

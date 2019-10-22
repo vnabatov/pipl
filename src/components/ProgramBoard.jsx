@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
-import ProgramBoardColumn from './ProgramBoardColumn'
+import ProgramBoardColumnTasks from './ProgramBoardColumnTasks'
+import ProgramBoardColumnStories from './ProgramBoardColumnStories'
 
 const SprintTable = styled.div`
 display: flex;
@@ -12,7 +13,7 @@ const TeamName = styled.div`
 min-width:150px
 `
 
-export default ({ stories, tasks, sprints }) => {
+export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
   const storySprint = {
     'id': '0',
     'teamName': 'Stories',
@@ -59,6 +60,20 @@ export default ({ stories, tasks, sprints }) => {
       'column-6'
     ]
   }
+
+  sprints.forEach(sprint => {
+    const alreadyAdded = []
+    Object.entries(sprint.columns).reverse().forEach(([columnId, { taskIds }]) => {
+      taskIds.forEach(task => {
+        const storyId = taskStoryIndex[task]
+        if (storyId && !storySprint.columns[columnId].taskIds.includes(storyId) && !alreadyAdded.includes(storyId)) {
+          storySprint.columns[columnId].taskIds.push(storyId)
+          alreadyAdded.push(storyId)
+        }
+      })
+    })
+  })
+
   return (
     <AppContext.Consumer>{() => (
       <details open>
@@ -68,12 +83,13 @@ export default ({ stories, tasks, sprints }) => {
             <TeamName>Stories</TeamName>
             {storySprint.columnOrder.map((columnId) => {
               const column = storySprint.columns[columnId]
-              const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
-              return <ProgramBoardColumn
-                key={column.id}
+              const sprintStories = column.taskIds.map(storyId => storyIndex[storyId])
+              console.log(sprintStories)
+              return <ProgramBoardColumnStories
+                key={columnId}
                 title={column.title}
                 stories={stories}
-                tasks={sprintTasks}
+                sprintStories={sprintStories || {}}
               />
             })}
           </SprintTable>
@@ -82,7 +98,7 @@ export default ({ stories, tasks, sprints }) => {
             {sprint.columnOrder.map((columnId) => {
               const column = sprint.columns[columnId]
               const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
-              return <ProgramBoardColumn
+              return <ProgramBoardColumnTasks
                 key={column.id}
                 title={column.title}
                 stories={stories}

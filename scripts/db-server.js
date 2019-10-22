@@ -33,7 +33,22 @@ app.get('/db', function (req, res) {
       })
     }
   })
-  res.send({ ...state, taskPostionsCache, dependendTasks })
+
+  const taskStoryIndex = {}
+  state.tasks.forEach(task => {
+    taskStoryIndex[task.id] = task.story
+  })
+
+  const taskIndex = {}
+  state.tasks.forEach(task => {
+    taskIndex[task.id] = task
+  })
+
+  const storyIndex = {}
+  state.stories.forEach(story => {
+    storyIndex[story.id] = story
+  })
+  res.send({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex })
 })
 
 app.post('/db', function (req, res) {
