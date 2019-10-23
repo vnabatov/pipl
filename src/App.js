@@ -29,7 +29,8 @@ const App = () => {
   use(() => isCompact)
   use(() => selectedStory)
   use(() => form.id)
-  use(() => dbs)
+  use(() => dbs && dbs.sprints)
+  use(() => dbs && dbs.tasks)
   use(() => storiesFilter)
 
   const fetchData = () => {

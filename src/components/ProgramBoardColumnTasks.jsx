@@ -44,7 +44,7 @@ export default ({ tasks, title, stories }) => (
     {({ selectStory, selectedStory, isCompact }) => (
       <Container><Title>{title}</Title><TaskList>
         {tasks.map(({ story, id, summary }, index) => {
-          return isCompact ? <Story selected={selectedStory === story} onClick={() => selectStory(story)}key={index} className={`message is-small story${id}`}>
+          return isCompact ? <Story hide={isCompact && selectedStory !== story} selected={selectedStory === story} onClick={() => selectStory(story)}key={index} className={`message is-small story${id}`}>
             <TaskLink tilte={'task ' + summary} href={`https://jira.wiley.com/browse/${story}`}>{id}</TaskLink>
           </Story> : <Story selected={selectedStory === story} onClick={() => selectStory(story)}key={index} className={`message is-small story${id}`}>
             <TaskLink href={`https://jira.wiley.com/browse/${story}`}>T&nbsp;/&nbsp;{id}&nbsp;({story || ' NO STORY '})</TaskLink><div>{summary}</div>
