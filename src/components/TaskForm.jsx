@@ -25,7 +25,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
   // todo: rid from string implementation of relatedTasks
   const relatedTasksSelected = tasks.filter(i => relatedTasks.includes(i.value))
   return (
-    <AppContext.Consumerz>
+    <AppContext.Consumer>
       {({ deleteTask, updateTask, clearForm }) => <Form key={id + '-form-container'}>
 
         <div className='field is-horizontal' key={'id'}>
