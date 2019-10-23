@@ -101,7 +101,7 @@ export default ({ key, task, index }) => {
             <p>#{task.id}&nbsp;/&nbsp;{task.sp}SP</p>
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>
-          <TicketBody>
+          <TicketBody title={task.description}>
             {task.summary}
 
             <Grid>
@@ -114,6 +114,7 @@ export default ({ key, task, index }) => {
           isSmall
           onClick={() => selectTask(task.id ? task : { id: task })}
           selected={selectedStory && selectedStory === task.story}
+          title={task.summary + '/' + task.description}
           relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
         >
           <p>#{task.id} / {task.summary} / {task.sp}SP</p>

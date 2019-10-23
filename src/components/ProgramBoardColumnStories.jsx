@@ -45,7 +45,7 @@ export default ({ title, stories, sprintStories }) => (
       <Container><Title>{title}</Title><TaskList>
         {sprintStories.map((story, index) => {
           return story ? <Story selected={selectedStory === story.id} onClick={() => selectStory(story.id)} key={index} className={`message is-small story${story.id}`}>
-            <TaskLink href={`https://jira.wiley.com/browse/${story.id}`}>S&nbsp;/&nbsp;{story.id}</TaskLink><div>{story.summary}</div>
+            <TaskLink title='story' href={`https://jira.wiley.com/browse/${story.id}`}>{story.id}</TaskLink><div>{story.summary}</div>
           </Story> : ''
         })}
       </TaskList></Container>)}
