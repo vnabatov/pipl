@@ -147,7 +147,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
               <p className='control'>
                 <Button className='button is-primary' type='button' value='Save' onClick={() => updateTask({ id, description, related, sp, story, summary, teamName })} />
                 <Button className='button is-warning' type='button' value='Delete' onClick={() => deleteTask(id)} />
-                <Button className='button' type='button' value='Clear' onClick={clearForm} />
+                <Button className='button' type='button' value='Close' onClick={clearForm} />
               </p>
             </div>
           </div>
