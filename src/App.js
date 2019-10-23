@@ -28,6 +28,7 @@ const App = () => {
   use(() => isMenuOpen)
   use(() => isCompact)
   use(() => selectedStory)
+  use(() => form.id)
   use(() => dbs)
   use(() => storiesFilter)
 
@@ -170,7 +171,7 @@ const App = () => {
 
             <div className='navbar-dropdown is-right'>
               {isMenuOpen ? <TaskForm
-                key={form.id + '-form'}
+                key={(form.id || 'empty') + '-form'}
                 form={form}
                 teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, label: sprint.teamName })) : []}
                 stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary}` })) : []}
