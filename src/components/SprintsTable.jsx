@@ -52,7 +52,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
 
   return (
     <AppContext.Consumer>{() => (
-      <details open>
+      <details>
         <summary>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</summary>
         <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
