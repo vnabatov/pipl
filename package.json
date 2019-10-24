@@ -11,6 +11,7 @@
     "express-fileupload": "^1.1.6-alpha.5",
     "jira-connector": "^2.16.1",
     "lowdb": "^1.0.0",
+    "moment": "^2.24.0",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.9.0",
@@ -66,8 +67,10 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "db-server": "node scripts/db-server.js",
-    "load:stories": "node scripts/load-jira.js --maxResults=1000 --loadTasks=false",
-    "load:stories-with-tasks": "node scripts/load-jira.js --maxResults=1000 --loadTasks=true",
+    "load:stories": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false --linkType=Task",
+    "load:stories-with-tasks": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=true --linkType=Task",
+    "load:epics": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false --linkType=Story,Task",
+    "load:epics-with-tasks": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=true --linkType=Story,Task",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
