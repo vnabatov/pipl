@@ -8,7 +8,10 @@ const { host, username, password } = require('./config/jira.config.json')
 const {
   loadTasks = false,
   maxResults = 1000,
-  jql = 'project = CPP0 AND issuetype = Story AND "Planned In" = FY20-Q3 AND status not in (Closed)',
+  jqlEpics = 'project = "AS" AND issuetype = Epic AND "Program Increment" = FY20ASPI2',
+  jqlStories = 'project = "AS" AND issuetype != Epic AND "Program Increment" = FY20ASPI2',
+  // jql = 'project = "AS" AND "Program Increment" = FY20ASPI2',
+  // jql = 'issuekey = AS-14741',
   linkType = 'Task'
 } = require('yargs').argv
 
@@ -18,7 +21,7 @@ const alreadyAdded = []
 const date = moment().format('YYYY-MM-DD')
 const time = moment().format('h:mm:ss')
 
-console.log({ maxResults, loadTasks, jql, linkType })
+console.log({ maxResults, loadTasks, jqlEpics, jqlStories, linkType })
 
 const prepareAlreadyAdded = () => {
   dbJSON.stories.forEach(({ id }) => {
@@ -42,51 +45,57 @@ const loadStoriesFromJira = (jiraData) => {
       console.log('Already exists:', story.id)
     }
   })
+
+  return jiraData.issues.map(i => i.key)
 }
 
 const loadTasksFromJira = (jiraData) => {
-  jiraData.issues.forEach(issue => {
-    const tasks = issue.fields.issuelinks.filter(link => [...linkType.split(',')].includes(link.type.name) && link.inwardIssue).map(link => ({
-      id: link.inwardIssue.key,
-      summary: link.inwardIssue.fields.summary,
-      story: issue.key,
-      related: '',
-      sp: '',
-      date,
-      time,
-      dateChange: date,
-      timeChange: time
-    }))
+  const tasks = jiraData.issues.map(item => ({
+    id: item.key,
+    summary: item.fields.summary,
+    story: item.fields.customfield_11220,
+    related: '',
+    sp: '',
+    teamId: item.fields.customfield_17122 && item.fields.customfield_17122.value,
+    date,
+    time,
+    dateChange: date,
+    timeChange: time
+  }))
 
-    tasks.forEach(task => {
-      const teamId = task.id.split('-')[0]
-      const sprint = dbJSON.sprints.find(({ id }) => id === teamId)
+  tasks.forEach(task => {
+    const teamId = task.teamId || 'Unassigned'
+    const sprint = dbJSON.sprints.find(({id}) => id === teamId)
 
-      console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
+    console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
 
-      if (sprint) {
-        if (!alreadyAdded.includes(task.id)) {
-          dbJSON.tasks.push({ ...task, teamName: sprint.teamName })
-          sprint.columns['column-1'].taskIds.push(task.id)
-          alreadyAdded.push(task.id)
-        } else {
-          console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
-        }
+    if (sprint) {
+      if (!alreadyAdded.includes(task.id)) {
+        dbJSON.tasks.push({...task, teamName: sprint.teamName})
+        sprint.columns['column-0'].taskIds.push(task.id)
+        alreadyAdded.push(task.id)
+      } else {
+        console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
       }
-    })
+    }
   })
 }
+
 const main = async () => {
   const hrstart = process.hrtime()
 
   prepareAlreadyAdded()
 
-  const jiraData = await getIssuesByFilter(jql)
+  const jiraDataEpics = await getIssuesByFilter(jqlEpics)
 
-  loadStoriesFromJira(jiraData)
+  const epics = loadStoriesFromJira(jiraDataEpics)
 
   if (loadTasks) {
-    loadTasksFromJira(jiraData)
+    const jqlStoriesForEpics = `project = "AS" AND (issuetype != Epic AND "Program Increment" = FY20ASPI2 OR "Epic Link" IN (${epics.join(', ')}))`
+    console.log(jqlStoriesForEpics)
+    const jiraDataStories = await getIssuesByFilter(jqlStoriesForEpics)
+    const tasks = loadTasksFromJira(jiraDataStories)
+    console.log(tasks)
   }
 
   fs.writeFile(dbFileName, JSON.stringify(dbJSON), function (err) {
