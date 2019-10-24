@@ -92,7 +92,7 @@ export default ({ key, task, index }) => {
         {...provided.dragHandleProps}
         ref={provided.innerRef}
       >{key}
-        {!isCompact ? <Ticket onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
+        {!isCompact ? <Ticket title={JSON.stringify(task)} onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}
             noStory={!task.story}
