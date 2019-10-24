@@ -18,6 +18,10 @@ h1 {
     border: 1px dotted lightgray;
 }
 
+.container {
+    max-width: calc(100% - 100px)
+}
+
 .sprint-table {
     display: flex;
     flex: 1;
