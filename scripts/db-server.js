@@ -4,6 +4,8 @@ const FileSync = require('lowdb/adapters/FileSync')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 const adapter = new FileSync('db/lowdb.json')
+const moment = require('moment')
+
 const db = lowdb(adapter)
 
 const app = express()
@@ -71,6 +73,9 @@ app.patch('/sprints', function (req, res) {
 })
 
 app.post('/tasks', function (req, res) {
+  const date = moment().format('YYYY-MM-DD')
+  const time = moment().format('h:mm:ss')
+
   const newTaskId = req.body.id.toString()
   const tasks = db.get('tasks')
   const task = tasks
@@ -82,7 +87,7 @@ app.post('/tasks', function (req, res) {
       .write()
     res.send(req.body)
   } else {
-    const newTask = req.body
+    const newTask = { ...req.body, time, date }
     newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString()
 
     db.get('tasks')

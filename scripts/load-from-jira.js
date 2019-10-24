@@ -15,7 +15,8 @@ const {
 const jira = new JiraClient({ host, basic_auth: { username, password } })
 const getIssuesByFilter = async (jql) => jira.search.search({ jql, maxResults })
 const alreadyAdded = []
-const date = moment().format('yyyy-mm-dd')
+const date = moment().format('YYYY-MM-DD')
+const time = moment().format('h:mm:ss')
 
 console.log({ maxResults, loadTasks, jql, linkType })
 
@@ -34,8 +35,11 @@ const loadStoriesFromJira = (jiraData) => {
 
   newStories.forEach(story => {
     if (!alreadyAdded.includes(story.id)) {
-      dbJSON.stories.push({ ...story, date })
+      dbJSON.stories.push({ ...story, date, time })
       alreadyAdded.push(story.id)
+      console.log('Added:', story.id)
+    } else {
+      console.log('Already exists:', story.id)
     }
   })
 }
@@ -48,26 +52,31 @@ const loadTasksFromJira = (jiraData) => {
       story: issue.key,
       related: '',
       sp: '',
-      date
+      date,
+      time
     }))
 
     tasks.forEach(task => {
       const teamId = task.id.split('-')[0]
       const sprint = dbJSON.sprints.find(({ id }) => id === teamId)
 
-      console.log('sprint (team)', sprint && sprint.teamName, 'task', task.id)
+      console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
 
       if (sprint) {
         if (!alreadyAdded.includes(task.id)) {
           dbJSON.tasks.push({ ...task, teamName: sprint.teamName })
           sprint.columns['column-1'].taskIds.push(task.id)
           alreadyAdded.push(task.id)
+        } else {
+          console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
         }
       }
     })
   })
 }
 const main = async () => {
+  const hrstart = process.hrtime()
+
   prepareAlreadyAdded()
 
   const jiraData = await getIssuesByFilter(jql)
@@ -82,6 +91,10 @@ const main = async () => {
     if (err) return console.log(err)
     console.log('writing to ' + dbFileName)
   })
+
+  const hrend = process.hrtime(hrstart)
+
+  console.info('Execution time: %ds %dms', hrend[0], hrend[1] / 1000000)
 }
 
 main()
