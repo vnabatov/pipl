@@ -29,7 +29,7 @@ const NETWORK = process.env.NETWORK || 'ws'
 let socket
 
 if (NETWORK === 'ws') {
-  socket = io('http://localhost:3001')
+  socket = io(window.location.href.substr(0, window.location.href.length - 1) + ':3001')
   socket.on('db', (data) => {
     const parsedData = JSON.parse(data)
 
