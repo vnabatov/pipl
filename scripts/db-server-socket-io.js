@@ -5,8 +5,11 @@ const lowdb = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('db/lowdb.json')
 const moment = require('moment')
+const fileUpload = require('express-fileupload')
 
 const db = lowdb(adapter)
+
+app.use(fileUpload())
 
 const getDb = () => {
   const state = db.getState()
@@ -48,6 +51,31 @@ const getDb = () => {
   })
   return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex })
 }
+
+app.get('/db', function (req, res) {
+  res.send(JSON.stringify(getDb()))
+})
+
+app.post('/upload', function (req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.')
+  }
+  let newDB
+  let newDBParsed
+  let error = ''
+  try {
+    newDB = req.files.dbFile.data.toString('utf8')
+    newDBParsed = JSON.parse(newDB)
+  } catch (e) {
+    error = e
+  }
+  if (newDBParsed && newDB.length) {
+    db.setState(newDBParsed).write()
+    res.redirect('/')
+  } else {
+    res.write(error, newDB)
+  }
+})
 
 io.on('connect', function (socket) {
   console.log('connect')
