@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 import { format } from 'date-fns'
@@ -53,6 +53,11 @@ const App = () => {
   use(() => dbs && dbs.tasks)
   use(() => storiesFilter)
 
+  const clearForm = () => {
+    form = { ...defaultForm }
+    isMenuOpen = false
+  }
+
   const setData = (data) => {
     socket.emit('sprint:update', JSON.stringify(data))
   }
@@ -82,11 +87,6 @@ const App = () => {
   const selectTask = (taskData) => {
     isMenuOpen = true
     form = taskData
-  }
-
-  const clearForm = () => {
-    form = { ...defaultForm }
-    isMenuOpen = false
   }
 
   const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))
