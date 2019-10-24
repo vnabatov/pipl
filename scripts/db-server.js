@@ -83,7 +83,7 @@ app.post('/tasks', function (req, res) {
 
   if (tasks.value().length && task.value()) {
     task
-      .assign(req.body)
+      .assign({ ...req.body, timeChange: time, dateChange: date })
       .write()
     res.send(req.body)
   } else {

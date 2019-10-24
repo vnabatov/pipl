@@ -53,7 +53,9 @@ const loadTasksFromJira = (jiraData) => {
       related: '',
       sp: '',
       date,
-      time
+      time,
+      dateChange: date,
+      timeChange: time
     }))
 
     tasks.forEach(task => {
