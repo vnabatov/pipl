@@ -14,12 +14,19 @@ app.use(fileUpload())
 const getDb = () => {
   const state = db.getState()
 
+  const alreadyAdded = []
   const taskPostionsCache = {}
   state.sprints.forEach((sprint) => {
     Object.entries(sprint.columns).forEach(([key, column]) => {
+      const saveFromDuplicates = []
       column.taskIds.forEach(task => {
-        taskPostionsCache[task] = parseInt(key.replace('column-', ''), 10)
+        if (!alreadyAdded[task]) {
+          taskPostionsCache[task] = parseInt(key.replace('column-', ''), 10)
+          alreadyAdded[task] = true
+          saveFromDuplicates.push(task)
+        }
       })
+      column.taskIds = [...saveFromDuplicates]
     })
   })
 
