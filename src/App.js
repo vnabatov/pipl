@@ -83,7 +83,7 @@ const App = () => {
 
   useEffect(() => {
     fetchData()
-    setInterval(() => fetchData(), 500)
+    setInterval(() => fetchData(), 1000)
   }, [])
 
   const downloadDb = () => {

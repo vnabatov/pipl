@@ -83,7 +83,7 @@ app.post('/tasks', function (req, res) {
     res.send(req.body)
   } else {
     const newTask = req.body
-    newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id)) + 1 : 1).toString()
+    newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString()
 
     db.get('tasks')
       .push(newTask)
