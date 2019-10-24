@@ -1,5 +1,3 @@
-'use strict'
-
 process.env.NODE_ENV = 'development'
 
 // Load environment variables from .env file. Suppress warnings using silent
@@ -314,5 +312,5 @@ if (!fs.existsSync('db/lowdb.json')) {
   const stream = fs.createReadStream('db/lowdb.default.json').pipe(fs.createWriteStream('db/lowdb.json'))
   stream.on('close', () => { require('./db-server') })
 } else {
-  require('./db-server')
+  process.env.NETWORK === 'ws' ? require('./db-server-socket-io') : require('./db-server')
 }

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 import { format } from 'date-fns'
+import io from 'socket.io-client'
 
 import Sprints from './components/Sprints'
 import TaskForm from './components/TaskForm'
@@ -24,6 +25,25 @@ let selectedStory = ''
 let dbs
 let storiesFilter = {}
 
+const NETWORK = process.env.NETWORK || 'ws'
+let socket
+
+if (NETWORK === 'ws') {
+  socket = io('http://localhost:3001')
+  socket.on('db', (data) => {
+    const parsedData = JSON.parse(data)
+
+    parsedData.sprints.forEach(sprint => {
+      sprint.dirty = false
+    })
+
+    dbs = parsedData
+  })
+  socket.on('connect', () => {
+    console.log('connect')
+  })
+}
+
 const App = () => {
   use(() => isMenuOpen)
   use(() => isCompact)
@@ -33,20 +53,82 @@ const App = () => {
   use(() => dbs && dbs.tasks)
   use(() => storiesFilter)
 
-  const fetchData = () => {
-    axios.get(api.db).then(({ data }) => {
-      data.sprints.forEach(sprint => {
-        sprint.dirty = false
+  let setData
+  let selectTask
+  let updateTask
+  let deleteTask
+  let updateColumnCount
+
+  if (NETWORK === 'ws') {
+    setData = (data) => {
+      socket.emit('sprint:update', JSON.stringify(data))
+    }
+
+    updateTask = (data) => {
+      socket.emit('task:update', JSON.stringify(data))
+      clearForm()
+    }
+
+    deleteTask = (id) => {
+      const taskToRemoveId = id
+      if (dbs.dependendTasks[taskToRemoveId] && dbs.dependendTasks[taskToRemoveId].length) {
+        window.alert(`please clear relations with ${dbs.dependendTasks[taskToRemoveId]}`)
+        return
+      }
+      if (window.confirm('sure?')) {
+        socket.emit('task:delete', taskToRemoveId)
+        clearForm()
+      }
+    }
+
+    updateColumnCount = (columnId, teamName, size) => {
+      axios.patch(api.columns + '/' + columnId, { teamName, size })
+      socket.emit('column:count', JSON.stringify({ columnId, teamName, size }))
+    }
+  } else {
+    const fetchData = () => {
+      axios.get(api.db).then(({ data }) => {
+        data.sprints.forEach(sprint => {
+          sprint.dirty = false
+        })
+        dbs = data
       })
-      dbs = data
-    })
+    }
+
+    setData = (data) => {
+      axios.patch(api.sprints, data)
+    }
+
+    updateTask = ({ id, description, related, sp, story, summary, teamName }) => {
+      axios.post(api.tasks, { id, description, related, sp, story, summary, teamName })
+      clearForm()
+    }
+
+    deleteTask = (id) => {
+      const taskToRemoveId = id
+      if (dbs.dependendTasks[taskToRemoveId] && dbs.dependendTasks[taskToRemoveId].length) {
+      // eslint-disable-next-line no-undef
+        alert(`please clear relations with ${dbs.dependendTasks[taskToRemoveId]}`)
+        return
+      }
+      // eslint-disable-next-line no-undef
+      if (confirm('sure?')) {
+        axios.delete(`${api.tasks}/${taskToRemoveId}`)
+        clearForm()
+      }
+    }
+
+    updateColumnCount = (columnId, teamName, size) => {
+      axios.patch(api.columns + '/' + columnId, { teamName, size })
+    }
+
+    useEffect(() => {
+      fetchData()
+      setInterval(() => fetchData(), 1000)
+    }, [])
   }
 
-  const setData = (data) => {
-    axios.patch(api.sprints, data)
-  }
-
-  const selectTask = (taskData) => {
+  selectTask = (taskData) => {
     isMenuOpen = true
     form = taskData
   }
@@ -56,35 +138,7 @@ const App = () => {
     isMenuOpen = false
   }
 
-  const updateTask = ({ id, description, related, sp, story, summary, teamName }) => {
-    axios.post(api.tasks, { id, description, related, sp, story, summary, teamName })
-    clearForm()
-  }
-
-  const deleteTask = (id) => {
-    const taskToRemoveId = id
-    if (dbs.dependendTasks[taskToRemoveId] && dbs.dependendTasks[taskToRemoveId].length) {
-    // eslint-disable-next-line no-undef
-      alert(`please clear relations with ${dbs.dependendTasks[taskToRemoveId]}`)
-      return
-    }
-    // eslint-disable-next-line no-undef
-    if (confirm('sure?')) {
-      axios.delete(`${api.tasks}/${taskToRemoveId}`)
-      clearForm()
-    }
-  }
-
-  const updateColumnCount = (columnId, teamName, size) => {
-    axios.patch(api.columns + '/' + columnId, { teamName, size })
-  }
-
   const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))
-
-  useEffect(() => {
-    fetchData()
-    setInterval(() => fetchData(), 1000)
-  }, [])
 
   const downloadDb = () => {
     function downloadURI (uri, name) {

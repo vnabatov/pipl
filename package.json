@@ -6,6 +6,7 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "bulma": "^0.7.5",
+    "cross-env": "^6.0.3",
     "date-fns": "^2.5.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6-alpha.5",
@@ -19,6 +20,8 @@
     "react-hoox": "^0.2.3",
     "react-lineto": "^3.1.3",
     "react-select": "^3.0.8",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "styled-components": "^4.3.2",
     "yargs": "^14.2.0"
   },
@@ -66,6 +69,7 @@
   "scripts": {
     "eslint": "standard --fix",
     "start": "node scripts/start.js",
+    "start:ws": "cross-env NETWORK=ws node scripts/start.js",
     "build": "node scripts/build.js",
     "db-server": "node scripts/db-server.js",
     "load:stories": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false --linkType=Task",
