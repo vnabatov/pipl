@@ -18,11 +18,6 @@ export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
     'id': '0',
     'teamName': 'Stories',
     'columns': {
-      'column-1': {
-        'id': 'column-1',
-        'title': 'Backlog',
-        'taskIds': []
-      },
       'column-2': {
         'id': 'column-2',
         'title': 'Sprint 1',
@@ -66,7 +61,7 @@ export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
     Object.entries(sprint.columns).reverse().forEach(([columnId, { taskIds }]) => {
       taskIds.forEach(task => {
         const storyId = taskStoryIndex[task]
-        if (storyId && !storySprint.columns[columnId].taskIds.includes(storyId) && !alreadyAdded.includes(storyId)) {
+        if (storySprint.columns[columnId] && storyId && !storySprint.columns[columnId].taskIds.includes(storyId) && !alreadyAdded.includes(storyId)) {
           storySprint.columns[columnId].taskIds.push(storyId)
           alreadyAdded.push(storyId)
         }
@@ -83,26 +78,34 @@ export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
             <TeamName>Stories</TeamName>
             {storySprint.columnOrder.map((columnId) => {
               const column = storySprint.columns[columnId]
-              const sprintStories = column.taskIds.map(storyId => storyIndex[storyId])
-              return <ProgramBoardColumnStories
-                key={columnId}
-                title={column.title}
-                stories={stories}
-                sprintStories={sprintStories || {}}
-              />
+              if (column) {
+                const sprintStories = column.taskIds.map(storyId => storyIndex[storyId])
+                return <ProgramBoardColumnStories
+                  key={columnId}
+                  title={column.title}
+                  stories={stories}
+                  sprintStories={sprintStories || {}}
+                />
+              } else {
+                return ''
+              }
             })}
           </SprintTable>
 
           {sprints && tasks && sprints.map(sprint => <div><SprintTable><TeamName>{sprint.teamName}</TeamName>
             {sprint.columnOrder.map((columnId) => {
-              const column = sprint.columns[columnId]
-              const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
-              return <ProgramBoardColumnTasks
-                key={column.id}
-                title={column.title}
-                stories={stories}
-                tasks={sprintTasks}
-              />
+              if (storySprint.columns[columnId]) {
+                const column = sprint.columns[columnId]
+                const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
+                return <ProgramBoardColumnTasks
+                  key={column.id}
+                  title={column.title}
+                  stories={stories}
+                  tasks={sprintTasks}
+                />
+              } else {
+                return ''
+              }
             })}
           </SprintTable></div>)}
         </div>
