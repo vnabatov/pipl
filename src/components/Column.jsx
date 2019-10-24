@@ -47,7 +47,7 @@ export default ({ title, tasks, column, teamName }) => {
         ref={provided.innerRef}
         {...provided.droppableProps}
       >
-        {tasks.map((task, index) => <Ticket key={teamName + column.id + task.id} index={index} task={task} />)}
+        {tasks.map((task, index) => task.summary !== 'not found' ? <Ticket key={teamName + column.id + task.id} index={index} task={task} /> : '')}
         {provided.placeholder}
       </TaskList>
       }
