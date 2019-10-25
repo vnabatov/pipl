@@ -16,10 +16,12 @@ const modifiedDate = {
   endDate: null,
   key: 'modified'
 }
+let taskFilter = ''
 
 export default ({ tasks, sprints, setData }) => {
   use(() => createdDate)
   use(() => modifiedDate)
+  use(() => taskFilter)
 
   const dateCreateRangeUpdate = (update) => {
     createdDate.startDate = update.created.startDate
@@ -49,6 +51,10 @@ export default ({ tasks, sprints, setData }) => {
     filteredTasks = filteredTasks.filter(task => moment(task.date + 'T' + task.time).date() <= moment(createdDate.endDate).date())
   }
 
+  if (taskFilter.length) {
+    filteredTasks = filteredTasks.filter(task => task.id.includes(taskFilter) || task.summary.includes(taskFilter))
+  }
+
   return (
     <div>
       <details>
@@ -62,6 +68,7 @@ export default ({ tasks, sprints, setData }) => {
           createdDate.endDate = null
         }} >Reset</div>
       </details>
+      
       <details>
         <summary>Modified {modifiedDate.startDate !== null || modifiedDate.endDate !== null ? '⏲️' : ''}</summary>
         <DateRangePicker
@@ -72,6 +79,11 @@ export default ({ tasks, sprints, setData }) => {
           modifiedDate.startDate = null
           modifiedDate.endDate = null
         }} >Reset</div>
+      </details>
+
+      <details>
+        <summary>Task Filter {taskFilter.length ? '🔣' : ''}</summary>
+        <input type='text' defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
       </details>
 
       {sprints.map((sprint, key) => (
