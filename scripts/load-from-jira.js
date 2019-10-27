@@ -62,13 +62,12 @@ const loadTasksFromJira = (jiraData) => {
       const teamId = task.id.split('-')[0]
       const sprint = dbJSON.sprints.find(({ id }) => id === teamId)
 
-      console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
-
       if (sprint) {
         if (!alreadyAdded.includes(task.id)) {
           dbJSON.tasks.push({ ...task, teamName: sprint.teamName })
           sprint.columns['column-1'].taskIds.push(task.id)
           alreadyAdded.push(task.id)
+          console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
         } else {
           console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
         }

@@ -36,19 +36,19 @@ export default ({ tasks, sprints, setData }) => {
   let filteredTasks = Object.assign(tasks)
   // todo: fix bug for stat of the month, potentially timezone problem
   if (modifiedDate.startDate !== null) {
-    filteredTasks = filteredTasks.filter(task => task.dateChange && moment(task.dateChange + 'T' + task.timeChange).date() >= moment(modifiedDate.startDate).date())
+    filteredTasks = filteredTasks.filter(task => task.dateChange && moment(new Date(task.dateChange + ' ' + task.timeChange)).date() >= moment(modifiedDate.startDate).date())
   }
 
   if (modifiedDate.endDate !== null) {
-    filteredTasks = filteredTasks.filter(task => task.dateChange && moment(task.dateChange + 'T' + task.timeChange).date() <= moment(modifiedDate.endDate).date())
+    filteredTasks = filteredTasks.filter(task => task.dateChange && moment(new Date(task.dateChange + ' ' + task.timeChange)).date() <= moment(modifiedDate.endDate).date())
   }
 
   if (createdDate.startDate !== null) {
-    filteredTasks = filteredTasks.filter(task => moment(task.date + 'T' + task.time).date() >= moment(createdDate.startDate).date())
+    filteredTasks = filteredTasks.filter(task => moment(new Date(task.date + ' ' + task.time)).date() >= moment(createdDate.startDate).date())
   }
 
   if (createdDate.endDate !== null) {
-    filteredTasks = filteredTasks.filter(task => moment(task.date + 'T' + task.time).date() <= moment(createdDate.endDate).date())
+    filteredTasks = filteredTasks.filter(task => moment(new Date(task.date + ' ' + task.time)).date() <= moment(createdDate.endDate).date())
   }
 
   if (taskFilter.length) {
@@ -68,7 +68,7 @@ export default ({ tasks, sprints, setData }) => {
           createdDate.endDate = null
         }} >Reset</div>
       </details>
-      
+
       <details>
         <summary>Modified {modifiedDate.startDate !== null || modifiedDate.endDate !== null ? '⏲️' : ''}</summary>
         <DateRangePicker

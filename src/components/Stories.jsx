@@ -71,7 +71,7 @@ export default ({ stories, tasks, storiesFilter }) => {
 
   let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / ${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
-  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<details>
+  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<details open>
     <summary>Stories</summary>
     <StoryFilters>
       <ReactSelect
