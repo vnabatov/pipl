@@ -52,38 +52,44 @@ export default ({ tasks, sprints, setData }) => {
   }
 
   if (taskFilter.length) {
-    filteredTasks = filteredTasks.filter(task => task.id.includes(taskFilter) || task.summary.includes(taskFilter))
+    if (taskFilter[0] === '/') {
+      filteredTasks = filteredTasks.filter(task => [task.id, task.summary, task.story].map(search => (new RegExp(taskFilter).test(search)).includes(true)))
+    } else {
+      filteredTasks = filteredTasks.filter(task => [task.id, task.summary, task.story].map(search => search.includes(taskFilter)).includes(true))
+    }
   }
 
   return (
     <div>
       <details>
-        <summary>Created {createdDate.startDate !== null || createdDate.endDate !== null ? '⏲️' : ''}</summary>
-        <DateRangePicker
-          ranges={[createdDate]}
-          onChange={dateCreateRangeUpdate}
-        />
-        <div className='button' onClick={() => {
-          createdDate.startDate = null
-          createdDate.endDate = null
-        }} >Reset</div>
-      </details>
-
-      <details>
-        <summary>Modified {modifiedDate.startDate !== null || modifiedDate.endDate !== null ? '⏲️' : ''}</summary>
-        <DateRangePicker
-          ranges={[modifiedDate]}
-          onChange={dateModifiedRangeUpdate}
-        />
-        <div className='button' onClick={() => {
-          modifiedDate.startDate = null
-          modifiedDate.endDate = null
-        }} >Reset</div>
-      </details>
-
-      <details>
         <summary>Task Filter {taskFilter.length ? '🔣' : ''}</summary>
-        <input type='text' defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
+        <input type='text' className='input' placeholder='Task Id / Story Id / Task Summary / Regexp(start with "/")'defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
+
+        <details>
+          <summary>Created {createdDate.startDate !== null || createdDate.endDate !== null ? '⏲️' : ''}</summary>
+          <DateRangePicker
+            ranges={[createdDate]}
+            onChange={dateCreateRangeUpdate}
+          />
+          <div className='button' onClick={() => {
+            createdDate.startDate = null
+            createdDate.endDate = null
+          }} >Reset</div>
+        </details>
+
+        <details>
+          <summary>Modified {modifiedDate.startDate !== null || modifiedDate.endDate !== null ? '⏲️' : ''}</summary>
+          <DateRangePicker
+            ranges={[modifiedDate]}
+            onChange={dateModifiedRangeUpdate}
+          />
+          <div className='button' onClick={() => {
+            modifiedDate.startDate = null
+            modifiedDate.endDate = null
+          }} >Reset</div>
+        </details>
+
+        <hr />
       </details>
 
       {sprints.map((sprint, key) => (

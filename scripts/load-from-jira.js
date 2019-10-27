@@ -46,25 +46,27 @@ const loadStoriesFromJira = (jiraData) => {
 
 const loadTasksFromJira = (jiraData) => {
   jiraData.issues.forEach(issue => {
-    const tasks = issue.fields.issuelinks.filter(link => [...linkType.split(',')].includes(link.type.name) && link.inwardIssue).map(link => ({
-      id: link.inwardIssue.key,
-      summary: link.inwardIssue.fields.summary,
-      story: issue.key,
-      related: '',
-      sp: '',
-      date,
-      time,
-      dateChange: date,
-      timeChange: time
-    }))
-
+    const tasks = issue.fields.issuelinks.filter(link => [...linkType.split(',')].includes(link.type.name) && link.inwardIssue).map(link => {
+      return ({
+        id: link.inwardIssue.key,
+        summary: link.inwardIssue.fields.summary,
+        story: issue.key,
+        related: '',
+        sp: '',
+        date,
+        time,
+        dateChange: date,
+        timeChange: time,
+        status: link.inwardIssue.fields.status.name
+      })
+    })
     tasks.forEach(task => {
       const teamId = task.id.split('-')[0]
       const sprint = dbJSON.sprints.find(({ id }) => id === teamId)
 
       if (sprint) {
-        if (!alreadyAdded.includes(task.id)) {
-          dbJSON.tasks.push({ ...task, teamName: sprint.teamName })
+        if (!alreadyAdded.includes(task.id) && task.status !== 'Closed') {
+          dbJSON.tasks.push({ ...task, teamName: sprint.teamName, status: undefined })
           sprint.columns['column-1'].taskIds.push(task.id)
           alreadyAdded.push(task.id)
           console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
