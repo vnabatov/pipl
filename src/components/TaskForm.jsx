@@ -104,7 +104,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
           </div>
           <div className='field-body'>
             <div className='field'>
-              <div className='control' title={story}>
+              <div className='control' title={getStory(story) ? getStory(story).fullLabel : ''}>
                 <ReactSelect
                   key={story}
                   options={stories}
