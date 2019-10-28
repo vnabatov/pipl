@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 import ReactSelect from 'react-select'
+import use from 'react-hoox'
 
 const Container = styled.div`
 display: grid;
@@ -62,9 +63,12 @@ grid-column-gap: 3px;
 
 const getTaskCountForStory = (tasks, story) => tasks.filter(task => task.story === story).length
 
-export default ({ stories, tasks, storiesFilter }) => {
-  const updateForm = (field, value) => (storiesFilter[field] = value)
+const defaultStory = { id: '', epicId: '', summary: '' }
+let newStory = defaultStory
 
+export default ({ stories, tasks, storiesFilter, addStory }) => {
+  const updateForm = (field, value) => (storiesFilter[field] = value)
+  use(() => newStory)
   let epicsSelectItems = {}
   stories.forEach(({ epicId }) => (epicsSelectItems[epicId] = 1))
   epicsSelectItems = Object.keys(epicsSelectItems).map(epic => epic === 'null' ? ({ value: '', label: 'All Epics' }) : ({ value: epic, label: epic }))
@@ -73,6 +77,17 @@ export default ({ stories, tasks, storiesFilter }) => {
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<details open>
     <summary>Stories</summary>
+    <StoryFilters>
+      <input placeholder='story id' type='text' className='input is-small' onChange={(e) => (newStory.id = e.target.value)} value={newStory.id} />
+      <input placeholder='epic id' type='text' className='input is-small' onChange={(e) => (newStory.epicId = e.target.value)} value={newStory.epicId} />
+      <input placeholder='summmary' type='text' className='input is-small' onChange={(e) => (newStory.summary = e.target.value)} value={newStory.summary} />
+      <input type='button' className='button is-small' value='Add Story' onClick={() => {
+        addStory(newStory)
+        newStory.id = ''
+        newStory.epicId = ''
+        newStory.summary = ''
+      }} />
+    </StoryFilters>
     <StoryFilters>
       <ReactSelect
         key='epics'

@@ -14,9 +14,10 @@ app.use(fileUpload())
 const getDb = () => {
   const state = db.getState()
 
-  const alreadyAdded = []
+  let alreadyAdded
   const taskPostionsCache = {}
   state.sprints.forEach((sprint) => {
+    alreadyAdded = []
     Object.entries(sprint.columns).forEach(([key, column]) => {
       const saveFromDuplicates = []
       column.taskIds.forEach(task => {
@@ -114,6 +115,17 @@ io.on('connect', function (socket) {
     const dbNew = JSON.stringify(getDb())
     socket.emit('db', dbNew)
     socket.broadcast.emit('db', dbNew)
+  })
+
+  socket.on('story:create', (data) => {
+    const parsedData = JSON.parse(data)
+    db.get('stories')
+      .push(parsedData)
+      .write()
+
+    const dbNew = JSON.stringify(getDb())
+
+    socket.emit('db', dbNew)
   })
 
   socket.on('task:update', (data) => {

@@ -103,6 +103,10 @@ const App = () => {
     downloadURI('db', format(new Date(), 'yyyy-MM-dd_HH_mm_ss') + '-db.json')
   }
 
+  const addStory = (story) => {
+    socket.emit('story:create', JSON.stringify(story))
+  }
+
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       selectStory,
@@ -189,7 +193,7 @@ const App = () => {
       </nav>
 
       {(!dbs) ? 'Loading' : <div className='content'>
-        <Stories storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
+        <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
         <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
