@@ -124,7 +124,7 @@ const App = () => {
 
       <nav className='navbar'>
         <div className='navbar-start'>
-          <h1>PI Planning Helper</h1>
+          <h1>[PI PL]anning Helper</h1>
         </div>
         <div className='navbar-end'>
 
