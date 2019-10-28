@@ -27,9 +27,9 @@ min-height: 100%;
 `
 
 export default ({ title, tasks, column, teamName }) => {
-  const spSum = tasks.reduce((acc, val) => acc + parseInt(val.sp, 10), 0)
+  const spSum = tasks.reduce((acc, val) => acc + parseFloat(val.sp), 0)
   return <AppContext.Consumer>{({ updateColumnCount }) => (<Container>
-    <Title error={parseInt(column.size, 10) < spSum} fit={parseInt(column.size, 10) === spSum}>
+    <Title error={parseFloat(parseFloat(column.size).toFixed(2)) < parseFloat(spSum.toFixed(2))} fit={parseFloat(column.size).toFixed(2) === spSum.toFixed(2)}>
       {title}
       <div className='field has-addons '>
         <p className='control'>

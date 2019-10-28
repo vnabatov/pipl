@@ -117,7 +117,7 @@ io.on('connect', function (socket) {
     socket.broadcast.emit('db', dbNew)
   })
 
-  socket.on('story:create', (data) => {
+  socket.on('story:add', (data) => {
     const parsedData = JSON.parse(data)
     db.get('stories')
       .push(parsedData)
