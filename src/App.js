@@ -38,6 +38,8 @@ if (NETWORK === 'ws') {
     })
 
     dbs = parsedData
+
+    console.log(dbs.tasks)
   })
   socket.on('connect', () => {
     console.log('connect')

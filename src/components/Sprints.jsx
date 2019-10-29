@@ -53,9 +53,9 @@ export default ({ tasks, sprints, setData }) => {
 
   if (taskFilter.length) {
     if (taskFilter[0] === '/') {
-      filteredTasks = filteredTasks.filter(task => [task.id, task.summary, task.story].map(search => (new RegExp(taskFilter).test(search)).includes(true)))
+      filteredTasks = filteredTasks.filter(task => [task.id, task.summary, task.story, task.v].map(search => (new RegExp(taskFilter).test(search)).includes(true)))
     } else {
-      filteredTasks = filteredTasks.filter(task => [task.id, task.summary, task.story].map(search => search.includes(taskFilter)).includes(true))
+      filteredTasks = filteredTasks.filter(task => [task.id, task.summary, task.story, task.v].map(search => search && search.includes(taskFilter)).includes(true))
     }
   }
 
@@ -63,7 +63,7 @@ export default ({ tasks, sprints, setData }) => {
     <div>
       <details>
         <summary>Task Filter {taskFilter.length ? '🔣' : ''}</summary>
-        <input type='text' className='input' placeholder='Task Id / Story Id / Task Summary / Regexp(start with "/")'defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
+        <input type='text' className='input' placeholder='Task Id / Story Id / Task Summary / Version / Regexp(start with "/")'defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
 
         <details>
           <summary>Created {createdDate.startDate !== null || createdDate.endDate !== null ? '⏲️' : ''}</summary>

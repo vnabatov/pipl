@@ -77,6 +77,13 @@ const loadTasksFromJira = (jiraData) => {
     })
   })
 }
+
+async function asyncForEach (array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array)
+  }
+}
+
 const main = async () => {
   const hrstart = process.hrtime()
 
@@ -88,6 +95,21 @@ const main = async () => {
 
   if (loadTasks) {
     loadTasksFromJira(jiraData)
+
+    await asyncForEach(dbJSON.tasks, async (task) => {
+      try {
+        if (task && task.id) {
+          const taskData = await getIssuesByFilter(`key=${task.id}`)
+          if (taskData) {
+            const ver = taskData.issues[0].fields.fixVersions[0].name
+            dbJSON.tasks.find(({ id }) => (id === task.id)).v = ver
+            console.log('set version', task.id, ver)
+          }
+        }
+      } catch (e) {
+        // console.log(e)
+      }
+    })
   }
 
   fs.writeFile(dbFileName, JSON.stringify(dbJSON), function (err) {
