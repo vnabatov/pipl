@@ -32,28 +32,9 @@ const TicketHeader = styled.div`
 transition: all .2s;
 align-items: center;
 border-radius: 4px 4px ${({ isSmall }) => isSmall ? '4px 4px' : '0 0'};
-${({ relationWarning, selected }) => {
-    if (relationWarning) {
-      if (selected) {
-        return 'background-color: #AB23D1;'
-      } else {
-        return 'background-color: #D12341;'
-      }
-    } else {
-      if (selected) {
-        return 'background-color: #3273DC;'
-      } else {
-        return 'background-color: #23D160;'
-      }
-    }
-  }
-}
-${({ noStory }) => {
-    if (noStory) {
-      return 'border: 3px solid #AB23D1;'
-    }
-  }
-}
+
+background-color: #23D160;
+
 color: #fff;
 display: -ms-flexbox;
 display: flex;
@@ -63,20 +44,53 @@ line-height: 1.25;
 padding: 4px;
 position: relative;
 word-break: break-word;
-${({ isSmall }) => isSmall ? 'font-size: 0.7rem;' : ''}
+
+${({ isSmall }) => isSmall ? 'font-size: 0.6rem;' : ''}}
+${({ relationSameSprint }) => relationSameSprint ? 'background-color: orange;' : ''}}
+${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
+${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
+${({ selected }) => selected ? 'border: 3px solid #3273DC;' : ''}}
+${({ noStory }) => noStory ? 'border: 3px solid #AB23D1;' : ''}}
 `
+
 const TicketBody = styled.div`
 padding: 3px;
 word-break: break-word;
 `
 
-const areRelatedTaskPositionsForbidden = (taskPostionsCache, taskId, taskRelated) => {
+const areRelatedTaskPositionsEarlier = (taskPostionsCache, taskId, taskRelated) => {
   let errorFound = false
 
   if (!taskRelated) return false
 
   taskRelated.split(',').forEach(related => {
-    if (taskPostionsCache[related] >= taskPostionsCache[taskId]) {
+    if (taskPostionsCache[related] > taskPostionsCache[taskId]) {
+      errorFound = true
+    }
+  })
+  return errorFound
+}
+
+const areRelatedTaskPositionsSameSprint = (taskPostionsCache, taskId, taskRelated) => {
+  let errorFound = false
+
+  if (!taskRelated) return false
+
+  taskRelated.split(',').forEach(related => {
+    if (taskPostionsCache[related] === taskPostionsCache[taskId]) {
+      errorFound = true
+    }
+  })
+  return errorFound
+}
+
+const areRelatedTaskPositionsInBacklog = (taskPostionsCache, taskId, taskRelated) => {
+  let errorFound = false
+
+  if (!taskRelated) return false
+
+  taskRelated.split(',').forEach(related => {
+    if (taskPostionsCache[related] === 1) {
       errorFound = true
     }
   })
@@ -96,7 +110,9 @@ export default ({ key, task, index }) => {
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}
             noStory={!task.story}
-            relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
+            relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
+            relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
+            relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
           >
             <p><a href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
@@ -115,7 +131,9 @@ export default ({ key, task, index }) => {
           onClick={() => selectTask(task.id ? task : { id: task })}
           selected={selectedStory && selectedStory === task.story}
           title={task.summary + '/' + task.description}
-          relationWarning={areRelatedTaskPositionsForbidden(taskPostionsCache, task.id, task.related)}
+          relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
+          relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
+          relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
         >
           <p>#{task.id} / {task.summary} / {task.sp}SP</p>
           <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
