@@ -13,6 +13,7 @@
     "jira-connector": "^2.16.1",
     "lowdb": "^1.0.0",
     "moment": "^2.24.0",
+    "nodemon": "^1.19.4",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
     "react-date-range": "^1.0.0-beta",
@@ -68,7 +69,8 @@
   },
   "scripts": {
     "eslint": "standard --fix",
-    "start": "node scripts/start.js",
+    "start:old": "node scripts/start.js",
+    "start": "nodemon scripts/start.js",
     "build": "node scripts/build.js",
     "db-server": "node scripts/db-server.js",
     "load:stories": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false --linkType=Task",
