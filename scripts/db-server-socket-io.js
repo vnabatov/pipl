@@ -53,11 +53,16 @@ const getDb = () => {
     taskIndex[task.id] = task
   })
 
+  const taskLastUpdate = {}
+  state.tasks.forEach(task => {
+    taskLastUpdate[task.id] = task['dateChange'] + task['timeChange']
+  })
+
   const storyIndex = {}
   state.stories.forEach(story => {
     storyIndex[story.id] = story
   })
-  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex })
+  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate })
 }
 
 app.get('/db', function (req, res) {

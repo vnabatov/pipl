@@ -126,7 +126,7 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
         )
           ? <Story title={summary} onClick={() => selectStory(id)} className='message is-small'>
             <StoryHeader noTasks={taskCount === 0} selected={id === selectedStory}>
-              <a href={`https://jira.wiley.com/browse/${id}`}>#{id} {taskCount ? `(${taskCount})` : ''}</a> [{epicId}]
+              <a target='_blank' href={`https://jira.wiley.com/browse/${id}`}>#{id} {taskCount ? `(${taskCount})` : ''}</a> [{epicId}]
             </StoryHeader>
             <StoryBody>
               {summary}

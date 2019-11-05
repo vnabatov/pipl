@@ -114,7 +114,7 @@ export default ({ key, task, index }) => {
             relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
             relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
           >
-            <p><a href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
+            <p><a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>
           <TicketBody title={task.description}>

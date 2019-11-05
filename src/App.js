@@ -38,8 +38,6 @@ if (NETWORK === 'ws') {
     })
 
     dbs = parsedData
-
-    console.log(dbs.tasks)
   })
   socket.on('connect', () => {
     console.log('connect')
@@ -52,7 +50,7 @@ const App = () => {
   use(() => selectedStory)
   use(() => form.id)
   use(() => dbs && dbs.sprints)
-  use(() => dbs && dbs.tasks)
+  use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
 
   const clearForm = () => {
