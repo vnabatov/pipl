@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 import ReactSelect from 'react-select'
 import use from 'react-hoox'
+import { UnmountClosed } from 'react-collapse'
 
+const PanelName = styled.div`
+cursor: pointer;
+&:hover {
+  font-weight: bold;
+}
+`
 const Container = styled.div`
 display: grid;
 grid-template-rows: 1fr;
@@ -67,6 +74,8 @@ const defaultStory = { id: '', epicId: '', summary: '' }
 let newStory = defaultStory
 
 export default ({ stories, tasks, storiesFilter, addStory }) => {
+  const [isOpened, setOpened] = useState(false)
+
   const updateForm = (field, value) => (storiesFilter[field] = value)
   use(() => newStory)
   let epicsSelectItems = {}
@@ -75,66 +84,68 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
 
   let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / ${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
-  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<details open>
-    <summary>Stories</summary>
-    <StoryFilters>
-      <input placeholder='story id' type='text' className='input is-small' onChange={(e) => (newStory.id = e.target.value)} value={newStory.id} />
-      <input placeholder='epic id' type='text' className='input is-small' onChange={(e) => (newStory.epicId = e.target.value)} value={newStory.epicId} />
-      <input placeholder='summmary' type='text' className='input is-small' onChange={(e) => (newStory.summary = e.target.value)} value={newStory.summary} />
-      <input type='button' className='button is-small' value='Add Story' onClick={() => {
-        addStory(newStory)
-        newStory.id = ''
-        newStory.epicId = ''
-        newStory.summary = ''
-      }} />
-    </StoryFilters>
-    <StoryFilters>
-      <ReactSelect
-        key='epics'
-        options={epicsSelectItems}
-        value={{ value: storiesFilter.epicId, label: storiesFilter.epicId || 'All Epics' }}
-        onChange={selectedOption => updateForm('epicId', selectedOption.value)}
-      />
-      <ReactSelect
-        key='stories'
-        options={storiesSelectItems}
-        value={{
-          value: storiesFilter.search && storiesFilter.search.value,
-          label: (storiesFilter.search && storiesFilter.search.label) || 'All Stories'
-        }}
-        onChange={selectedOption => updateForm('search', selectedOption)}
-      />
-      <ReactSelect
-        key='withTasks'
-        options={[{ value: '', label: 'All' }, { value: 'withTasks', label: 'With Tasks' }, { value: 'withoutTasks', label: 'Without Tasks' }]}
-        value={{ value: storiesFilter.withTasks, label: storiesFilter.withTasks || 'All' }}
-        onChange={selectedOption => updateForm('withTasks', selectedOption.value)}
-      />
-      <div className='button is-small' type='button' onClick={() => {
-        updateForm('epicId', null)
-        updateForm('search', null)
-        updateForm('withTasks', null)
-      }}>Clear</div>
-    </StoryFilters>
-    <Container>
-      {stories.length && stories.map(({ id, summary, epicId }) => {
-        const taskCount = getTaskCountForStory(tasks, id)
-        return (
-          (!storiesFilter.epicId || storiesFilter.epicId === epicId) &&
+  return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
+    <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} Stories</PanelName>
+    <UnmountClosed isOpened={isOpened}>
+      <StoryFilters>
+        <input placeholder='story id' type='text' className='input is-small' onChange={(e) => (newStory.id = e.target.value)} value={newStory.id} />
+        <input placeholder='epic id' type='text' className='input is-small' onChange={(e) => (newStory.epicId = e.target.value)} value={newStory.epicId} />
+        <input placeholder='summmary' type='text' className='input is-small' onChange={(e) => (newStory.summary = e.target.value)} value={newStory.summary} />
+        <input type='button' className='button is-small' value='Add Story' onClick={() => {
+          addStory(newStory)
+          newStory.id = ''
+          newStory.epicId = ''
+          newStory.summary = ''
+        }} />
+      </StoryFilters>
+      <StoryFilters>
+        <ReactSelect
+          key='epics'
+          options={epicsSelectItems}
+          value={{ value: storiesFilter.epicId, label: storiesFilter.epicId || 'All Epics' }}
+          onChange={selectedOption => updateForm('epicId', selectedOption.value)}
+        />
+        <ReactSelect
+          key='stories'
+          options={storiesSelectItems}
+          value={{
+            value: storiesFilter.search && storiesFilter.search.value,
+            label: (storiesFilter.search && storiesFilter.search.label) || 'All Stories'
+          }}
+          onChange={selectedOption => updateForm('search', selectedOption)}
+        />
+        <ReactSelect
+          key='withTasks'
+          options={[{ value: '', label: 'All' }, { value: 'withTasks', label: 'With Tasks' }, { value: 'withoutTasks', label: 'Without Tasks' }]}
+          value={{ value: storiesFilter.withTasks, label: storiesFilter.withTasks || 'All' }}
+          onChange={selectedOption => updateForm('withTasks', selectedOption.value)}
+        />
+        <div className='button is-small' type='button' onClick={() => {
+          updateForm('epicId', null)
+          updateForm('search', null)
+          updateForm('withTasks', null)
+        }}>Clear</div>
+      </StoryFilters>
+      <Container>
+        {stories.length && stories.map(({ id, summary, epicId }) => {
+          const taskCount = getTaskCountForStory(tasks, id)
+          return (
+            (!storiesFilter.epicId || storiesFilter.epicId === epicId) &&
           (!storiesFilter.search || !storiesFilter.search.value || storiesFilter.search.value === id) &&
           (!storiesFilter.withTasks || (storiesFilter.withTasks === 'withTasks' && taskCount > 0) || (storiesFilter.withTasks === 'withoutTasks' && taskCount === 0))
-        )
-          ? <Story title={summary} onClick={() => selectStory(id)} className='message is-small'>
-            <StoryHeader noTasks={taskCount === 0} selected={id === selectedStory}>
-              <a target='_blank' href={`https://jira.wiley.com/browse/${id}`}>#{id} {taskCount ? `(${taskCount})` : ''}</a> [{epicId}]
-            </StoryHeader>
-            <StoryBody>
-              {summary}
-            </StoryBody>
-          </Story>
-          : ''
-      })}
-    </Container>
-  </details>)}
+          )
+            ? <Story title={summary} onClick={() => selectStory(id)} className='message is-small'>
+              <StoryHeader noTasks={taskCount === 0} selected={id === selectedStory}>
+                <a target='_blank' href={`https://jira.wiley.com/browse/${id}`}>#{id} {taskCount ? `(${taskCount})` : ''}</a> [{epicId}]
+              </StoryHeader>
+              <StoryBody>
+                {summary}
+              </StoryBody>
+            </Story>
+            : ''
+        })}
+      </Container>
+    </UnmountClosed>
+  </div>)}
   </AppContext.Consumer>
 }

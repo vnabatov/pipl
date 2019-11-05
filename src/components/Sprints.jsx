@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
+import styled from 'styled-components'
 import SprintsTable from './SprintsTable'
 import { DateRangePicker } from 'react-date-range'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import use from 'react-hoox'
 import moment from 'moment'
+import { UnmountClosed } from 'react-collapse'
 
+const PanelName = styled.div`
+cursor: pointer;
+&:hover {
+  font-weight: bold;
+}
+`
 const createdDate = {
   startDate: null,
   endDate: null,
@@ -19,6 +27,8 @@ const modifiedDate = {
 let taskFilter = ''
 
 export default ({ tasks, sprints, setData }) => {
+  const [isOpened, setOpened] = useState(false)
+
   use(() => createdDate)
   use(() => modifiedDate)
   use(() => taskFilter)
@@ -61,8 +71,9 @@ export default ({ tasks, sprints, setData }) => {
 
   return (
     <div>
-      <details>
-        <summary>Task Filter {taskFilter.length ? '🔣' : ''}</summary>
+      <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} Task Filter {taskFilter.length ? '🔣' : ''}</PanelName>
+
+      <UnmountClosed isOpened={isOpened}>
         <input type='text' className='input' placeholder='Task Id / Story Id / Task Summary / Version / Regexp(start with "/")'defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
 
         <details>
@@ -90,7 +101,7 @@ export default ({ tasks, sprints, setData }) => {
         </details>
 
         <hr />
-      </details>
+      </UnmountClosed>
 
       {sprints.map((sprint, key) => (
         <SprintsTable

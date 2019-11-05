@@ -1,17 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import use from 'react-hoox'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
+import { UnmountClosed } from 'react-collapse'
 
 const SprintTable = styled.div`
 display: flex;
 flex: 1;
 justify-content: space-between;
 `
+const PanelName = styled.div`
+cursor: pointer;
+&:hover {
+  font-weight: bold;
+}
+`
 
 export default ({ sprintDb, setData, tasksDb }) => {
+  const [isOpened, setOpened] = useState(false)
+
   use(sprintDb)
   use(tasksDb)
 
@@ -51,9 +60,9 @@ export default ({ sprintDb, setData, tasksDb }) => {
   }
 
   return (
-    <AppContext.Consumer>{() => (
-      <details>
-        <summary>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</summary>
+    <AppContext.Consumer>{() => (<div>
+      <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} {sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</PanelName>
+      <UnmountClosed isOpened={isOpened}>
         <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
             {
@@ -71,8 +80,8 @@ export default ({ sprintDb, setData, tasksDb }) => {
             }
           </DragDropContext>
         </SprintTable>
-      </details>
-    )}
+      </UnmountClosed>
+    </div>)}
     </AppContext.Consumer>
   )
 }

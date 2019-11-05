@@ -1,6 +1,6 @@
 {
   "name": "pipl",
-  "homepage":"spaceshipyard.site",
+  "homepage": "spaceshipyard.site",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -17,6 +17,7 @@
     "nodemon": "^1.19.4",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
+    "react-collapse": "^5.0.0",
     "react-date-range": "^1.0.0-beta",
     "react-dom": "^16.9.0",
     "react-hoox": "^0.2.3",
