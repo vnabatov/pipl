@@ -14,46 +14,13 @@ min-width:150px
 `
 
 export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
+  const storyColumns = {}
+  Object.entries(sprints[0].columns).forEach(([id, value]) => (storyColumns[id] = { ...value, taskIds: [] }))
   const storySprint = {
     'id': '0',
     'teamName': 'Stories',
-    'columns': {
-      'column-2': {
-        'id': 'column-2',
-        'title': 'Sprint 1',
-        'taskIds': []
-      },
-      'column-3': {
-        'id': 'column-3',
-        'title': 'Sprint 2',
-        'taskIds': []
-      },
-      'column-4': {
-        'id': 'column-4',
-        'title': 'Sprint 3',
-        'taskIds': []
-      },
-      'column-5': {
-        'id': 'column-5',
-        'title': 'Sprint 4',
-        'size': '40',
-        'taskIds': []
-      },
-      'column-6': {
-        'id': 'column-6',
-        'title': 'Sprint 5',
-        'size': '40',
-        'taskIds': []
-      }
-    },
-    'columnOrder': [
-      'column-1',
-      'column-2',
-      'column-3',
-      'column-4',
-      'column-5',
-      'column-6'
-    ]
+    'columns': storyColumns,
+    'columnOrder': sprints[0].columnOrder.slice(1)
   }
 
   sprints.forEach(sprint => {
