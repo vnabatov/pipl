@@ -88,7 +88,6 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
             <div className='field'>
               <div className='control'>
                 <ReactSelect
-                  isDisabled={id}
                   options={teamNames}
                   value={{ value: teamName, label: teamName }}
                   onChange={selectedOption => setTeamName(selectedOption.value)}
