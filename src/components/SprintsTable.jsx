@@ -4,7 +4,7 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import use from 'react-hoox'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
-import { UnmountClosed } from 'react-collapse'
+import { Collapse } from 'react-collapse'
 
 const SprintTable = styled.div`
 display: flex;
@@ -62,7 +62,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
   return (
     <AppContext.Consumer>{() => (<div>
       <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} {sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</PanelName>
-      <UnmountClosed isOpened={isOpened}>
+      <Collapse isOpened={isOpened}>
         <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
             {
@@ -80,7 +80,7 @@ export default ({ sprintDb, setData, tasksDb }) => {
             }
           </DragDropContext>
         </SprintTable>
-      </UnmountClosed>
+      </Collapse>
     </div>)}
     </AppContext.Consumer>
   )

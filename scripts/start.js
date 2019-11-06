@@ -312,5 +312,5 @@ if (!fs.existsSync('db/lowdb.json')) {
   const stream = fs.createReadStream('db/lowdb.default.json').pipe(fs.createWriteStream('db/lowdb.json'))
   stream.on('close', () => { require('./db-server') })
 } else {
-  require('./db-server-socket-io') 
+  require('./db-server-socket-io')
 }

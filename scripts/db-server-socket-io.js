@@ -140,17 +140,92 @@ io.on('connect', function (socket) {
     const time = moment().format('h:mm:ss')
 
     const newTaskId = parsedData.id.toString()
+    const oldTaskId = parsedData.oldId && parsedData.oldId.toString()
     const tasks = db.get('tasks')
+
+    console.log('oldTaskId, newTaskId', oldTaskId, newTaskId)
+
     const task = tasks
+      .find({ id: oldTaskId || newTaskId })
+
+    const taskNewIdDuplicate = tasks
       .find({ id: newTaskId })
 
+    if (oldTaskId !== newTaskId && taskNewIdDuplicate.value()) {
+      console.log(newTaskId, 'exists already, cant add')
+      return
+    }
+
     if (tasks.value().length && task.value()) {
+      if (task.value().teamName !== parsedData.teamName) {
+        const toRemove = []
+        const sprints = db.get('sprints').value()
+
+        sprints.forEach(sprint => {
+          const teamName = sprint.teamName
+          const columns = sprint.columns
+          Object.entries(columns).forEach(([colId, column]) => {
+            if (column.taskIds.includes(newTaskId)) {
+              toRemove.push({ columnId: column.id, teamName })
+            }
+          })
+        })
+
+        toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
+          db.get('sprints')
+            .find({ teamName })
+            .get(`columns.${columnId}.taskIds`)
+            .pull(newTaskId)
+            .write()
+        })
+
+        db.get('sprints')
+          .find({ teamName: parsedData.teamName })
+          .get('columns.column-1.taskIds')
+          .push(newTaskId)
+          .write()
+      }
+
+      if (oldTaskId !== newTaskId) {
+        const toRemove = []
+        const sprints = db.get('sprints').value()
+
+        sprints.forEach(sprint => {
+          const teamName = sprint.teamName
+          const columns = sprint.columns
+          Object.entries(columns).forEach(([colId, column]) => {
+            if (column.taskIds.includes(oldTaskId)) {
+              toRemove.push({ columnId: column.id, teamName })
+            }
+          })
+        })
+
+        toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
+          db.get('sprints')
+            .find({ teamName })
+            .get(`columns.${columnId}.taskIds`)
+            .pull(oldTaskId)
+            .write()
+
+          console.log('remove', `columns.${columnId}.taskIds`, oldTaskId)
+          console.log('add', `columns.${columnId}.taskIds`, newTaskId)
+
+          db.get('sprints')
+            .find({ teamName })
+            .get(`columns.${columnId}.taskIds`)
+            .push(newTaskId)
+            .write()
+        })
+      }
+
       task
-        .assign({ ...parsedData, timeChange: time, dateChange: date })
+        .assign({ ...parsedData, timeChange: time, dateChange: date, oldId: undefined })
         .write()
     } else {
       const newTask = { ...parsedData, time, date }
-      newTask.id = (newTaskId || tasks.value().length ? Math.max(...tasks.value().map(({ id }) => id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString()
+      console.log('newTaskId', newTaskId)
+      if (!newTaskId || !newTaskId.length) { newTask.id = (tasks.value().length ? Math.max(...tasks.value().map(({ id }) => isNaN(id.replace(/[0-9a-zA-Z]+-/, '')) ? 0 : id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString() }
+      console.log('newTask.id', newTask.id)
 
       db.get('tasks')
         .push(newTask)

@@ -87,6 +87,7 @@ const App = () => {
   const selectTask = (taskData) => {
     isMenuOpen = true
     form = taskData
+    form.oldId = taskData.id
   }
 
   const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))

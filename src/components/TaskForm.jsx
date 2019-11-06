@@ -26,7 +26,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
   const relatedTasksSelected = tasks.filter(i => relatedTasks.includes(i.value))
   return (
     <AppContext.Consumer>
-      {({ deleteTask, updateTask, clearForm }) => <Form key={id + '-form-container'}>
+      {({ deleteTask, updateTask, clearForm }) => <Form>
 
         <div className='field is-horizontal' key={'id'}>
           <div className='field-label is-small'>
@@ -35,7 +35,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
           <div className='field-body'>
             <div className='field'>
               <div className='control'>
-                <input className='input is-small' type='text' value={id} onChange={e => setId(e.target.value)} />
+                <input className='input is-small' type='text' defaultValue={id} onChange={e => setId(e.target.value)} />
               </div>
             </div>
           </div>
@@ -88,7 +88,6 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
             <div className='field'>
               <div className='control'>
                 <ReactSelect
-                  isDisabled={id}
                   options={teamNames}
                   value={{ value: teamName, label: teamName }}
                   onChange={selectedOption => setTeamName(selectedOption.value)}
@@ -145,7 +144,7 @@ export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
           <div className='field-body'>
             <div className='field'>
               <p className='control'>
-                <Button className='button is-primary' type='button' value='Save' onClick={() => teamName && summary ? updateTask({ id, description, related, sp, story, summary, teamName }) : window.alert('Select Team and Fill Summary')} />
+                <Button className='button is-primary' type='button' value='Save' onClick={() => teamName && summary ? updateTask({ id, description, related, sp, story, summary, teamName, oldId: form.oldId }) : window.alert('Select Team and Fill Summary')} />
                 <Button className='button is-warning' type='button' value='Delete' onClick={() => deleteTask(id)} />
                 <Button className='button' type='button' value='Close' onClick={clearForm} />
               </p>
