@@ -62,7 +62,12 @@ const loadTasksFromJira = (jiraData) => {
     })
     tasks.forEach(task => {
       const teamId = task.id.split('-')[0]
-      const sprint = dbJSON.sprints.find(({ id }) => id === teamId)
+      let sprint = dbJSON.sprints.find(({ id }) => id === teamId)
+
+      if (!sprint) {
+        console.log('sprint not found, trying default')
+        sprint = dbJSON.sprints.find(({ id }) => id === 'default')
+      }
 
       if (sprint) {
         if (!alreadyAdded.includes(task.id) && task.status !== 'Closed') {
@@ -73,6 +78,8 @@ const loadTasksFromJira = (jiraData) => {
         } else {
           console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
         }
+      } else {
+        console.log('sprint not found')
       }
     })
   })
