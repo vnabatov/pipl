@@ -310,7 +310,7 @@ detect(DEFAULT_PORT).then(port => {
 // create db from default if its empty
 if (!fs.existsSync('db/lowdb.json')) {
   const stream = fs.createReadStream('db/lowdb.default.json').pipe(fs.createWriteStream('db/lowdb.json'))
-  stream.on('close', () => { require('./db-server') })
+  stream.on('close', () => { require('./db-server-socket-io') })
 } else {
   require('./db-server-socket-io')
 }

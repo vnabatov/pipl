@@ -9,7 +9,7 @@ const {
   loadTasks = false,
   maxResults = 1000,
   jql = 'project = CPP0 AND issuetype = Story AND "Planned In" = FY20-Q3 AND status not in (Closed)',
-  linkType = 'Task'
+  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP0 AND issuetype = Story AND "Planned In" = FY20-Q3 AND status not in (Closed)') AND project not in ('WMMS', 'WIMC', 'PDH') AND status not in (Closed)`
 } = require('yargs').argv
 
 const jira = new JiraClient({ host, basic_auth: { username, password } })
@@ -18,7 +18,7 @@ const alreadyAdded = []
 const date = moment().format('YYYY-MM-DD')
 const time = moment().format('h:mm:ss')
 
-console.log({ maxResults, loadTasks, jql, linkType })
+console.log({ maxResults, loadTasks, jql, jql2 })
 
 const prepareAlreadyAdded = () => {
   dbJSON.stories.forEach(({ id }) => {
@@ -45,50 +45,71 @@ const loadStoriesFromJira = (jiraData) => {
 }
 
 const loadTasksFromJira = (jiraData) => {
-  jiraData.issues.forEach(issue => {
-    const tasks = issue.fields.issuelinks.filter(link => [...linkType.split(',')].includes(link.type.name) && link.inwardIssue).map(link => {
-      return ({
-        id: link.inwardIssue.key,
-        summary: link.inwardIssue.fields.summary,
-        story: issue.key,
-        related: '',
-        sp: '',
-        date,
-        time,
-        dateChange: date,
-        timeChange: time,
-        status: link.inwardIssue.fields.status.name
-      })
-    })
-    tasks.forEach(task => {
-      const teamId = task.id.split('-')[0]
-      let sprint = dbJSON.sprints.find(({ id }) => id === teamId)
+  jiraData.issues.forEach(task => {
+    const teamId = task.key.split('-')[0]
+    let sprint = dbJSON.sprints.find(({ id }) => id === teamId)
 
-      if (!sprint) {
-        console.log('sprint not found, trying default')
-        sprint = dbJSON.sprints.find(({ id }) => id === 'default')
-      }
+    if (!sprint) {
+      console.log('sprint not found, trying default')
+      sprint = dbJSON.sprints.find(({ id }) => id === 'default')
+    }
 
-      if (sprint) {
-        if (!alreadyAdded.includes(task.id) && task.status !== 'Closed') {
-          dbJSON.tasks.push({ ...task, teamName: sprint.teamName, status: undefined })
-          sprint.columns['column-1'].taskIds.push(task.id)
-          alreadyAdded.push(task.id)
-          console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
-        } else {
-          console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.id)
+    if (sprint) {
+      if (!alreadyAdded.includes(task.key) && task.status !== 'Closed') {
+        let taskSprint = ''
+        try {
+          taskSprint = /.+name=([^,]+)/.exec(task.fields.customfield_10942)[1]
+        } catch (e) {
+          console.log(`can't get a sprint`, e)
         }
-      } else {
-        console.log('sprint not found')
-      }
-    })
-  })
-}
 
-async function asyncForEach (array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array)
-  }
+        let version = ''
+        if (task.fields.fixVersions.length) {
+          try {
+            version = task.fields.fixVersions.map(({ name }) => name).join(',')
+          } catch (e) {
+            console.log(`can't get a version`, e)
+          }
+        }
+
+        let storyKey = task.fields.customfield_16525
+        try {
+          if (!storyKey && task.fields.issueLinks.length) {
+            task.fields.issueLinks.forEach(issueLink => {
+              if (issueLink.type.name === 'Story') {
+                storyKey = issueLink.id
+              }
+            })
+          }
+        } catch (e) {
+          console.log(`can't get a story key`, e)
+        }
+
+        const taskData = {
+          id: task.key,
+          summary: task.fields.summary,
+          story: storyKey,
+          related: '',
+          sp: '',
+          date,
+          time,
+          dateChange: date,
+          timeChange: time,
+          v: version,
+          sprint: taskSprint
+        }
+
+        dbJSON.tasks.push({ ...taskData, teamName: sprint.teamName, status: undefined })
+        sprint.columns[(dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || 'column-1'].taskIds.push(taskData.id)
+        alreadyAdded.push(taskData.id)
+        console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', taskData.id)
+      } else {
+        console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.key)
+      }
+    } else {
+      console.log('sprint not found')
+    }
+  })
 }
 
 const main = async () => {
@@ -96,27 +117,17 @@ const main = async () => {
 
   prepareAlreadyAdded()
 
-  const jiraData = await getIssuesByFilter(jql)
+  const storiesData = await getIssuesByFilter(jql)
 
-  loadStoriesFromJira(jiraData)
+  console.log('loadStoriesFromJira')
 
-  if (loadTasks) {
-    loadTasksFromJira(jiraData)
+  loadStoriesFromJira(storiesData)
 
-    await asyncForEach(dbJSON.tasks, async (task) => {
-      try {
-        if (task && task.id) {
-          const taskData = await getIssuesByFilter(`key=${task.id}`)
-          if (taskData) {
-            const ver = taskData.issues[0].fields.fixVersions[0].name
-            dbJSON.tasks.find(({ id }) => (id === task.id)).v = ver
-            console.log('set version', task.id, ver)
-          }
-        }
-      } catch (e) {
-        // console.log(e)
-      }
-    })
+  if (loadTasks === 'true') {
+    console.log('loadTasks')
+
+    const taskData = await getIssuesByFilter(jql2)
+    loadTasksFromJira(taskData)
   }
 
   fs.writeFile(dbFileName, JSON.stringify(dbJSON), function (err) {
