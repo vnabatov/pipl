@@ -21,6 +21,8 @@ const Label = styled.div`
 text-align:center;
 word-break: break-word;
 text-transform: capitalize;
+${({ selected }) => selected ? 'font-weight: bold;' : ''}}
+
 `
 
 const Ticket = styled.div`
@@ -106,7 +108,7 @@ export default ({ task, index }) => {
         {...provided.dragHandleProps}
         ref={provided.innerRef}
       >
-        {!isCompact ? <Ticket id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
+        {!isCompact ? <Ticket id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}
             noStory={!task.story}
@@ -115,24 +117,27 @@ export default ({ task, index }) => {
             relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
           >
             <p><a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
+            <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>
-          <TicketBody>
+          <TicketBody title={task.description}>
             {task.summary}
             <Grid>
               <Label title='depends on'>{task.related}</Label>
-              <Label title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
+              <Label selected={selectedStory && selectedStory === task.story} title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
               <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
             </Grid>
           </TicketBody>
         </Ticket> : <TicketHeader
           isSmall
-          onClick={() => selectTask(task.id ? task : { id: task })}
+          onClick={() => selectTask(task)}
           selected={selectedStory && selectedStory === task.story}
+          title={task.summary + '/' + task.description}
           relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
           relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
           relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
         >
           <p>#{task.id} / {task.summary} / {task.sp}SP</p>
+          <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
         </TicketHeader>}
       </Container>
     )}
