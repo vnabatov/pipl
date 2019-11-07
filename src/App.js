@@ -49,7 +49,8 @@ const App = () => {
   use(() => isCompact)
   use(() => selectedStory)
   use(() => form.id)
-  use(() => dbs ? dbs.taskLastUpdateHash : '')
+  use(() => dbs && dbs.sprints)
+  use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
 
   const clearForm = () => {
@@ -195,7 +196,7 @@ const App = () => {
       {(!dbs) ? 'Loading' : <div className='content'>
         <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
-        <Sprints taskLastUpdateHash={dbs.taskLastUpdateHash} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+        <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <Relations tasks={dbs.tasks} selectedId={form.id} />
 

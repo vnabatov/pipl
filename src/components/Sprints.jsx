@@ -95,7 +95,7 @@ export default ({ taskLastUpdateHash, tasks, sprints, setData }) => {
       {sprints.map((sprint, key) => (
         <SprintsTable
           setData={setData}
-          key={key + taskLastUpdateHash}
+          key={key + sprint.teamName}
           tasksDb={filteredTasks}
           sprintDb={sprint}
         />
