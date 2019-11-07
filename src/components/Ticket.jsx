@@ -115,9 +115,8 @@ export default ({ task, index }) => {
             relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
           >
             <p><a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
-            <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>
-          <TicketBody title={task.description}>
+          <TicketBody>
             {task.summary}
             <Grid>
               <Label title='depends on'>{task.related}</Label>
@@ -129,13 +128,11 @@ export default ({ task, index }) => {
           isSmall
           onClick={() => selectTask(task.id ? task : { id: task })}
           selected={selectedStory && selectedStory === task.story}
-          title={task.summary + '/' + task.description}
           relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
           relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
           relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
         >
           <p>#{task.id} / {task.summary} / {task.sp}SP</p>
-          <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
         </TicketHeader>}
       </Container>
     )}

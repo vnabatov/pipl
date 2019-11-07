@@ -90,6 +90,7 @@ export default ({ taskLastUpdateHash, tasks, sprints, setData }) => {
             modifiedDate.endDate = null
           }} >Reset</div>
         </details>
+        <hr />
       </details>
 
       {sprints.map((sprint, key) => (
