@@ -97,7 +97,7 @@ const areRelatedTaskPositionsInBacklog = (taskPostionsCache, taskId, taskRelated
   return errorFound
 }
 
-export default ({ key, task, index }) => {
+export default ({ task, index }) => {
   return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact }) => (
     <Draggable draggableId={task.id} index={index}>{(provided) => (
       <Container
@@ -105,8 +105,8 @@ export default ({ key, task, index }) => {
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         ref={provided.innerRef}
-      >{key}
-        {!isCompact ? <Ticket title={JSON.stringify(task)} onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
+      >
+        {!isCompact ? <Ticket id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task.id ? task : { id: task })} className='message is-small'>
           <TicketHeader
             selected={selectedStory && selectedStory === task.story}
             noStory={!task.story}
@@ -119,7 +119,6 @@ export default ({ key, task, index }) => {
           </TicketHeader>
           <TicketBody title={task.description}>
             {task.summary}
-
             <Grid>
               <Label title='depends on'>{task.related}</Label>
               <Label title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>

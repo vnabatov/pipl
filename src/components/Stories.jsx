@@ -85,7 +85,7 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
   let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / ${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
-    <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} Stories</PanelName>
+    <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '|' : '-'} Stories</PanelName>
     <UnmountClosed isOpened={isOpened}>
       <StoryFilters>
         <input placeholder='story id' type='text' className='input is-small' onChange={(e) => (newStory.id = e.target.value)} value={newStory.id} />
@@ -134,7 +134,7 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
           (!storiesFilter.search || !storiesFilter.search.value || storiesFilter.search.value === id) &&
           (!storiesFilter.withTasks || (storiesFilter.withTasks === 'withTasks' && taskCount > 0) || (storiesFilter.withTasks === 'withoutTasks' && taskCount === 0))
           )
-            ? <Story title={summary} onClick={() => selectStory(id)} className='message is-small'>
+            ? <Story key={'story' + id} title={summary} onClick={() => selectStory(id)} className='message is-small'>
               <StoryHeader noTasks={taskCount === 0} selected={id === selectedStory}>
                 <a target='_blank' href={`https://jira.wiley.com/browse/${id}`}>#{id} {taskCount ? `(${taskCount})` : ''}</a> [{epicId}]
               </StoryHeader>

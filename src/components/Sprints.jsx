@@ -1,19 +1,11 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import SprintsTable from './SprintsTable'
 import { DateRangePicker } from 'react-date-range'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import use from 'react-hoox'
 import moment from 'moment'
-import { UnmountClosed } from 'react-collapse'
 
-const PanelName = styled.div`
-cursor: pointer;
-&:hover {
-  font-weight: bold;
-}
-`
 const createdDate = {
   startDate: null,
   endDate: null,
@@ -26,9 +18,7 @@ const modifiedDate = {
 }
 let taskFilter = ''
 
-export default ({ tasks, sprints, setData }) => {
-  const [isOpened, setOpened] = useState(false)
-
+export default ({ taskLastUpdateHash, tasks, sprints, setData }) => {
   use(() => createdDate)
   use(() => modifiedDate)
   use(() => taskFilter)
@@ -71,12 +61,13 @@ export default ({ tasks, sprints, setData }) => {
 
   return (
     <div>
-      <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} Task Filter {taskFilter.length ? '🔣' : ''}</PanelName>
 
-      <UnmountClosed isOpened={isOpened}>
+      <details key='details1'>
+        <summary>Task Filter {taskFilter.length ? '🔣' : ''}</summary>
+
         <input type='text' className='input' placeholder='Task Id / Story Id / Task Summary / Version / Regexp(start with "/")'defaultValue={taskFilter} onChange={(e) => (taskFilter = e.target.value)} />
 
-        <details>
+        <details key='details1'>
           <summary>Created {createdDate.startDate !== null || createdDate.endDate !== null ? '⏲️' : ''}</summary>
           <DateRangePicker
             ranges={[createdDate]}
@@ -88,7 +79,7 @@ export default ({ tasks, sprints, setData }) => {
           }} >Reset</div>
         </details>
 
-        <details>
+        <details key='details2'>
           <summary>Modified {modifiedDate.startDate !== null || modifiedDate.endDate !== null ? '⏲️' : ''}</summary>
           <DateRangePicker
             ranges={[modifiedDate]}
@@ -99,14 +90,12 @@ export default ({ tasks, sprints, setData }) => {
             modifiedDate.endDate = null
           }} >Reset</div>
         </details>
-
-        <hr />
-      </UnmountClosed>
+      </details>
 
       {sprints.map((sprint, key) => (
         <SprintsTable
           setData={setData}
-          key={key}
+          key={key + taskLastUpdateHash}
           tasksDb={filteredTasks}
           sprintDb={sprint}
         />

@@ -47,45 +47,42 @@ export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
   return (
     <AppContext.Consumer>{() => (
       <div>
-        <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '▼' : '►'} Program board</PanelName>
+        <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '|' : '-'} Program board</PanelName>
         <UnmountClosed isOpened={isOpened}>
+          <SprintTable key={'pb-sprint-stories'}>
+            <TeamName>Stories</TeamName>
+            {storySprint.columnOrder.map((columnId) => {
+              const column = storySprint.columns[columnId]
+              if (column) {
+                const sprintStories = column.taskIds.map(storyId => storyIndex[storyId])
+                return <ProgramBoardColumnStories
+                  key={columnId}
+                  title={column.title}
+                  stories={stories}
+                  sprintStories={sprintStories || {}}
+                />
+              } else {
+                return ''
+              }
+            })}
+          </SprintTable>
 
-          <div>
-            <SprintTable>
-              <TeamName>Stories</TeamName>
-              {storySprint.columnOrder.map((columnId) => {
-                const column = storySprint.columns[columnId]
-                if (column) {
-                  const sprintStories = column.taskIds.map(storyId => storyIndex[storyId])
-                  return <ProgramBoardColumnStories
-                    key={columnId}
-                    title={column.title}
-                    stories={stories}
-                    sprintStories={sprintStories || {}}
-                  />
-                } else {
-                  return ''
-                }
-              })}
-            </SprintTable>
-
-            {sprints && tasks && sprints.map(sprint => <div><SprintTable><TeamName>{sprint.teamName}</TeamName>
-              {sprint.columnOrder.map((columnId) => {
-                if (storySprint.columns[columnId]) {
-                  const column = sprint.columns[columnId]
-                  const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
-                  return <ProgramBoardColumnTasks
-                    key={column.id}
-                    title={column.title}
-                    stories={stories}
-                    tasks={sprintTasks}
-                  />
-                } else {
-                  return ''
-                }
-              })}
-            </SprintTable></div>)}
-          </div>
+          {sprints && tasks && sprints.map(sprint => <SprintTable key={'pb-sprint' + sprint.teamName}><TeamName>{sprint.teamName}</TeamName>
+            {sprint.columnOrder.slice(1).map((columnId) => {
+              if (storySprint.columns[columnId]) {
+                const column = sprint.columns[columnId]
+                const sprintTasks = column.taskIds.map(taskId => tasks.filter(task => task.id === taskId)[0] || { id: taskId, summary: 'not found' })
+                return <ProgramBoardColumnTasks
+                  key={column.id}
+                  title={column.title}
+                  stories={stories}
+                  tasks={sprintTasks}
+                />
+              } else {
+                return ''
+              }
+            })}
+          </SprintTable>)}
         </UnmountClosed>
       </div>
     )}

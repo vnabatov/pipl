@@ -6,6 +6,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('db/lowdb.json')
 const moment = require('moment')
 const fileUpload = require('express-fileupload')
+const stringHash = require('string-hash')
 
 const db = lowdb(adapter)
 
@@ -57,12 +58,13 @@ const getDb = () => {
   state.tasks.forEach(task => {
     taskLastUpdate[task.id] = task['dateChange'] + task['timeChange']
   })
-
+  const taskLastUpdateHash = stringHash(JSON.stringify(taskLastUpdate) + JSON.stringify(taskPostionsCache))
+  console.log(taskLastUpdateHash)
   const storyIndex = {}
   state.stories.forEach(story => {
     storyIndex[story.id] = story
   })
-  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate })
+  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdateHash })
 }
 
 app.get('/db', function (req, res) {

@@ -39,13 +39,13 @@ text-decoration: none !important;
 font-size:16px;
 `
 
-export default ({ title, stories, sprintStories }) => (
+export default ({ title, sprintStories }) => (
   <AppContext.Consumer>
     {({ selectStory, selectedStory }) => (
       <Container><Title>{title}</Title><TaskList>
-        {sprintStories.map((story, index) => {
-          return story ? <Story selected={selectedStory === story.id} onClick={() => selectStory(story.id)} key={index} className={`message is-small story${story.id}`}>
-            <TaskLink title='story' href={`https://jira.wiley.com/browse/${story.id}`}>{story.id}</TaskLink><div>{story.summary}</div>
+        {sprintStories.map((story) => {
+          return story ? <Story selected={selectedStory === story.id} key={'pb-story' + story.id} onClick={() => selectStory(story.id)} className={`message is-small story${story.id}`}>
+            <TaskLink title='story' href={`https://jira.wiley.com/browse/${story.id}`}>{story.id}</TaskLink>{story.summary}
           </Story> : ''
         })}
       </TaskList></Container>)}
