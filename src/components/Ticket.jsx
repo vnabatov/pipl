@@ -59,6 +59,10 @@ const TicketBody = styled.div`
 padding: 3px;
 word-break: break-word;
 `
+const Error = styled.div`
+font-weight: bold;
+color: red;
+`
 
 const areRelatedTaskPositionsEarlier = (taskPostionsCache, taskId, taskRelated) => {
   let errorFound = false
@@ -103,6 +107,9 @@ export default memo(({ task, index }) => {
   return <AppContext.Consumer key={'context-task-' + task.id}>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
     const isSelectedTask = selectedStory && selectedStory === task.story
     const isSelectedStory = selectedId && selectedId === task.id
+    const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
+    const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
+    const relationBacklog = areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)
     return (
       <Draggable draggableId={task.id} index={index}>{(provided) => (
         <Container
@@ -116,9 +123,9 @@ export default memo(({ task, index }) => {
               selectedStory={isSelectedStory}
               selectedTask={isSelectedTask}
               noStory={!task.story}
-              relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
-              relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
-              relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
+              relationEarlier={relationEarlier}
+              relationSameSprint={relationSameSprint}
+              relationBacklog={relationBacklog}
             >
               <a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}
               <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
@@ -130,6 +137,11 @@ export default memo(({ task, index }) => {
                 <Label selected={selectedStory && selectedStory === task.story} title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
                 <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
               </Grid>
+              <Error>
+                {relationEarlier ? 'Enabler is in later sprint' : ''}
+                {relationSameSprint ? 'Enabler is in the same sprint' : ''}
+                {relationBacklog ? 'Enabler is in the backlog' : ''}
+              </Error>
             </TicketBody>
           </Ticket> : <TicketHeader
             isSmall
@@ -138,9 +150,9 @@ export default memo(({ task, index }) => {
             selectedStory={isSelectedStory}
             selectedTask={isSelectedTask}
             title={task.summary + '/' + task.description}
-            relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
-            relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
-            relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
+            relationEarlier={relationEarlier}
+            relationSameSprint={relationSameSprint}
+            relationBacklog={relationBacklog}
           >
             #{task.id} / {task.summary} / {task.sp}SP
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
