@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import io from 'socket.io-client'
 
 import Sprints from './components/Sprints'
-import TaskForm from './components/TaskForm'
+import Navbar from './components/Navbar'
 import Stories from './components/Stories'
 import AppContext from './AppContext'
 import Relations from './components/Relations'
@@ -20,7 +20,8 @@ const defaultForm = { id: '', description: 'empty', teamName: '', summary: '', r
 
 let form = { ...defaultForm }
 let isMenuOpen = false
-let isCompact = false
+let isCompact = true
+let showRelations = true
 let selectedStory = ''
 let dbs
 let storiesFilter = {}
@@ -45,10 +46,11 @@ if (NETWORK === 'ws') {
 }
 
 const App = () => {
+  use(() => form.id)
   use(() => isMenuOpen)
+  use(() => showRelations)
   use(() => isCompact)
   use(() => selectedStory)
-  use(() => form.id)
   use(() => dbs && dbs.sprints)
   use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
@@ -120,89 +122,32 @@ const App = () => {
       selectedStory,
       dependendTasks: dbs && dbs.dependendTasks,
       taskPostionsCache: dbs && dbs.taskPostionsCache,
-      isCompact
+      isCompact,
+      selectedId: form.id
     }}>
 
-      <nav className='navbar'>
-        <div className='navbar-start'>
-          <h1>[PI PL]anning Helper</h1>
-        </div>
-        <div className='navbar-end'>
-
-          <div className='navbar-item'>
-            <div className={`button navbar-link is-arrowless`} onClick={downloadDb}>
-              Download
-            </div>
-          </div>
-
-          <form
-            action='/upload'
-            style={{ display: 'inherit' }}
-            method='post'
-            encType='multipart/form-data'>
-
-            <div className='navbar-item'>
-              <div>
-                <div className='file'>
-                  <label className='file-label'>
-                    <input className='file-input' type='file'name='dbFile' />
-                    <span className='file-cta'>
-                      <span className='file-label'>
-                      Choose a file…
-                      </span>
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className='navbar-item'>
-              <input className='button' type='submit' value='Upload' />
-            </div>
-
-          </form>
-
-          <div className='navbar-item'>
-            <div className={`button navbar-link is-arrowless ${isCompact ? 'is-success' : ''}`} onClick={() => (isCompact = !isCompact)}>
-              Compact
-            </div>
-          </div>
-
-          <div className='navbar-item'>
-            <div className={`button navbar-link is-arrowless ${form.id === 'all' ? 'is-success' : ''}`} onClick={() => (form.id = (form.id === 'all' ? '' : 'all'))}>
-              Relations
-            </div>
-          </div>
-
-          <div className={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
-
-            <div className='navbar-link' onClick={() => (isMenuOpen = !isMenuOpen)}>
-              Create/Edit
-            </div>
-
-            <div className='navbar-dropdown is-right'>
-              {isMenuOpen ? <TaskForm
-                key={(form.id || 'empty') + '-form'}
-                form={form}
-                teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, label: sprint.teamName })) : []}
-                stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary.substr(0, 15)}`, fullLabel: `#${id}: ${summary}` })) : []}
-                tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary.substr(0, 15)}` })) : []}
-              /> : ''}
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar {...{ downloadDb,
+        isCompact,
+        form,
+        dbs,
+        isMenuOpen,
+        showRelations,
+        menuToggle: () => (isMenuOpen = !isMenuOpen),
+        relationsToggle: () => (showRelations = !showRelations),
+        allRelationsToggle: () => (form.id = (form.id === 'all' ? '' : 'all')),
+        compactToggle: () => (isCompact = !isCompact)
+      }} />
 
       {(!dbs) ? 'Loading' : <div className='content'>
         <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
         <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
-        <Relations tasks={dbs.tasks} selectedId={form.id} />
-
         <ProgramBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
-        <RelationsProgramBoard tasks={dbs.tasks} selectedStory={selectedStory} />
+        {showRelations && <Relations tasks={dbs.tasks} selectedId={form.id} />}
+
+        {showRelations && <RelationsProgramBoard showRelations={showRelations} tasks={dbs.tasks} selectedStory={selectedStory} />}
       </div>}
     </AppContext.Provider>
   </div>

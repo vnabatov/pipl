@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 import AppContext from '../AppContext'
@@ -51,8 +51,9 @@ ${({ isSmall }) => isSmall ? 'font-size: 0.6rem;' : ''}}
 ${({ relationSameSprint }) => relationSameSprint ? 'background-color: orange;' : ''}}
 ${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
 ${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
-${({ selected }) => selected ? 'border: 3px solid #3273DC;' : ''}}
-${({ noStory }) => noStory ? 'border: 3px solid #AB23D1;' : ''}}
+${({ selectedTask }) => selectedTask ? 'border-left: 3px solid #3273DC;' : ''}}
+${({ selectedStory }) => selectedStory ? 'border-top: 3px solid green;' : ''}}
+${({ noStory }) => noStory ? 'border-right: 3px solid #AB23D1;' : ''}}
 `
 
 const TicketBody = styled.div`
@@ -99,49 +100,56 @@ const areRelatedTaskPositionsInBacklog = (taskPostionsCache, taskId, taskRelated
   return errorFound
 }
 
-export default ({ task, index }) => {
-  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact }) => (
-    <Draggable draggableId={task.id} index={index}>{(provided) => (
-      <Container
-        className={'task' + task.id}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
-        ref={provided.innerRef}
-      >
-        {!isCompact ? <Ticket id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
-          <TicketHeader
-            selected={selectedStory && selectedStory === task.story}
-            noStory={!task.story}
+export default memo(({ task, index }) => {
+  return <AppContext.Consumer key={'context-task-' + task.id}>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
+    const isSelectedTask = selectedStory && selectedStory === task.story
+    const isSelectedStory = selectedId && selectedId === task.id
+    return (
+      <Draggable draggableId={task.id} index={index}>{(provided) => (
+        <Container
+          className={'task' + task.id}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          {!isCompact || isSelectedTask || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
+            <TicketHeader
+              selectedStory={isSelectedStory}
+              selectedTask={isSelectedTask}
+              noStory={!task.story}
+              relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
+              relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
+              relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
+            >
+              <p><a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
+              <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+            </TicketHeader>
+            <TicketBody title={task.description}>
+              {task.summary}
+              <Grid>
+                <Label title='depends on'>{task.related}</Label>
+                <Label selected={selectedStory && selectedStory === task.story} title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
+                <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
+              </Grid>
+            </TicketBody>
+          </Ticket> : <TicketHeader
+            isSmall
+            key={'task-' + task.id}
+            onClick={() => selectTask(task)}
+            selectedStory={isSelectedStory}
+            selectedTask={isSelectedTask}
+            title={task.summary + '/' + task.description}
             relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
             relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
             relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
           >
-            <p><a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
+            <p>#{task.id} / {task.summary} / {task.sp}SP</p>
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
-          </TicketHeader>
-          <TicketBody title={task.description}>
-            {task.summary}
-            <Grid>
-              <Label title='depends on'>{task.related}</Label>
-              <Label selected={selectedStory && selectedStory === task.story} title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
-              <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
-            </Grid>
-          </TicketBody>
-        </Ticket> : <TicketHeader
-          isSmall
-          onClick={() => selectTask(task)}
-          selected={selectedStory && selectedStory === task.story}
-          title={task.summary + '/' + task.description}
-          relationEarlier={areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)}
-          relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
-          relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
-        >
-          <p>#{task.id} / {task.summary} / {task.sp}SP</p>
-          <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
-        </TicketHeader>}
-      </Container>
-    )}
-    </Draggable>
-  )}
+          </TicketHeader>}
+        </Container>
+      )}
+      </Draggable>
+    )
+  }}
   </AppContext.Consumer>
-}
+})

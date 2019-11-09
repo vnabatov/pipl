@@ -60,8 +60,7 @@ export default ({ taskLastUpdateHash, tasks, sprints, setData }) => {
   }
 
   return (
-    <div>
-
+    <div key='sprint-container'>
       <details key='details1'>
         <summary>Task Filter {taskFilter.length ? '🔣' : ''}</summary>
 
