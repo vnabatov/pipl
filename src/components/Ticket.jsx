@@ -27,7 +27,6 @@ ${({ selected }) => selected ? 'font-weight: bold;' : ''}}
 
 const Ticket = styled.div`
 min-height: 100px;
-border: 1px solid lightgray;
 background: rgba(255,255,255, .7);
 `
 const TicketHeader = styled.div`
@@ -121,7 +120,7 @@ export default memo(({ task, index }) => {
               relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
               relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
             >
-              <p><a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}</p>
+              <a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}
               <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
             </TicketHeader>
             <TicketBody title={task.description}>
@@ -143,7 +142,7 @@ export default memo(({ task, index }) => {
             relationSameSprint={areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)}
             relationBacklog={areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)}
           >
-            <p>#{task.id} / {task.summary} / {task.sp}SP</p>
+            #{task.id} / {task.summary} / {task.sp}SP
             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
           </TicketHeader>}
         </Container>

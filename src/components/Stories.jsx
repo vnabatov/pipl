@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 import ReactSelect from 'react-select'
-import use from 'react-hoox'
 import { UnmountClosed } from 'react-collapse'
 
 const PanelName = styled.div`
@@ -67,44 +66,17 @@ display: grid;
 grid-template-columns: 2fr 2fr 2fr 1fr;
 grid-column-gap: 3px;
 `
-
 const getTaskCountForStory = (tasks, story) => tasks.filter(task => task.story === story).length
-
-const defaultStory = { id: '', epicId: '', summary: '' }
-let newStory = defaultStory
 
 export default ({ stories, tasks, storiesFilter, addStory }) => {
   const [isOpened, setOpened] = useState(false)
-
   const updateForm = (field, value) => (storiesFilter[field] = value)
-  use(() => newStory)
-  let epicsSelectItems = {}
-  stories.forEach(({ epicId }) => (epicsSelectItems[epicId] = 1))
-  epicsSelectItems = Object.keys(epicsSelectItems).map(epic => epic === 'null' ? ({ value: '', label: 'All Epics' }) : ({ value: epic, label: epic }))
-
-  let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / ${epicId} / ${summary}` }))
+  let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / epic:${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
     <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '|' : '-'} Stories</PanelName>
     <UnmountClosed isOpened={isOpened}>
       <StoryFilters>
-        <input placeholder='story id' type='text' className='input is-small' onChange={(e) => (newStory.id = e.target.value)} value={newStory.id} />
-        <input placeholder='epic id' type='text' className='input is-small' onChange={(e) => (newStory.epicId = e.target.value)} value={newStory.epicId} />
-        <input placeholder='summmary' type='text' className='input is-small' onChange={(e) => (newStory.summary = e.target.value)} value={newStory.summary} />
-        <input type='button' className='button is-small' value='Add Story' onClick={() => {
-          addStory(newStory)
-          newStory.id = ''
-          newStory.epicId = ''
-          newStory.summary = ''
-        }} />
-      </StoryFilters>
-      <StoryFilters>
-        <ReactSelect
-          key='epics'
-          options={epicsSelectItems}
-          value={{ value: storiesFilter.epicId, label: storiesFilter.epicId || 'All Epics' }}
-          onChange={selectedOption => updateForm('epicId', selectedOption.value)}
-        />
         <ReactSelect
           key='stories'
           options={storiesSelectItems}
