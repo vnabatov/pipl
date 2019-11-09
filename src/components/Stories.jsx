@@ -3,13 +3,8 @@ import styled from 'styled-components'
 import AppContext from '../AppContext'
 import ReactSelect from 'react-select'
 import { UnmountClosed } from 'react-collapse'
+import PanelName from './PanelName'
 
-const PanelName = styled.div`
-cursor: pointer;
-&:hover {
-  font-weight: bold;
-}
-`
 const Container = styled.div`
 display: grid;
 grid-template-rows: 1fr;
@@ -74,7 +69,7 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
   let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / epic:${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
-    <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '|' : '-'} Stories</PanelName>
+    <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Stories</PanelName>
     <UnmountClosed isOpened={isOpened}>
       <StoryFilters>
         <ReactSelect

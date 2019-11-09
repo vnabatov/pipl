@@ -47,7 +47,7 @@ position: relative;
 word-break: break-word;
 
 ${({ isSmall }) => isSmall ? 'font-size: 0.6rem;' : ''}}
-${({ relationSameSprint }) => relationSameSprint ? 'background-color: orange;' : ''}}
+${({ relationSameSprint }) => relationSameSprint ? `background-color: orange;` : ''}}
 ${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
 ${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
 ${({ selectedTask }) => selectedTask ? 'border-left: 3px solid #3273DC;' : ''}}

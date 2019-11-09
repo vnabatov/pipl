@@ -5,19 +5,14 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 import { UnmountClosed } from 'react-collapse'
+import PanelName from './PanelName'
 
 const SprintTable = styled.div`
 display: flex;
 flex: 1;
 justify-content: space-between;
 `
-const PanelName = styled.div`
-cursor: pointer;
-${({ isOpened }) => isOpened ? 'font-weight:bold' : ''}}
-&:hover {
-  color: coral
-}
-`
+
 export default ({ sprintDb, setData, tasksDb }) => {
   const [isOpened, setOpened] = useState(false)
 

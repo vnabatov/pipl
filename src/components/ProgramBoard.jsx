@@ -4,6 +4,8 @@ import AppContext from '../AppContext'
 import ProgramBoardColumnTasks from './ProgramBoardColumnTasks'
 import ProgramBoardColumnStories from './ProgramBoardColumnStories'
 import { UnmountClosed } from 'react-collapse'
+import PanelName from './PanelName'
+
 const SprintTable = styled.div`
 display: flex;
 flex: 1;
@@ -11,12 +13,6 @@ justify-content: space-between;
 `
 const TeamName = styled.div`
 min-width:150px
-`
-const PanelName = styled.div`
-cursor: pointer;
-&:hover {
-  font-weight: bold;
-}
 `
 
 export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
@@ -47,7 +43,7 @@ export default ({ stories, tasks, sprints, taskStoryIndex, storyIndex }) => {
   return (
     <AppContext.Consumer>{() => (
       <div>
-        <PanelName onClick={() => setOpened(!isOpened)}>{isOpened ? '|' : '-'} Program board</PanelName>
+        <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Program board</PanelName>
         <UnmountClosed isOpened={isOpened}>
           <SprintTable key={'pb-sprint-stories'}>
             <TeamName>Stories</TeamName>
