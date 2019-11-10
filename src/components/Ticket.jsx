@@ -120,7 +120,6 @@ const Task = memo(({
   const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
   const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
   const relationBacklog = areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)
-  console.log('render')
   return !isCompact || isSelectedTask || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
     <TicketHeader
       selectedStory={isSelectedStory}
@@ -160,7 +159,10 @@ const Task = memo(({
 #{task.id} / {task.summary} / {task.sp}SP
     <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
   </TicketHeader>
-}, (prevProps, nextProps) => shallowequal(prevProps.task, nextProps.task))
+}, (prevProps, nextProps) => shallowequal(prevProps.task, prevProps.task) &&
+nextProps.task.id !== nextProps.selectedId &&
+nextProps.task.id !== prevProps.selectedId
+)
 
 export default memo(({ task, index }) => {
   return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
