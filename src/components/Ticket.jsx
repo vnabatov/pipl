@@ -161,7 +161,9 @@ const Task = memo(({
   </TicketHeader>
 }, (prevProps, nextProps) => shallowequal(prevProps.task, prevProps.task) &&
 nextProps.task.id !== nextProps.selectedId &&
-nextProps.task.id !== prevProps.selectedId
+nextProps.task.id !== prevProps.selectedId &&
+prevProps.task.story !== prevProps.selectedStory &&
+nextProps.task.story !== nextProps.selectedStory
 )
 
 export default memo(({ task, index }) => {
