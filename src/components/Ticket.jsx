@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import styled from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 import AppContext from '../AppContext'
+import shallowequal from 'shallowequal'
 
 const Container = styled.div`
 padding:3px;
@@ -103,13 +104,66 @@ const areRelatedTaskPositionsInBacklog = (taskPostionsCache, taskId, taskRelated
   return errorFound
 }
 
+const Task = memo(({
+  selectedStory,
+  task,
+  selectedId,
+  taskPostionsCache,
+  isCompact,
+  deleteTask,
+  selectStory,
+  dependendTasks,
+  selectTask
+}) => {
+  const isSelectedTask = selectedStory && selectedStory === task.story
+  const isSelectedStory = selectedId && selectedId === task.id
+  const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
+  const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
+  const relationBacklog = areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)
+  console.log('render')
+  return !isCompact || isSelectedTask || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
+    <TicketHeader
+      selectedStory={isSelectedStory}
+      selectedTask={isSelectedTask}
+      noStory={!task.story}
+      relationEarlier={relationEarlier}
+      relationSameSprint={relationSameSprint}
+      relationBacklog={relationBacklog}
+    >
+      <a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}
+      <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+    </TicketHeader>
+    <TicketBody title={task.description}>
+      {task.summary}
+      <Grid>
+        <Label title='depends on'>{task.related}</Label>
+        <Label selected={selectedStory && selectedStory === task.story} title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
+        <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
+      </Grid>
+      <Error>
+        {relationEarlier ? 'Enabler is in later sprint' : ''}
+        {relationSameSprint ? 'Enabler is in the same sprint' : ''}
+        {relationBacklog ? 'Enabler is in the backlog' : ''}
+      </Error>
+    </TicketBody>
+  </Ticket> : <TicketHeader
+    isSmall
+    key={'task-' + task.id}
+    onClick={() => selectTask(task)}
+    selectedStory={isSelectedStory}
+    selectedTask={isSelectedTask}
+    title={task.summary + '/' + task.description}
+    relationEarlier={relationEarlier}
+    relationSameSprint={relationSameSprint}
+    relationBacklog={relationBacklog}
+  >
+#{task.id} / {task.summary} / {task.sp}SP
+    <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+  </TicketHeader>
+}, (prevProps, nextProps) => shallowequal(prevProps.task, nextProps.task))
+
 export default memo(({ task, index }) => {
-  return <AppContext.Consumer key={'context-task-' + task.id}>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
-    const isSelectedTask = selectedStory && selectedStory === task.story
-    const isSelectedStory = selectedId && selectedId === task.id
-    const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
-    const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
-    const relationBacklog = areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
     return (
       <Draggable draggableId={task.id} index={index}>{(provided) => (
         <Container
@@ -118,45 +172,17 @@ export default memo(({ task, index }) => {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          {!isCompact || isSelectedTask || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
-            <TicketHeader
-              selectedStory={isSelectedStory}
-              selectedTask={isSelectedTask}
-              noStory={!task.story}
-              relationEarlier={relationEarlier}
-              relationSameSprint={relationSameSprint}
-              relationBacklog={relationBacklog}
-            >
-              <a target='_blank' href={`https://jira.wiley.com/browse/${task.id}`}>#{task.id}</a>&nbsp;/&nbsp;{task.sp}SP / ver:{task.v}
-              <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
-            </TicketHeader>
-            <TicketBody title={task.description}>
-              {task.summary}
-              <Grid>
-                <Label title='depends on'>{task.related}</Label>
-                <Label selected={selectedStory && selectedStory === task.story} title='story' onClick={() => selectStory(task.story)}>{task.story}</Label>
-                <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
-              </Grid>
-              <Error>
-                {relationEarlier ? 'Enabler is in later sprint' : ''}
-                {relationSameSprint ? 'Enabler is in the same sprint' : ''}
-                {relationBacklog ? 'Enabler is in the backlog' : ''}
-              </Error>
-            </TicketBody>
-          </Ticket> : <TicketHeader
-            isSmall
-            key={'task-' + task.id}
-            onClick={() => selectTask(task)}
-            selectedStory={isSelectedStory}
-            selectedTask={isSelectedTask}
-            title={task.summary + '/' + task.description}
-            relationEarlier={relationEarlier}
-            relationSameSprint={relationSameSprint}
-            relationBacklog={relationBacklog}
-          >
-            #{task.id} / {task.summary} / {task.sp}SP
-            <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
-          </TicketHeader>}
+          <Task {...{
+            selectedStory,
+            task,
+            selectedId,
+            taskPostionsCache,
+            isCompact,
+            deleteTask,
+            selectStory,
+            dependendTasks,
+            selectTask
+          }} />
         </Container>
       )}
       </Draggable>

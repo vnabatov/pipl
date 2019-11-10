@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 import Ticket from './Ticket'
 import { Droppable } from 'react-beautiful-dnd'
@@ -26,7 +26,17 @@ min-width: 100px;
 min-height: 100%;
 `
 
-export default ({ title, tasks, column, teamName }) => {
+const TaskInnerList = memo(({ provided, tasks }) => (
+  <TaskList
+    ref={provided.innerRef}
+    {...provided.droppableProps}
+  >
+    {tasks.map((task, index) => task.summary !== 'not found' ? <Ticket key={task.id} index={index} task={task} /> : '')}
+    {provided.placeholder}
+  </TaskList>
+))
+
+export default memo(({ title, tasks, column, teamName }) => {
   const spSum = tasks.reduce((acc, val) => acc + parseFloat(val.sp), 0)
   return <AppContext.Consumer>{({ updateColumnCount }) => (<Container>
     <Title error={parseFloat(parseFloat(column.size).toFixed(2)) < parseFloat(spSum.toFixed(2))} fit={parseFloat(column.size).toFixed(2) === spSum.toFixed(2)}>
@@ -43,14 +53,7 @@ export default ({ title, tasks, column, teamName }) => {
       </div>
     </Title>
     <Droppable droppableId={column.id}>
-      {(provided) => <TaskList
-        ref={provided.innerRef}
-        {...provided.droppableProps}
-      >
-        {tasks.map((task, index) => task.summary !== 'not found' ? <Ticket key={teamName + column.id + task.id} index={index} task={task} /> : '')}
-        {provided.placeholder}
-      </TaskList>
-      }
+      {(provided) => <TaskInnerList {...{ provided, tasks }} />}
     </Droppable>
   </Container>)}</AppContext.Consumer>
-}
+})
