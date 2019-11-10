@@ -163,7 +163,8 @@ const Task = memo(({
 nextProps.task.id !== nextProps.selectedId &&
 nextProps.task.id !== prevProps.selectedId &&
 prevProps.task.story !== prevProps.selectedStory &&
-nextProps.task.story !== nextProps.selectedStory
+nextProps.task.story !== nextProps.selectedStory &&
+prevProps.isCompact === nextProps.isCompact
 )
 
 export default memo(({ task, index }) => {
