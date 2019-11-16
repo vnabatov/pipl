@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Ticket from './Ticket'
 import { Droppable } from 'react-beautiful-dnd'
 import AppContext from '../AppContext'
+import shallowequal from 'shallowequal'
 
 const Container = styled.div`
 margin:3px;
@@ -26,15 +27,17 @@ min-width: 100px;
 min-height: 100%;
 `
 
-const TaskInnerList = memo(({ provided, tasks }) => (
-  <TaskList
-    ref={provided.innerRef}
-    {...provided.droppableProps}
-  >
-    {tasks.map((task, index) => task.summary !== 'not found' ? <Ticket key={task.id} index={index} task={task} /> : '')}
-    {provided.placeholder}
-  </TaskList>
-))
+const TaskInnerList = memo(({ provided, tasks }) =>
+  (
+    <TaskList
+      ref={provided.innerRef}
+      {...provided.droppableProps}
+    >
+      {tasks.map((task, index) => task.summary !== 'not found' ? <Ticket key={task.id} index={index} task={task} /> : '')}
+      {provided.placeholder}
+    </TaskList>
+  )
+, (prevProps, nextProps) => shallowequal(prevProps.tasks, nextProps.tasks))
 
 export default memo(({ title, tasks, column, teamName }) => {
   const spSum = tasks.reduce((acc, val) => acc + parseFloat(val.sp), 0)
@@ -56,4 +59,4 @@ export default memo(({ title, tasks, column, teamName }) => {
       {(provided) => <TaskInnerList {...{ provided, tasks }} />}
     </Droppable>
   </Container>)}</AppContext.Consumer>
-})
+}, (prevProps, nextProps) => shallowequal(prevProps.tasks, nextProps.tasks))

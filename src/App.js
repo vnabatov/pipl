@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 import { format } from 'date-fns'
@@ -109,7 +109,7 @@ const App = () => {
   const addStory = (story) => {
     socket.emit('story:create', JSON.stringify(story))
   }
-
+  console.log('render')
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       selectStory,
@@ -152,4 +152,4 @@ const App = () => {
     </AppContext.Provider>
   </div>
 }
-export default App
+export default memo(App)
