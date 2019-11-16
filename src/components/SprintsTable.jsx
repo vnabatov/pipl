@@ -55,7 +55,7 @@ export default memo(({ sprintDb, setData, tasksDb }) => {
     <AppContext.Consumer>{() => (<div>
       <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</PanelName>
       <UnmountClosed isOpened={isOpened}>
-        <SprintTable>
+        {isOpened ? <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
             {
               sprintDb.columnOrder.map((columnId) => {
@@ -71,7 +71,7 @@ export default memo(({ sprintDb, setData, tasksDb }) => {
               })
             }
           </DragDropContext>
-        </SprintTable>
+        </SprintTable> : ''}
       </UnmountClosed>
     </div>)}
     </AppContext.Consumer>

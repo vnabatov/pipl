@@ -51,7 +51,6 @@ ${({ isSmall }) => isSmall ? 'font-size: 0.6rem;' : ''}}
 ${({ relationSameSprint }) => relationSameSprint ? `background-color: orange;` : ''}}
 ${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
 ${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
-${({ selectedTask }) => selectedTask ? 'border-left: 3px solid #3273DC;' : ''}}
 ${({ selectedStory }) => selectedStory ? 'border-top: 3px solid green;' : ''}}
 ${({ noStory }) => noStory ? 'border-right: 3px solid #AB23D1;' : ''}}
 `
@@ -115,15 +114,13 @@ const Task = memo(({
   dependendTasks,
   selectTask
 }) => {
-  const isSelectedTask = selectedStory && selectedStory === task.story
   const isSelectedStory = selectedId && selectedId === task.id
   const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
   const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
   const relationBacklog = areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)
-  return !isCompact || isSelectedTask || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
+  return !isCompact || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
     <TicketHeader
       selectedStory={isSelectedStory}
-      selectedTask={isSelectedTask}
       noStory={!task.story}
       relationEarlier={relationEarlier}
       relationSameSprint={relationSameSprint}
@@ -150,7 +147,6 @@ const Task = memo(({
     key={'task-' + task.id}
     onClick={() => selectTask(task)}
     selectedStory={isSelectedStory}
-    selectedTask={isSelectedTask}
     title={task.summary + '/' + task.description}
     relationEarlier={relationEarlier}
     relationSameSprint={relationSameSprint}
@@ -180,7 +176,6 @@ export default memo(({ task, index }) => {
           <Task {...{
             selectedStory,
             task,
-            selectedId,
             taskPostionsCache,
             isCompact,
             deleteTask,

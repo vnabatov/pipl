@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, Fragment } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 import { format } from 'date-fns'
@@ -45,9 +45,72 @@ if (NETWORK === 'ws') {
   })
 }
 
-const App = () => {
+const NavbarContainer = () => {
   use(() => form.id)
   use(() => isMenuOpen)
+  use(() => showRelations)
+  use(() => isCompact)
+
+  const clearForm = () => {
+    form = { ...defaultForm }
+    isMenuOpen = false
+  }
+
+  const updateTask = (data) => {
+    socket.emit('task:update', JSON.stringify(data))
+    clearForm()
+  }
+
+  const deleteTask = (id) => {
+    const taskToRemoveId = id
+    if (dbs.dependendTasks[taskToRemoveId] && dbs.dependendTasks[taskToRemoveId].length) {
+      window.alert(`please clear relations with ${dbs.dependendTasks[taskToRemoveId]}`)
+      return
+    }
+    if (window.confirm('sure?')) {
+      socket.emit('task:delete', taskToRemoveId)
+      clearForm()
+    }
+  }
+
+  const downloadDb = () => {
+    function downloadURI (uri, name) {
+      var link = document.createElement('a')
+      link.download = name
+      link.href = uri
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    downloadURI('db', format(new Date(), 'yyyy-MM-dd_HH_mm_ss') + '-db.json')
+  }
+
+  return <div className='container is-widescreen'>
+    <AppContext.Provider value={{
+      deleteTask,
+      updateTask,
+      clearForm,
+      dependendTasks: dbs && dbs.dependendTasks,
+      taskPostionsCache: dbs && dbs.taskPostionsCache,
+      isCompact
+    }}>
+
+      <Navbar {...{ downloadDb,
+        isCompact,
+        form,
+        dbs,
+        isMenuOpen,
+        showRelations,
+        menuToggle: () => (isMenuOpen = !isMenuOpen),
+        relationsToggle: () => (showRelations = !showRelations),
+        allRelationsToggle: () => (form.id = (form.id === 'all' ? '' : 'all')),
+        compactToggle: () => (isCompact = !isCompact)
+      }} />
+    </AppContext.Provider>
+  </div>
+}
+
+const Content = () => {
   use(() => showRelations)
   use(() => isCompact)
   use(() => selectedStory)
@@ -94,22 +157,10 @@ const App = () => {
 
   const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))
 
-  const downloadDb = () => {
-    function downloadURI (uri, name) {
-      var link = document.createElement('a')
-      link.download = name
-      link.href = uri
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
-    downloadURI('db', format(new Date(), 'yyyy-MM-dd_HH_mm_ss') + '-db.json')
-  }
-
   const addStory = (story) => {
     socket.emit('story:create', JSON.stringify(story))
   }
-  console.log('render')
+
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       selectStory,
@@ -122,22 +173,8 @@ const App = () => {
       selectedStory,
       dependendTasks: dbs && dbs.dependendTasks,
       taskPostionsCache: dbs && dbs.taskPostionsCache,
-      isCompact,
-      selectedId: form.id
+      isCompact
     }}>
-
-      <Navbar {...{ downloadDb,
-        isCompact,
-        form,
-        dbs,
-        isMenuOpen,
-        showRelations,
-        menuToggle: () => (isMenuOpen = !isMenuOpen),
-        relationsToggle: () => (showRelations = !showRelations),
-        allRelationsToggle: () => (form.id = (form.id === 'all' ? '' : 'all')),
-        compactToggle: () => (isCompact = !isCompact)
-      }} />
-
       {(!dbs) ? 'Loading' : <div className='content'>
         <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
@@ -152,4 +189,9 @@ const App = () => {
     </AppContext.Provider>
   </div>
 }
+
+const App = () => <Fragment>
+  <NavbarContainer />
+  <Content />
+</Fragment>
 export default memo(App)
