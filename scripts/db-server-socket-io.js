@@ -215,7 +215,6 @@ app.get('/loadFromJira', async (req, res) => {
     } finally {
       loadFromJiraInProgress = false
 
-      console.log(JSON.stringify(newStories))
       if (newStories.length) {
         newStories.forEach(newStory => {
           createStory(newStory)
@@ -226,10 +225,12 @@ app.get('/loadFromJira', async (req, res) => {
           updateTask(newTask)
         })
       }
+      console.log('stories')
       console.log(JSON.stringify(newStories))
+      console.log('tasks')
       console.log(JSON.stringify(newTasks))
 
-      res.send(JSON.stringify(newStories) + JSON.stringify(newTasks))
+      res.send(JSON.stringify({ newStories, newTasks }))
     }
   }
 })
