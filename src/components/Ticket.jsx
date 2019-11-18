@@ -160,10 +160,13 @@ nextProps.task.id !== nextProps.selectedId &&
 nextProps.task.id !== prevProps.selectedId &&
 prevProps.task.story !== prevProps.selectedStory &&
 nextProps.task.story !== nextProps.selectedStory &&
-prevProps.isCompact === nextProps.isCompact
+prevProps.isCompact === nextProps.isCompact &&
+prevProps.task.sp === nextProps.task.sp &&
+prevProps.task.summary === nextProps.task.summary &&
+prevProps.task.related === nextProps.task.related
 )
 
-export default memo(({ task, index }) => {
+export default ({ task, index }) => {
   return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
     return (
       <Draggable draggableId={task.id} index={index}>{(provided) => (
@@ -189,4 +192,4 @@ export default memo(({ task, index }) => {
     )
   }}
   </AppContext.Consumer>
-})
+}

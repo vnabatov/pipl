@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react'
+import React, { useState } from 'react'
 
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import AppContext from '../AppContext'
 import { UnmountClosed } from 'react-collapse'
 import PanelName from './PanelName'
-import shallowequal from 'shallowequal'
 
 const SprintTable = styled.div`
 display: flex;
@@ -14,7 +13,7 @@ flex: 1;
 justify-content: space-between;
 `
 
-export default memo(({ sprintDb, setData, tasksDb }) => {
+export default ({ sprintDb, setData, tasksDb }) => {
   const [isOpened, setOpened] = useState(false)
 
   const onDragEnd = ({ destination, source, draggableId }) => {
@@ -76,4 +75,4 @@ export default memo(({ sprintDb, setData, tasksDb }) => {
     </div>)}
     </AppContext.Consumer>
   )
-}, (prevProps, nextProps) => shallowequal(prevProps.tasksDb, nextProps.tasksDb) && shallowequal(prevProps.sprintDb, nextProps.sprintDb))
+}

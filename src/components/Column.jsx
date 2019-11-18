@@ -1,9 +1,8 @@
-import React, { memo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Ticket from './Ticket'
 import { Droppable } from 'react-beautiful-dnd'
 import AppContext from '../AppContext'
-import shallowequal from 'shallowequal'
 
 const Container = styled.div`
 margin:3px;
@@ -27,7 +26,7 @@ min-width: 100px;
 min-height: 100%;
 `
 
-const TaskInnerList = memo(({ provided, tasks }) =>
+const TaskInnerList = ({ provided, tasks }) =>
   (
     <TaskList
       ref={provided.innerRef}
@@ -37,9 +36,8 @@ const TaskInnerList = memo(({ provided, tasks }) =>
       {provided.placeholder}
     </TaskList>
   )
-, (prevProps, nextProps) => shallowequal(prevProps.tasks, nextProps.tasks))
 
-export default memo(({ title, tasks, column, teamName }) => {
+export default ({ title, tasks, column, teamName }) => {
   const spSum = tasks.reduce((acc, val) => acc + parseFloat(val.sp), 0)
   return <AppContext.Consumer>{({ updateColumnCount }) => (<Container>
     <Title error={parseFloat(parseFloat(column.size).toFixed(2)) < parseFloat(spSum.toFixed(2))} fit={parseFloat(column.size).toFixed(2) === spSum.toFixed(2)}>
@@ -59,4 +57,4 @@ export default memo(({ title, tasks, column, teamName }) => {
       {(provided) => <TaskInnerList {...{ provided, tasks }} />}
     </Droppable>
   </Container>)}</AppContext.Consumer>
-}, (prevProps, nextProps) => shallowequal(prevProps.tasks, nextProps.tasks))
+}

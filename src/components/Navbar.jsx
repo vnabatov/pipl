@@ -1,7 +1,7 @@
 import React from 'react'
 import TaskForm from './TaskForm'
 
-export default ({ downloadDb, isCompact, form, dbs, relationsToggle, showRelations, allRelationsToggle, compactToggle, menuToggle, isMenuOpen }) => {
+export default ({ downloadDb, isCompact, form, dbs, relationsToggle, showRelations, allRelations, allRelationsToggle, compactToggle, menuToggle, isMenuOpen }) => {
   return (
     <nav className='navbar'>
       <div className='navbar-start'>
@@ -55,7 +55,7 @@ export default ({ downloadDb, isCompact, form, dbs, relationsToggle, showRelatio
         </div>
 
         <div className='navbar-item'>
-          <div className={`button navbar-link is-arrowless ${form.id === 'all' ? 'is-success' : ''}`} onClick={allRelationsToggle}>
+          <div className={`button navbar-link is-arrowless ${allRelations ? 'is-success' : ''}`} onClick={allRelationsToggle}>
               All Relations
           </div>
         </div>

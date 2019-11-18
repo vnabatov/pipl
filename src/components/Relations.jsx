@@ -13,14 +13,14 @@ const showRelationForTask = (link, task, color = 'red') => {
     : ''
 }
 
-export default ({ tasks, selectedId }) => {
+export default ({ tasks, selectedId, allRelations }) => {
   let isBlockedBy = []
   let blocks = []
   return tasks.map(task => {
     isBlockedBy = []
     blocks = []
     if (task.related) {
-      const isSelected = selectedId === 'all' || selectedId === task.id
+      const isSelected = allRelations || selectedId === task.id
       const hasRelationsToSelected = !isSelected && task.related.split(',').includes(selectedId)
       if (isSelected) {
         isBlockedBy.push(task.related.split(',').map((link) => showRelationForTask(link, task.id, 'red')))

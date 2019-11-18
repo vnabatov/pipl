@@ -7,10 +7,120 @@ const adapter = new FileSync('db/lowdb.json')
 const moment = require('moment')
 const fileUpload = require('express-fileupload')
 const stringHash = require('string-hash')
+const { prepareAlreadyAdded, getIssuesByFilter, loadStoriesFromJira, loadTasksFromJira } = require('./jira-utils')
 
 const db = lowdb(adapter)
-
 app.use(fileUpload())
+
+const createStory = (parsedData) => {
+  db.get('stories')
+    .push(parsedData)
+    .write()
+}
+
+const updateTask = (parsedData) => {
+  const date = moment().format('YYYY-MM-DD')
+  const time = moment().format('h:mm:ss')
+
+  const newTaskId = parsedData.id.toString()
+  const oldTaskId = parsedData.oldId && parsedData.oldId.toString()
+  const tasks = db.get('tasks')
+
+  console.log('oldTaskId, newTaskId', oldTaskId, newTaskId)
+
+  const task = tasks
+    .find({ id: oldTaskId || newTaskId })
+
+  const taskNewIdDuplicate = tasks
+    .find({ id: newTaskId })
+
+  if (oldTaskId !== newTaskId && taskNewIdDuplicate.value()) {
+    console.log(newTaskId, 'exists already, cant add')
+    return
+  }
+
+  if (tasks.value().length && task.value()) {
+    if (task.value().teamName !== parsedData.teamName) {
+      const toRemove = []
+      const sprints = db.get('sprints').value()
+
+      sprints.forEach(sprint => {
+        const teamName = sprint.teamName
+        const columns = sprint.columns
+        Object.entries(columns).forEach(([colId, column]) => {
+          if (column.taskIds.includes(newTaskId)) {
+            toRemove.push({ columnId: column.id, teamName })
+          }
+        })
+      })
+
+      toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
+        db.get('sprints')
+          .find({ teamName })
+          .get(`columns.${columnId}.taskIds`)
+          .pull(newTaskId)
+          .write()
+      })
+
+      db.get('sprints')
+        .find({ teamName: parsedData.teamName })
+        .get('columns.column-1.taskIds')
+        .push(newTaskId)
+        .write()
+    }
+
+    if (oldTaskId !== newTaskId) {
+      const toRemove = []
+      const sprints = db.get('sprints').value()
+
+      sprints.forEach(sprint => {
+        const teamName = sprint.teamName
+        const columns = sprint.columns
+        Object.entries(columns).forEach(([colId, column]) => {
+          if (column.taskIds.includes(oldTaskId)) {
+            toRemove.push({ columnId: column.id, teamName })
+          }
+        })
+      })
+
+      toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
+        db.get('sprints')
+          .find({ teamName })
+          .get(`columns.${columnId}.taskIds`)
+          .pull(oldTaskId)
+          .write()
+
+        console.log('remove', `columns.${columnId}.taskIds`, oldTaskId)
+        console.log('add', `columns.${columnId}.taskIds`, newTaskId)
+
+        db.get('sprints')
+          .find({ teamName })
+          .get(`columns.${columnId}.taskIds`)
+          .push(newTaskId)
+          .write()
+      })
+    }
+
+    task
+      .assign({ ...parsedData, timeChange: time, dateChange: date, oldId: undefined })
+      .write()
+  } else {
+    const newTask = { ...parsedData, time, date }
+    console.log('newTaskId', newTaskId)
+    if (!newTaskId || !newTaskId.length) { newTask.id = (tasks.value().length ? Math.max(...tasks.value().map(({ id }) => isNaN(id.replace(/[0-9a-zA-Z]+-/, '')) ? 0 : id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString() }
+    console.log('newTask.id', newTask.id)
+
+    db.get('tasks')
+      .push(newTask)
+      .write()
+
+    db.get('sprints')
+      .find({ teamName: newTask.teamName })
+      .get('columns.column-1.taskIds')
+      .push(newTask.id)
+      .write()
+  }
+}
 
 const getDb = () => {
   const state = db.getState()
@@ -71,6 +181,48 @@ app.get('/db', function (req, res) {
   res.send(JSON.stringify(getDb()))
 })
 
+let loadFromJiraInProgress = false
+app.get('/loadFromJira', async (req, res) => {
+  console.log('load')
+  if (!loadFromJiraInProgress) {
+    loadFromJiraInProgress = true
+    let newTasks = {}
+    let newStories = {}
+
+    try {
+      const jql = 'key=CPP0-1061'
+      const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
+      const loadTasks = true
+
+      const dbJSONFile = getDb()
+
+      prepareAlreadyAdded(dbJSONFile)
+
+      const storiesData = await getIssuesByFilter(jql, dbJSONFile)
+
+      console.log('loadStoriesFromJira')
+
+      newStories = loadStoriesFromJira(storiesData, dbJSONFile)
+
+      if (loadTasks === 'true') {
+        console.log('loadTasks')
+
+        const taskData = await getIssuesByFilter(jql2)
+        newTasks = loadTasksFromJira(taskData, dbJSONFile)
+      }
+    } catch (e) {
+      console.log(e)
+    } finally {
+      loadFromJiraInProgress = false
+
+      console.log(JSON.stringify(newStories))
+      console.log(JSON.stringify(newTasks))
+
+      res.send(JSON.stringify(newStories))
+    }
+  }
+})
+
 app.post('/upload', function (req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.')
@@ -126,10 +278,8 @@ io.on('connect', function (socket) {
 
   socket.on('story:create', (data) => {
     const parsedData = JSON.parse(data)
-    db.get('stories')
-      .push(parsedData)
-      .write()
 
+    createStory(parsedData)
     const dbNew = JSON.stringify(getDb())
 
     socket.emit('db', dbNew)
@@ -138,109 +288,8 @@ io.on('connect', function (socket) {
   socket.on('task:update', (data) => {
     const parsedData = JSON.parse(data)
 
-    const date = moment().format('YYYY-MM-DD')
-    const time = moment().format('h:mm:ss')
-
-    const newTaskId = parsedData.id.toString()
-    const oldTaskId = parsedData.oldId && parsedData.oldId.toString()
-    const tasks = db.get('tasks')
-
-    console.log('oldTaskId, newTaskId', oldTaskId, newTaskId)
-
-    const task = tasks
-      .find({ id: oldTaskId || newTaskId })
-
-    const taskNewIdDuplicate = tasks
-      .find({ id: newTaskId })
-
-    if (oldTaskId !== newTaskId && taskNewIdDuplicate.value()) {
-      console.log(newTaskId, 'exists already, cant add')
-      return
-    }
-
-    if (tasks.value().length && task.value()) {
-      if (task.value().teamName !== parsedData.teamName) {
-        const toRemove = []
-        const sprints = db.get('sprints').value()
-
-        sprints.forEach(sprint => {
-          const teamName = sprint.teamName
-          const columns = sprint.columns
-          Object.entries(columns).forEach(([colId, column]) => {
-            if (column.taskIds.includes(newTaskId)) {
-              toRemove.push({ columnId: column.id, teamName })
-            }
-          })
-        })
-
-        toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
-          db.get('sprints')
-            .find({ teamName })
-            .get(`columns.${columnId}.taskIds`)
-            .pull(newTaskId)
-            .write()
-        })
-
-        db.get('sprints')
-          .find({ teamName: parsedData.teamName })
-          .get('columns.column-1.taskIds')
-          .push(newTaskId)
-          .write()
-      }
-
-      if (oldTaskId !== newTaskId) {
-        const toRemove = []
-        const sprints = db.get('sprints').value()
-
-        sprints.forEach(sprint => {
-          const teamName = sprint.teamName
-          const columns = sprint.columns
-          Object.entries(columns).forEach(([colId, column]) => {
-            if (column.taskIds.includes(oldTaskId)) {
-              toRemove.push({ columnId: column.id, teamName })
-            }
-          })
-        })
-
-        toRemove.length && toRemove.forEach(({ columnId, teamName }) => {
-          db.get('sprints')
-            .find({ teamName })
-            .get(`columns.${columnId}.taskIds`)
-            .pull(oldTaskId)
-            .write()
-
-          console.log('remove', `columns.${columnId}.taskIds`, oldTaskId)
-          console.log('add', `columns.${columnId}.taskIds`, newTaskId)
-
-          db.get('sprints')
-            .find({ teamName })
-            .get(`columns.${columnId}.taskIds`)
-            .push(newTaskId)
-            .write()
-        })
-      }
-
-      task
-        .assign({ ...parsedData, timeChange: time, dateChange: date, oldId: undefined })
-        .write()
-    } else {
-      const newTask = { ...parsedData, time, date }
-      console.log('newTaskId', newTaskId)
-      if (!newTaskId || !newTaskId.length) { newTask.id = (tasks.value().length ? Math.max(...tasks.value().map(({ id }) => isNaN(id.replace(/[0-9a-zA-Z]+-/, '')) ? 0 : id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString() }
-      console.log('newTask.id', newTask.id)
-
-      db.get('tasks')
-        .push(newTask)
-        .write()
-
-      db.get('sprints')
-        .find({ teamName: newTask.teamName })
-        .get('columns.column-1.taskIds')
-        .push(newTask.id)
-        .write()
-    }
-
-    console.log(parsedData)
+    console.log('task:update', parsedData)
+    updateTask(parsedData)
 
     const dbNew = JSON.stringify(getDb())
     socket.emit('db', dbNew)

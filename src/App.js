@@ -1,4 +1,4 @@
-import React, { memo, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import axios from 'axios'
 import use from 'react-hoox'
 import { format } from 'date-fns'
@@ -20,6 +20,7 @@ const defaultForm = { id: '', description: 'empty', teamName: '', summary: '', r
 
 let form = { ...defaultForm }
 let isMenuOpen = false
+let allRelations = false
 let isCompact = true
 let showRelations = true
 let selectedStory = ''
@@ -39,6 +40,7 @@ if (NETWORK === 'ws') {
     })
 
     dbs = parsedData
+    console.log('dbs', dbs)
   })
   socket.on('connect', () => {
     console.log('connect')
@@ -49,6 +51,7 @@ const NavbarContainer = () => {
   use(() => form.id)
   use(() => isMenuOpen)
   use(() => showRelations)
+  use(() => allRelations)
   use(() => isCompact)
 
   const clearForm = () => {
@@ -100,10 +103,11 @@ const NavbarContainer = () => {
         form,
         dbs,
         isMenuOpen,
+        allRelations,
         showRelations,
         menuToggle: () => (isMenuOpen = !isMenuOpen),
         relationsToggle: () => (showRelations = !showRelations),
-        allRelationsToggle: () => (form.id = (form.id === 'all' ? '' : 'all')),
+        allRelationsToggle: () => (allRelations = !allRelations),
         compactToggle: () => (isCompact = !isCompact)
       }} />
     </AppContext.Provider>
@@ -115,8 +119,10 @@ const Content = () => {
   use(() => isCompact)
   use(() => selectedStory)
   use(() => dbs && dbs.sprints)
+  use(() => dbs && dbs.tasks)
   use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
+  use(() => allRelations)
 
   const clearForm = () => {
     form = { ...defaultForm }
@@ -161,6 +167,8 @@ const Content = () => {
     socket.emit('story:create', JSON.stringify(story))
   }
 
+  console.log(dbs && dbs.tasks)
+
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       selectStory,
@@ -182,7 +190,7 @@ const Content = () => {
 
         <ProgramBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
-        {showRelations && <Relations tasks={dbs.tasks} selectedId={form.id} />}
+        {showRelations && <Relations allRelations={allRelations} tasks={dbs.tasks} selectedId={form.id} />}
 
         {showRelations && <RelationsProgramBoard showRelations={showRelations} tasks={dbs.tasks} selectedStory={selectedStory} />}
       </div>}
@@ -190,8 +198,10 @@ const Content = () => {
   </div>
 }
 
-const App = () => <Fragment>
-  <NavbarContainer />
-  <Content />
-</Fragment>
-export default memo(App)
+const App = () => {
+  return <Fragment>
+    <NavbarContainer />
+    <Content />
+  </Fragment>
+}
+export default App
