@@ -186,13 +186,13 @@ app.get('/loadFromJira', async (req, res) => {
   console.log('load')
   if (!loadFromJiraInProgress) {
     loadFromJiraInProgress = true
-    let newTasks = {}
-    let newStories = {}
+    let newTasks = []
+    let newStories = []
 
     try {
       const jql = 'key=CPP0-1061'
       const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
-      const loadTasks = true
+      const loadTasks = 'true'
 
       const dbJSONFile = getDb()
 
@@ -216,9 +216,20 @@ app.get('/loadFromJira', async (req, res) => {
       loadFromJiraInProgress = false
 
       console.log(JSON.stringify(newStories))
+      if (newStories.length) {
+        newStories.forEach(newStory => {
+          createStory(newStory)
+        })
+      }
+      if (newTasks.length) {
+        newTasks.forEach(newTask => {
+          updateTask(newTask)
+        })
+      }
+      console.log(JSON.stringify(newStories))
       console.log(JSON.stringify(newTasks))
 
-      res.send(JSON.stringify(newStories))
+      res.send(JSON.stringify(newStories) + JSON.stringify(newTasks))
     }
   }
 })

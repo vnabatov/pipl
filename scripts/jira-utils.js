@@ -12,13 +12,14 @@ const {
 
 const jira = new JiraClient({ host, basic_auth: { username, password } })
 const getIssuesByFilter = async (jql) => jira.search.search({ jql, maxResults })
-const alreadyAdded = []
+let alreadyAdded = []
 const date = moment().format('YYYY-MM-DD')
 const time = moment().format('h:mm:ss')
 
 console.log({ maxResults, loadTasks, jql, jql2 })
 
 const prepareAlreadyAdded = (dbJSON) => {
+  alreadyAdded = []
   dbJSON.stories.forEach(({ id }) => {
     alreadyAdded.push(id)
   })
