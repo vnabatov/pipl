@@ -23,6 +23,7 @@ let allRelations = false
 let isCompact = true
 let showRelations = true
 let selectedStory = ''
+let selectedTask = ''
 let dbs
 let storiesFilter = {}
 
@@ -117,6 +118,7 @@ const Content = () => {
   use(() => showRelations)
   use(() => isCompact)
   use(() => selectedStory)
+  use(() => selectedTask)
   use(() => dbs && dbs.sprints)
   use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
@@ -157,6 +159,7 @@ const Content = () => {
     isMenuOpen = true
     form = taskData
     form.oldId = taskData.id
+    // selectedTask = taskData.id
   }
 
   const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))
@@ -173,6 +176,7 @@ const Content = () => {
       updateColumnCount,
       setData,
       selectTask,
+      selectedTask,
       clearForm,
       taskLastUpdate: dbs && dbs.taskLastUpdate,
       selectedStory,

@@ -29,6 +29,8 @@ ${({ selected }) => selected ? 'font-weight: bold;' : ''}}
 const Ticket = styled.div`
 min-height: 100px;
 background: rgba(255,255,255, .7);
+${({ isHidden }) => isHidden ? 'display: none;' : ''}}
+
 `
 const TicketHeader = styled.div`
 transition: all .2s;
@@ -53,6 +55,7 @@ ${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
 ${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
 ${({ selectedStory }) => selectedStory ? 'border-top: 3px solid green;' : ''}}
 ${({ noStory }) => noStory ? 'border-right: 3px solid #AB23D1;' : ''}}
+${({ isHidden }) => isHidden ? 'display: none;' : ''}}
 `
 
 const TicketBody = styled.div`
@@ -106,7 +109,7 @@ const areRelatedTaskPositionsInBacklog = (taskPostionsCache, taskId, taskRelated
 const Task = memo(({
   selectedStory,
   task,
-  selectedId,
+  selectedTask,
   taskPostionsCache,
   isCompact,
   deleteTask,
@@ -114,13 +117,24 @@ const Task = memo(({
   dependendTasks,
   selectTask
 }) => {
-  const isSelectedStory = selectedId && selectedId === task.id
+  const isSelectedStory = selectedStory && selectedStory === task.story
+  const isHidden = selectedStory && selectedStory !== task.story
+  const isSelectedTask = selectedTask && selectedTask === task.id
   const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
   const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
   const relationBacklog = areRelatedTaskPositionsInBacklog(taskPostionsCache, task.id, task.related)
-  return !isCompact || isSelectedStory ? <Ticket key={'task-' + task.id} id={'task-' + task.id} title={JSON.stringify(task)} onClick={() => selectTask(task)} className='message is-small'>
+  return !isCompact || isSelectedStory || isSelectedTask ? <Ticket
+    key={'task-' + task.id}
+    id={'task-' + task.id}
+    title={JSON.stringify(task)}
+    isHidden={isHidden}
+    onClick={() => selectTask(task)}
+    className='message is-small'
+  >
     <TicketHeader
       selectedStory={isSelectedStory}
+      selectedTask={isSelectedTask}
+      isHidden={isHidden}
       noStory={!task.story}
       relationEarlier={relationEarlier}
       relationSameSprint={relationSameSprint}
@@ -146,6 +160,8 @@ const Task = memo(({
     isSmall
     key={'task-' + task.id}
     onClick={() => selectTask(task)}
+    isHidden={isHidden}
+    selectedTask={isSelectedTask}
     selectedStory={isSelectedStory}
     title={task.summary + '/' + task.description}
     relationEarlier={relationEarlier}
@@ -155,9 +171,11 @@ const Task = memo(({
 #{task.id} / {task.summary} / {task.sp}SP
     <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
   </TicketHeader>
-}, (prevProps, nextProps) => shallowequal(prevProps.task, prevProps.task) &&
-    nextProps.task.id !== nextProps.selectedId &&
-    nextProps.task.id !== prevProps.selectedId &&
+}, (prevProps, nextProps) => {
+  const isPropsEqual = shallowequal(prevProps.task, prevProps.task) &&
+    nextProps.task.id !== nextProps.selectedTask &&
+    nextProps.task.id !== prevProps.selectedTask &&
+    prevProps.task.story === '' &&
     prevProps.task.story !== prevProps.selectedStory &&
     nextProps.task.story !== nextProps.selectedStory &&
     prevProps.isCompact === nextProps.isCompact &&
@@ -165,10 +183,11 @@ const Task = memo(({
     prevProps.task.summary === nextProps.task.summary &&
     prevProps.task.related === nextProps.task.related &&
     prevProps.taskLastUpdate === nextProps.taskLastUpdate
-)
+  return isPropsEqual
+})
 
 export default ({ task, index }) => {
-  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedId }) => {
+  return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedTask }) => {
     return (
       <Draggable draggableId={task.id} index={index}>{(provided) => (
         <Container
@@ -185,7 +204,8 @@ export default ({ task, index }) => {
             deleteTask,
             selectStory,
             dependendTasks,
-            selectTask
+            selectTask,
+            selectedTask
           }} />
         </Container>
       )}
