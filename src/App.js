@@ -119,7 +119,6 @@ const Content = () => {
   use(() => isCompact)
   use(() => selectedStory)
   use(() => dbs && dbs.sprints)
-  use(() => dbs && dbs.tasks)
   use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
   use(() => allRelations)
@@ -167,8 +166,6 @@ const Content = () => {
     socket.emit('story:create', JSON.stringify(story))
   }
 
-  console.log(dbs && dbs.tasks)
-
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       selectStory,
@@ -178,6 +175,7 @@ const Content = () => {
       setData,
       selectTask,
       clearForm,
+      taskLastUpdate: dbs && dbs.taskLastUpdate,
       selectedStory,
       dependendTasks: dbs && dbs.dependendTasks,
       taskPostionsCache: dbs && dbs.taskPostionsCache,

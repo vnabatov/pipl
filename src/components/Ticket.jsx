@@ -156,14 +156,15 @@ const Task = memo(({
     <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
   </TicketHeader>
 }, (prevProps, nextProps) => shallowequal(prevProps.task, prevProps.task) &&
-nextProps.task.id !== nextProps.selectedId &&
-nextProps.task.id !== prevProps.selectedId &&
-prevProps.task.story !== prevProps.selectedStory &&
-nextProps.task.story !== nextProps.selectedStory &&
-prevProps.isCompact === nextProps.isCompact &&
-prevProps.task.sp === nextProps.task.sp &&
-prevProps.task.summary === nextProps.task.summary &&
-prevProps.task.related === nextProps.task.related
+    nextProps.task.id !== nextProps.selectedId &&
+    nextProps.task.id !== prevProps.selectedId &&
+    prevProps.task.story !== prevProps.selectedStory &&
+    nextProps.task.story !== nextProps.selectedStory &&
+    prevProps.isCompact === nextProps.isCompact &&
+    prevProps.task.sp === nextProps.task.sp &&
+    prevProps.task.summary === nextProps.task.summary &&
+    prevProps.task.related === nextProps.task.related &&
+    prevProps.taskLastUpdate === nextProps.taskLastUpdate
 )
 
 export default ({ task, index }) => {

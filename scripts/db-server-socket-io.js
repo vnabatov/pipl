@@ -174,7 +174,7 @@ const getDb = () => {
   state.stories.forEach(story => {
     storyIndex[story.id] = story
   })
-  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdateHash })
+  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate, taskLastUpdateHash })
 }
 
 app.get('/db', function (req, res) {
