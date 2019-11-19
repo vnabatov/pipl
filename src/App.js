@@ -8,7 +8,6 @@ import Sprints from './components/Sprints'
 import Navbar from './components/Navbar'
 import Stories from './components/Stories'
 import AppContext from './AppContext'
-import Relations from './components/Relations'
 import RelationsProgramBoard from './components/RelationsProgramBoard'
 
 import 'bulma/css/bulma.css'
@@ -187,8 +186,6 @@ const Content = () => {
         <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <ProgramBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
-
-        {showRelations && <Relations allRelations={allRelations} tasks={dbs.tasks} selectedId={form.id} />}
 
         {showRelations && <RelationsProgramBoard showRelations={showRelations} tasks={dbs.tasks} selectedStory={selectedStory} />}
       </div>}
