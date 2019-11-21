@@ -21,7 +21,6 @@ text-align:center;
 background: ${({ error, fit }) => error ? 'lightcoral' : (fit ? 'lightgreen' : 'none')}
 `
 const TaskList = styled.div`
-padding:3px;
 min-width: 100px;
 min-height: 100%;
 `

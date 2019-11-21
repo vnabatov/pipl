@@ -1,13 +1,30 @@
 import React from 'react'
 import TaskForm from './TaskForm'
+import { debounce } from 'lodash'
 
-export default ({ downloadDb, isCompact, form, dbs, relationsToggle, showRelations, allRelations, allRelationsToggle, compactToggle, menuToggle, isMenuOpen }) => {
+const INPUT_DEBOUNCE = 500
+
+export default ({ downloadDb, updateTaskFilter, taskFilter, isCompact, form, dbs, relationsToggle, showRelations, allRelations, allRelationsToggle, compactToggle, menuToggle, isMenuOpen }) => {
+  const updateFilterDebounced = debounce((v) => updateTaskFilter(v), INPUT_DEBOUNCE)
   return (
     <nav className='navbar'>
       <div className='navbar-start'>
         <h1>[PI PL]anning Helper</h1>
       </div>
       <div className='navbar-end'>
+
+        <div className='navbar-item'>
+          <input
+            type='text'
+            className='input'
+            placeholder='Task Id / Story Id / Task Summary / Version / Regexp(start with "/")'
+            defaultValue={taskFilter}
+            onChange={(e) => {
+              e.persist()
+              updateFilterDebounced(e.target.value)
+            }}
+          />
+        </div>
 
         <div className='navbar-item'>
           <div className={`button navbar-link is-arrowless`} onClick={downloadDb}>

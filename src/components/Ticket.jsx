@@ -5,6 +5,7 @@ import AppContext from '../AppContext'
 import shallowequal from 'shallowequal'
 
 const Container = styled.div`
+${({ isHidden }) => isHidden ? 'display: none;' : ''}}
 padding:3px;
 `
 
@@ -29,8 +30,6 @@ ${({ selected }) => selected ? 'font-weight: bold;' : ''}}
 const Ticket = styled.div`
 min-height: 100px;
 background: rgba(255,255,255, .7);
-${({ isHidden }) => isHidden ? 'display: none;' : ''}}
-
 `
 const TicketHeader = styled.div`
 transition: all .2s;
@@ -55,7 +54,6 @@ ${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
 ${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
 ${({ selectedStory }) => selectedStory ? 'border-top: 3px solid green;' : ''}}
 ${({ noStory }) => noStory ? 'border-right: 3px solid #AB23D1;' : ''}}
-${({ isHidden }) => isHidden ? 'display: none;' : ''}}
 `
 
 const TicketBody = styled.div`
@@ -118,7 +116,6 @@ const Task = memo(({
   selectTask
 }) => {
   const isSelectedStory = selectedStory && selectedStory === task.story
-  const isHidden = selectedStory && selectedStory !== task.story
   const isSelectedTask = selectedTask && selectedTask === task.id
   const relationEarlier = areRelatedTaskPositionsEarlier(taskPostionsCache, task.id, task.related)
   const relationSameSprint = areRelatedTaskPositionsSameSprint(taskPostionsCache, task.id, task.related)
@@ -127,14 +124,12 @@ const Task = memo(({
     key={'task-' + task.id}
     id={'task-' + task.id}
     title={JSON.stringify(task)}
-    isHidden={isHidden}
     onClick={() => selectTask(task)}
     className='message is-small'
   >
     <TicketHeader
       selectedStory={isSelectedStory}
       selectedTask={isSelectedTask}
-      isHidden={isHidden}
       noStory={!task.story}
       relationEarlier={relationEarlier}
       relationSameSprint={relationSameSprint}
@@ -151,16 +146,15 @@ const Task = memo(({
         <Label title='enables'>{dependendTasks[task.id] ? dependendTasks[task.id].join(',') : ''}</Label>
       </Grid>
       <Error>
-        {relationEarlier ? 'Enabler is in later sprint' : ''}
-        {relationSameSprint ? 'Enabler is in the same sprint' : ''}
-        {relationBacklog ? 'Enabler is in the backlog' : ''}
+        {relationEarlier ? <p>Enabler is in later sprint</p> : ''}
+        {relationSameSprint ? <p>Enabler is in the same sprint</p> : ''}
+        {relationBacklog ? <p>Enabler is in the backlog</p> : ''}
       </Error>
     </TicketBody>
   </Ticket> : <TicketHeader
     isSmall
     key={'task-' + task.id}
     onClick={() => selectTask(task)}
-    isHidden={isHidden}
     selectedTask={isSelectedTask}
     selectedStory={isSelectedStory}
     title={task.summary + '/' + task.description}
@@ -188,6 +182,7 @@ const Task = memo(({
 
 export default ({ task, index }) => {
   return <AppContext.Consumer>{({ deleteTask, selectedStory, selectTask, selectStory, taskPostionsCache, dependendTasks, isCompact, selectedTask }) => {
+    const isHidden = selectedStory && selectedStory !== task.story
     return (
       <Draggable draggableId={task.id} index={index}>{(provided) => (
         <Container
@@ -195,6 +190,7 @@ export default ({ task, index }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
+          isHidden={isHidden}
         >
           <Task {...{
             selectedStory,

@@ -24,6 +24,8 @@ let isCompact = true
 let showRelations = true
 let selectedStory = ''
 let selectedTask = ''
+let taskFilter = ''
+
 let dbs
 let storiesFilter = {}
 
@@ -53,6 +55,7 @@ const NavbarContainer = () => {
   use(() => showRelations)
   use(() => allRelations)
   use(() => isCompact)
+  use(() => taskFilter)
 
   const clearForm = () => {
     form = { ...defaultForm }
@@ -102,6 +105,8 @@ const NavbarContainer = () => {
         isCompact,
         form,
         dbs,
+        taskFilter,
+        updateTaskFilter: (v) => (taskFilter = v),
         isMenuOpen,
         allRelations,
         showRelations,
@@ -123,6 +128,7 @@ const Content = () => {
   use(() => dbs && dbs.taskLastUpdate)
   use(() => storiesFilter)
   use(() => allRelations)
+  use(() => taskFilter)
 
   const clearForm = () => {
     form = { ...defaultForm }
@@ -187,7 +193,7 @@ const Content = () => {
       {(!dbs) ? 'Loading' : <div className='content'>
         <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
-        <Sprints setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+        <Sprints taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <ProgramBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
