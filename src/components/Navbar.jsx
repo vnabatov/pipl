@@ -26,6 +26,19 @@ export default ({ downloadDb, updateTaskFilter, taskFilter, isCompact, form, dbs
           />
         </div>
 
+        {dbs ? <div className='navbar-item'>
+          <div className='select'>
+            <select onChange={(e) => {
+              const el = document.getElementById(e.target.value)
+              if (el) {
+                window.scrollTo(0, el.offsetTop - 100)
+              }
+            }} >
+              {dbs.sprints.map(({ teamName }) => <option value={teamName}>{teamName}</option>)}
+            </select>
+          </div>
+        </div> : ''}
+
         <div className='navbar-item'>
           <div className={`button navbar-link is-arrowless`} onClick={downloadDb}>
               Download

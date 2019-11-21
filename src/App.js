@@ -55,6 +55,7 @@ const NavbarContainer = () => {
   use(() => showRelations)
   use(() => allRelations)
   use(() => isCompact)
+  use(() => dbs && dbs.sprints.map(({ teamName }) => teamName))
   use(() => taskFilter)
 
   const clearForm = () => {
