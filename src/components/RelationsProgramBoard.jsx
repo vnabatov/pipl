@@ -13,7 +13,7 @@ const showRelationForTask = (link, task, color = 'red') => {
     : ''
 }
 
-export default ({ tasks, selectedStory }) => {
+export default ({ tasks, selectedStory, relationsRedraw }) => {
   let isBlockedBy
   return tasks.map(task => {
     isBlockedBy = []

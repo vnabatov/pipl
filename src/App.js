@@ -8,6 +8,7 @@ import Sprints from './components/Sprints'
 import Navbar from './components/Navbar'
 import Stories from './components/Stories'
 import AppContext from './AppContext'
+import Relations from './components/Relations'
 import RelationsProgramBoard from './components/RelationsProgramBoard'
 
 import 'bulma/css/bulma.css'
@@ -25,6 +26,7 @@ let showRelations = true
 let selectedStory = ''
 let selectedTask = ''
 let taskFilter = ''
+let relationsRedraw = ''
 
 let dbs
 let storiesFilter = {}
@@ -52,10 +54,12 @@ if (NETWORK === 'ws') {
 const NavbarContainer = () => {
   use(() => form.id)
   use(() => isMenuOpen)
+  use(() => relationsRedraw)
   use(() => showRelations)
   use(() => allRelations)
   use(() => isCompact)
   use(() => dbs && dbs.sprints.map(({ teamName }) => teamName))
+  use(() => dbs && dbs.taskLastUpdate)
   use(() => taskFilter)
 
   const clearForm = () => {
@@ -116,6 +120,8 @@ const NavbarContainer = () => {
         allRelationsToggle: () => (allRelations = !allRelations),
         compactToggle: () => (isCompact = !isCompact)
       }} />
+      {showRelations && dbs && <RelationsProgramBoard showRelations={showRelations} relationsRedraw={relationsRedraw} tasks={dbs.tasks} selectedStory={selectedStory} />}
+      {showRelations && dbs && <Relations allRelations={allRelations} relationsRedraw={relationsRedraw} tasks={dbs.tasks} selectedId={form.id} />}
     </AppContext.Provider>
   </div>
 }
@@ -175,6 +181,10 @@ const Content = () => {
     socket.emit('story:create', JSON.stringify(story))
   }
 
+  const redrawRelations = () => {
+    relationsRedraw = Date.now()
+  }
+
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       selectStory,
@@ -184,6 +194,7 @@ const Content = () => {
       setData,
       selectTask,
       selectedTask,
+      redrawRelations,
       clearForm,
       taskLastUpdate: dbs && dbs.taskLastUpdate,
       selectedStory,
@@ -197,8 +208,6 @@ const Content = () => {
         <Sprints taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <ProgramBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
-
-        {showRelations && <RelationsProgramBoard showRelations={showRelations} tasks={dbs.tasks} selectedStory={selectedStory} />}
       </div>}
     </AppContext.Provider>
   </div>

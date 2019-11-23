@@ -51,8 +51,11 @@ export default ({ sprintDb, setData, tasksDb }) => {
     setData(sprintDb, sprintDb.teamName)
   }
   return (
-    <AppContext.Consumer>{() => (<div id={sprintDb.teamName}>
-      <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</PanelName>
+    <AppContext.Consumer>{({ redrawRelations }) => (<div id={sprintDb.teamName}>
+      <PanelName isOpened={isOpened} onClick={() => {
+        setOpened(!isOpened)
+        redrawRelations()
+      }}>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</PanelName>
       <UnmountClosed isOpened={isOpened}>
         {isOpened ? <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
