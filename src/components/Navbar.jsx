@@ -1,11 +1,35 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import TaskForm from './TaskForm'
 import { debounce } from 'lodash'
 
 const INPUT_DEBOUNCE = 500
 
-export default ({ downloadDb, updateTaskFilter, taskFilter, isCompact, form, dbs, relationsToggle, showRelations, allRelations, allRelationsToggle, compactToggle, menuToggle, isMenuOpen }) => {
+export default ({
+  downloadDb,
+  updateTaskFilter,
+  taskFilter,
+  isCompact,
+  form,
+  dbs,
+  relationsToggle,
+  showRelations,
+  allRelations,
+  allRelationsToggle,
+  compactToggle,
+  menuClose,
+  isMenuOpen
+}) => {
   const updateFilterDebounced = debounce((v) => updateTaskFilter(v), INPUT_DEBOUNCE)
+  const escFunction = useCallback(({ keyCode }) => keyCode === 27 ? menuClose() : null, [])
+
+  useEffect(() => {
+    document.addEventListener('keydown', escFunction, false)
+
+    return () => {
+      document.removeEventListener('keydown', escFunction, false)
+    }
+  }, [])
+
   return (
     <nav className='navbar'>
       <div className='navbar-start'>
@@ -92,7 +116,7 @@ export default ({ downloadDb, updateTaskFilter, taskFilter, isCompact, form, dbs
 
         <div className={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
 
-          <div className='navbar-link' onClick={menuToggle}>
+          <div className='navbar-link' onClick={menuClose}>
               Create/Edit
           </div>
 
@@ -100,7 +124,7 @@ export default ({ downloadDb, updateTaskFilter, taskFilter, isCompact, form, dbs
             {isMenuOpen ? <TaskForm
               key={(form.id || 'empty') + '-form'}
               form={form}
-              closeMenu={menuToggle}
+              closeMenu={menuClose}
               teamNames={dbs ? dbs.sprints.map(sprint => ({ value: sprint.teamName, label: sprint.teamName })) : []}
               stories={dbs ? dbs.stories.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary.substr(0, 15)}`, fullLabel: `#${id}: ${summary}` })) : []}
               tasks={dbs ? dbs.tasks.map(({ id, summary }) => ({ value: id, label: `#${id}: ${summary.substr(0, 15)}` })) : []}
