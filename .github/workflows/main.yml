@@ -1,10 +1,12 @@
 name: CI
 
-on: [push]
+on: 
+  push:
+    branches:    
+      - master
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd pipl
+            kill $(lsof -t -i:3000,3001) 
             git pull
             npm i
-            nohup npm start &
-            sudo service apache2 restart
+            nohup npm start &>/dev/null &
