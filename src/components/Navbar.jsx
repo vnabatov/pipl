@@ -17,6 +17,7 @@ export default ({
   allRelations,
   allRelationsToggle,
   compactToggle,
+  menuToggle,
   menuClose,
   isMenuOpen
 }) => {
@@ -64,44 +65,52 @@ export default ({
           </div>
         </div> : ''}
 
-        <div className='navbar-item'>
-          <div className={`button navbar-link is-arrowless`} onClick={downloadDb}>
-              JSON
+        <div class='navbar-item has-dropdown is-hoverable'>
+          <a class='navbar-link' href='#'>
+            Download
+          </a>
+          <div class='navbar-dropdown is-boxed'>
+            <a class='navbar-item' href='#' onClick={downloadDb}>
+              JSON - full database
+            </a>
+            <a class='navbar-item' href='#' onClick={downloadCSV}>
+              CSV - tasks and positions
+            </a>
           </div>
         </div>
 
-        <div className='navbar-item'>
-          <div className={`button navbar-link is-arrowless`} onClick={downloadCSV}>
-              CSV
-          </div>
-        </div>
+        <div class='navbar-item has-dropdown is-hoverable'>
+          <a class='navbar-link' href='#'>
+            Upload
+          </a>
+          <div class='navbar-dropdown'>
+            <form
+              action='/upload'
+              style={{ display: 'inherit' }}
+              method='post'
+              encType='multipart/form-data'>
 
-        <form
-          action='/upload'
-          style={{ display: 'inherit' }}
-          method='post'
-          encType='multipart/form-data'>
-
-          <div className='navbar-item'>
-            <div>
-              <div className='file'>
-                <label className='file-label'>
-                  <input className='file-input' type='file'name='dbFile' />
-                  <span className='file-cta'>
-                    <span className='file-label'>
+              <div className='navbar-item'>
+                <div>
+                  <div className='file'>
+                    <label className='file-label'>
+                      <input className='file-input' type='file'name='dbFile' />
+                      <span className='file-cta'>
+                        <span className='file-label'>
                       Choose a file…
-                    </span>
-                  </span>
-                </label>
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div className='navbar-item'>
-            <input className='button' type='submit' value='Upload' />
+              <div className='navbar-item'>
+                <input className='button' type='submit' value='Upload' />
+              </div>
+            </form>
           </div>
-
-        </form>
+        </div>
 
         <div className='navbar-item'>
           <div className={`button navbar-link is-arrowless ${isCompact ? 'is-success' : ''}`} onClick={compactToggle}>
@@ -123,7 +132,7 @@ export default ({
 
         <div className={`navbar-item has-dropdown ${isMenuOpen ? 'is-active' : ''}`}>
 
-          <div className='navbar-link' onClick={menuClose}>
+          <div className='navbar-link' onClick={menuToggle}>
               Create/Edit
           </div>
 

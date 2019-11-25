@@ -129,6 +129,7 @@ const NavbarContainer = () => {
         isMenuOpen,
         allRelations,
         showRelations,
+        menuToggle: () => (isMenuOpen = !isMenuOpen),
         menuClose: () => (isMenuOpen = false),
         relationsToggle: () => (showRelations = !showRelations),
         allRelationsToggle: () => (allRelations = !allRelations),
