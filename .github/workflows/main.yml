@@ -22,5 +22,5 @@ jobs:
             kill $(lsof -t -i:3000,3001) 
             git pull
             npm i
-            nohup npm start &
+            nohup npm start &>/dev/null &
             sudo service apache2 restart
