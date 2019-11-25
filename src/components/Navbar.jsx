@@ -6,6 +6,7 @@ const INPUT_DEBOUNCE = 500
 
 export default ({
   downloadDb,
+  downloadCSV,
   updateTaskFilter,
   taskFilter,
   isCompact,
@@ -65,7 +66,13 @@ export default ({
 
         <div className='navbar-item'>
           <div className={`button navbar-link is-arrowless`} onClick={downloadDb}>
-              Download
+              JSON
+          </div>
+        </div>
+
+        <div className='navbar-item'>
+          <div className={`button navbar-link is-arrowless`} onClick={downloadCSV}>
+              CSV
           </div>
         </div>
 

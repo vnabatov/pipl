@@ -8,6 +8,7 @@ const moment = require('moment')
 const fileUpload = require('express-fileupload')
 const stringHash = require('string-hash')
 const { prepareAlreadyAdded, getIssuesByFilter, loadStoriesFromJira, loadTasksFromJira } = require('./jira-utils')
+const { Parser } = require('json2csv')
 
 const db = lowdb(adapter)
 app.use(fileUpload())
@@ -179,6 +180,15 @@ const getDb = () => {
 
 app.get('/db', function (req, res) {
   res.send(JSON.stringify(getDb()))
+})
+
+app.get('/dbCSV', function (req, res) {
+  const { tasks, taskPostionsCache } = getDb()
+  const fields = ['id', 'story', 'sp', 'summary', 'teamName', 'taskPostion', 'v', 'date', 'time', 'dateChange', 'timeChange', 'related']
+  const opts = { fields }
+  const parser = new Parser(opts)
+  const csv = parser.parse(tasks.map(task => ({ ...task, taskPostion: taskPostionsCache[task.id] })))
+  res.send(csv)
 })
 
 let loadFromJiraInProgress = false

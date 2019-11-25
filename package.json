@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6-alpha.5",
     "jira-connector": "^2.16.1",
+    "json2csv": "^4.5.4",
     "lowdb": "^1.0.0",
     "moment": "^2.24.0",
     "nodemon": "^1.19.4",

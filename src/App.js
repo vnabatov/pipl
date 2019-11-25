@@ -96,6 +96,18 @@ const NavbarContainer = () => {
     downloadURI('db', format(new Date(), 'yyyy-MM-dd_HH_mm_ss') + '-db.json')
   }
 
+  const downloadCSV = () => {
+    function downloadURI (uri, name) {
+      var link = document.createElement('a')
+      link.download = name
+      link.href = uri
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    downloadURI('dbCSV', format(new Date(), 'yyyy-MM-dd_HH_mm_ss') + '-PIPL.csv')
+  }
+
   return <div className='container is-widescreen'>
     <AppContext.Provider value={{
       deleteTask,
@@ -106,7 +118,9 @@ const NavbarContainer = () => {
       isCompact
     }}>
 
-      <Navbar {...{ downloadDb,
+      <Navbar {...{
+        downloadDb,
+        downloadCSV,
         isCompact,
         form,
         dbs,
