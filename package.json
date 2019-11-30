@@ -93,7 +93,7 @@
     "coverageReporters": [
       "html",
       "json-summary"
-    ],k
+    ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
