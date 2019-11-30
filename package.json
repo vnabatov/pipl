@@ -32,7 +32,6 @@
     "yargs": "^14.2.0"
   },
   "devDependencies": {
-    "standardjs": "^1.0.0-alpha",
     "autoprefixer": "6.7.2",
     "babel-core": "6.22.1",
     "babel-eslint": "7.1.1",
@@ -59,12 +58,13 @@
     "fs-extra": "0.30.0",
     "html-webpack-plugin": "2.24.0",
     "http-proxy-middleware": "0.17.3",
-    "jest": "18.1.0",
+    "jest": "^18.1.0",
     "json-loader": "0.5.4",
     "object-assign": "4.1.1",
     "postcss-loader": "1.2.2",
     "promise": "7.1.1",
     "react-dev-utils": "^0.5.2",
+    "standardjs": "^1.0.0-alpha",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.14.0",
@@ -80,7 +80,7 @@
     "db-server": "node scripts/db-server.js",
     "load:s": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false",
     "load:s-t": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=true",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "jest"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -104,6 +104,9 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
+    },
+    "globals": {
+      "window": {}
     }
   },
   "babel": {
