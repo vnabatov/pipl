@@ -11,6 +11,7 @@
     "date-fns": "^2.5.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6-alpha.5",
+    "jest-coverage-badges": "^1.1.2",
     "jira-connector": "^2.16.1",
     "json2csv": "^4.5.4",
     "lowdb": "^1.0.0",
@@ -81,7 +82,8 @@
     "db-server": "node scripts/db-server.js",
     "load:s": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false",
     "load:s-t": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=true",
-    "test": "jest"
+    "test": "jest",
+    "test:badges": "npm test && jest-coverage-badges"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -89,7 +91,8 @@
     ],
     "collectCoverage": true,
     "coverageReporters": [
-      "html"
+      "html",
+      "json-summary"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
