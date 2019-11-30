@@ -78,7 +78,7 @@
     "eslint": "standard --fix",
     "start": "node scripts/start.js",
     "start:nodemon": "nodemon scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "npm run eslint && node scripts/build.js",
     "db-server": "node scripts/db-server.js",
     "load:s": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=false",
     "load:s-t": "node scripts/load-from-jira.js --maxResults=1000 --loadTasks=true",
@@ -93,7 +93,7 @@
     "coverageReporters": [
       "html",
       "json-summary"
-    ],
+    ],k
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
