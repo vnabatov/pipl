@@ -10,7 +10,7 @@ const Button = styled.input`
 margin-right: 0.5rem;
 `
 
-export default ({ form, teamNames = [], stories = [], tasks = [] }) => {
+export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
   const [id, setId] = useState(form.id)
   const [description, setDescription] = useState(form.description)
   const [related, setRelated] = useState(form.related)

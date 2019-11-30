@@ -1,0 +1,133 @@
+exports[`TaskForm Matches the snapshot 1`] = `
+<div
+  className="sc-bdVaJa jAdfzN">
+  <div
+    className="field is-horizontal">
+    <div
+      className="field-label is-small">
+      <label
+        className="label">
+        id
+      </label>
+    </div>
+    <div
+      className="field-body">
+      <div
+        className="field">
+        <div
+          className="control">
+          <input
+            className="input is-small"
+            defaultValue={undefined}
+            onChange={[Function]}
+            type="text" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="field is-horizontal">
+    <div
+      className="field-label is-small">
+      <label
+        className="label">
+        description
+      </label>
+    </div>
+    <div
+      className="field-body">
+      <div
+        className="field">
+        <div
+          className="control">
+          <input
+            className="input is-small"
+            onChange={[Function]}
+            type="text"
+            value={undefined} />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="field is-horizontal">
+    <div
+      className="field-label is-small">
+      <label
+        className="label">
+        sp
+      </label>
+    </div>
+    <div
+      className="field-body">
+      <div
+        className="field">
+        <div
+          className="control">
+          <input
+            className="input is-small"
+            onChange={[Function]}
+            type="text"
+            value={undefined} />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="field is-horizontal">
+    <div
+      className="field-label is-small">
+      <label
+        className="label">
+        summary
+      </label>
+    </div>
+    <div
+      className="field-body">
+      <div
+        className="field">
+        <div
+          className="control">
+          <input
+            className="input is-small"
+            onChange={[Function]}
+            type="text"
+            value={undefined} />
+        </div>
+      </div>
+    </div>
+  </div>
+  0
+  0
+  0
+  <div
+    className="field is-horizontal">
+    <div
+      className="field-label is-normal" />
+    <div
+      className="field-body">
+      <div
+        className="field">
+        <p
+          className="control">
+          <input
+            className="button is-primary sc-bwzfXH ksNfkq"
+            onClick={[Function]}
+            type="button"
+            value="Save" />
+          <input
+            className="button is-warning sc-bwzfXH ksNfkq"
+            onClick={[Function]}
+            type="button"
+            value="Delete" />
+          <input
+            className="button sc-bwzfXH ksNfkq"
+            onClick={[Function]}
+            type="button"
+            value="Close" />
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
