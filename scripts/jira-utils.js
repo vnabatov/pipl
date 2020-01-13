@@ -5,7 +5,7 @@ const { host, username, password } = require('./config/jira.config.json')
 const {
   loadTasks = false,
   maxResults = 1000,
-  updateDbDirectly = false,
+  updateDbDirectly = true,
   jql = 'key=CPP0-1061',
   jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
 } = require('yargs').argv
@@ -62,54 +62,58 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
     }
 
     if (sprint) {
+      let taskSprint = ''
+      try {
+        taskSprint = /.+name=([^,]+)/.exec(task.fields.customfield_10942)[1]
+      } catch (e) {
+        console.log(`can't get a sprint`, e)
+      }
+
+      let version = ''
+      if (task.fields.fixVersions.length) {
+        try {
+          version = task.fields.fixVersions.map(({ name }) => name).join(',')
+        } catch (e) {
+          console.log(`can't get a version`, e)
+        }
+      }
+
+      let storyKey = task.fields.customfield_16525
+      try {
+        if (!storyKey && task.fields.issueLinks.length) {
+          task.fields.issueLinks.forEach(issueLink => {
+            if (issueLink.type.name === 'Story') {
+              storyKey = issueLink.id
+            }
+          })
+        }
+      } catch (e) {
+        console.log(`can't get a story key`, e)
+      }
+
+      const taskData = {
+        id: task.key,
+        summary: task.fields.summary,
+        story: storyKey,
+        related: '',
+        sp: '',
+        date,
+        time,
+        dateChange: date,
+        timeChange: time,
+        v: version,
+        sprint: taskSprint
+      }
+
+      const newSprint = (dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || 'column-1'
+
       if (!alreadyAdded.includes(task.key) && task.status !== 'Closed') {
-        let taskSprint = ''
-        try {
-          taskSprint = /.+name=([^,]+)/.exec(task.fields.customfield_10942)[1]
-        } catch (e) {
-          console.log(`can't get a sprint`, e)
-        }
-
-        let version = ''
-        if (task.fields.fixVersions.length) {
-          try {
-            version = task.fields.fixVersions.map(({ name }) => name).join(',')
-          } catch (e) {
-            console.log(`can't get a version`, e)
-          }
-        }
-
-        let storyKey = task.fields.customfield_16525
-        try {
-          if (!storyKey && task.fields.issueLinks.length) {
-            task.fields.issueLinks.forEach(issueLink => {
-              if (issueLink.type.name === 'Story') {
-                storyKey = issueLink.id
-              }
-            })
-          }
-        } catch (e) {
-          console.log(`can't get a story key`, e)
-        }
-
-        const taskData = {
-          id: task.key,
-          summary: task.fields.summary,
-          story: storyKey,
-          related: '',
-          sp: '',
-          date,
-          time,
-          dateChange: date,
-          timeChange: time,
-          v: version,
-          sprint: taskSprint
-        }
-
         if (updateDbDirectly) {
           dbJSON.tasks.push({ ...taskData, teamName: sprint.teamName, status: undefined })
-          sprint.columns[(dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || 'column-1'].taskIds.push(taskData.id)
+          sprint.columns[newSprint].taskIds.push(taskData.id)
 
+          console.log('dbJSON.sprintMap', dbJSON.sprintMap)
+          console.log('taskSprint', taskSprint)
           console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', taskData.id)
         }
 
@@ -118,6 +122,15 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         alreadyAdded.push(taskData.id)
       } else {
         console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.key)
+
+        // moving to sprint set in jira
+        Object.entries(sprint.columns).forEach(([key, val]) => {
+          console.log(key, val)
+          if (val.taskIds && val.taskIds.includes(taskData.id)) {
+            sprint.columns[key].taskIds = val.taskIds.filter(id => id !== taskData.id)
+          }
+        })
+        sprint.columns[newSprint].taskIds.push(taskData.id)
       }
     } else {
       console.log('sprint not found')
