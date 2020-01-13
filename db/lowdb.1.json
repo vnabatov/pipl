@@ -640,6 +640,8 @@
     }
   ],
   "sprintMap":{
-    "FY20 10 UI": "column-3"
+    "FY20 10 UI": "column-3",
+    "FY20 11 UI": "column-4",
+    "FY20 8 UI": "column-5"
   }
 }
