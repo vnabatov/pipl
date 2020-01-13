@@ -13,3 +13,6 @@ http://localhost:3000/ opens automatically
 check this public project board
 tasks are sorted by priority
 https://github.com/vnabatov/pipl/projects/1
+
+:3001/loadFromJira
+loads tasks from jira and set sprints according to sprintMap from db.json
