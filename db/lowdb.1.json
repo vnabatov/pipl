@@ -640,8 +640,15 @@
     }
   ],
   "sprintMap":{
-    "FY20 10 UI": "column-3",
-    "FY20 11 UI": "column-4",
-    "FY20 8 UI": "column-5"
+    "FY20 14 UI": "column-2",
+    "FY20 15 UI": "column-3",
+    "FY20 16 UI": "column-4",
+    "FY20 17 UI": "column-5",
+    "FY20 18 UI": "column-6",
+    "FY20 Sprint 14 CAT": "column-2",
+    "FY20 Sprint 15 CAT": "column-3",
+    "FY20 Sprint 16 CAT": "column-4",
+    "FY20 Sprint 17 CAT": "column-5",
+    "FY20 Sprint 18 CAT": "column-6"
   }
 }
