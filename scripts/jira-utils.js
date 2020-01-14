@@ -6,8 +6,8 @@ const {
   loadTasks = false,
   maxResults = 1000,
   updateDbDirectly = true,
-  jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC',
-  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
+  jql = 'key=CPP0-1061',
+  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
 } = require('yargs').argv
 
 const jira = new JiraClient({ host, basic_auth: { username, password } })
@@ -108,7 +108,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         if (!sprint || !sprint.includes) {
           return null
         }
-        
+
         if (sprint.includes(' 14')){
           return 'column-2'
         } else if (sprint.includes(' 15')){
@@ -130,8 +130,6 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
           dbJSON.tasks.push({ ...taskData, teamName: sprint.teamName, status: undefined })
           sprint.columns[newSprint].taskIds.push(taskData.id)
 
-          console.log('dbJSON.sprintMap', dbJSON.sprintMap)
-          console.log('taskSprint', taskSprint)
           console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', taskData.id)
         }
 
