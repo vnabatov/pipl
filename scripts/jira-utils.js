@@ -105,15 +105,15 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         sprint: taskSprint
       }
       const getSprintToColumn = (sprint) => {
-        if(sprint.includes(' 14 ')){
+        if(sprint.includes(' 14')){
           return 'column-2'
-        } else if(sprint.includes(' 15 ')){
+        } else if(sprint.includes(' 15')){
           return 'column-3'
-        } else if(sprint.includes(' 16 ')){
+        } else if(sprint.includes(' 16')){
           return 'column-4'
-        } else if(sprint.includes(' 17 ')){
+        } else if(sprint.includes(' 17')){
           return 'column-5'
-        } else if(sprint.includes(' 18 ')){
+        } else if(sprint.includes(' 18')){
           return 'column-6'
         } else {
           return null
