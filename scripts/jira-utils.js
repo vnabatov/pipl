@@ -96,7 +96,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         summary: task.fields.summary,
         story: storyKey,
         related: '',
-        sp: '',
+        sp: task.fields.customfield_10223 || '',
         date,
         time,
         dateChange: date,
