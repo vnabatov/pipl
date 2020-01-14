@@ -6,8 +6,8 @@ const {
   loadTasks = false,
   maxResults = 1000,
   updateDbDirectly = true,
-  jql = 'key=CPP0-1061',
-  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
+  jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC',
+  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
 } = require('yargs').argv
 
 const jira = new JiraClient({ host, basic_auth: { username, password } })
@@ -105,15 +105,19 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         sprint: taskSprint
       }
       const getSprintToColumn = (sprint) => {
-        if(sprint.includes(' 14')){
+        if (!sprint || !sprint.includes) {
+          return null
+        }
+        
+        if (sprint.includes(' 14')){
           return 'column-2'
-        } else if(sprint.includes(' 15')){
+        } else if (sprint.includes(' 15')){
           return 'column-3'
-        } else if(sprint.includes(' 16')){
+        } else if (sprint.includes(' 16')){
           return 'column-4'
-        } else if(sprint.includes(' 17')){
+        } else if (sprint.includes(' 17')){
           return 'column-5'
-        } else if(sprint.includes(' 18')){
+        } else if (sprint.includes(' 18')){
           return 'column-6'
         } else {
           return null
