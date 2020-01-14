@@ -6,8 +6,8 @@ const dbJSONFile = require('../db/lowdb.json')
 const {
   loadTasks = false,
   maxResults = 1000,
-  jql = 'key=CPP0-1061',
-  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
+  jql = 'project = CPP-Master AND issuetype = Story AND "Planned In" = FY20-Q2',
+  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND "Planned In" = FY20-Q2')`
 } = require('yargs').argv
 
 console.log({ maxResults, loadTasks, jql, jql2 })
