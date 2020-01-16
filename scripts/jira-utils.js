@@ -49,6 +49,17 @@ const loadStoriesFromJira = (jiraData, dbJSON) => {
   return newStories
 }
 
+const getInwardOutwardIssue = (issuelink, inwardIssues = true, outwardIssues = true) => {
+  if (outwardIssues && issuelink.outwardIssue) {
+    return {...issuelink.outwardIssue, relationIO: 'outward'};
+  }
+  if (inwardIssues && issuelink.inwardIssue) {
+    return {...issuelink.inwardIssue, relationIO: 'inward'};
+
+  }
+  return null;
+};
+
 const loadTasksFromJira = (jiraData, dbJSON) => {
   const newTasks = []
 
@@ -64,7 +75,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
     if (sprint) {
       let taskSprint = ''
       try {
-        taskSprint = /.+name=([^,]+)/.exec(task.fields.customfield_10942)[1]
+        taskSprint = task.fields.customfield_10942 ? /.+name=([^,]+)/.exec(task.fields.customfield_10942)[1] : ''
       } catch (e) {
         console.log(`can't get a sprint`, e)
       }
@@ -80,7 +91,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
 
       let storyKey = task.fields.customfield_16525
       try {
-        if (!storyKey && task.fields.issueLinks.length) {
+        if (!storyKey && task.fields.issueLinks && task.fields.issueLinks.length) {
           task.fields.issueLinks.forEach(issueLink => {
             if (issueLink.type.name === 'Story') {
               storyKey = issueLink.id
@@ -91,11 +102,42 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         console.log(`can't get a story key`, e)
       }
 
+      const issueLinks = task.fields.issuelinks
+      const relatedIssueTypes = ['Task', 'Sub-task']
+      const checkRelations = []
+      const ignoreWithTextInSummary = ''
+      const relatedIssues = [];
+
+      issueLinks.forEach(issuelink => {
+        const issue = getInwardOutwardIssue(issuelink);
+        const relation = issuelink.type[issue.relationIO];
+
+        console.log('add?', issue.key)
+
+        if (!relatedIssueTypes.includes(issue.fields.issuetype.name)) {
+          console.log(`! Skipped ${issue.key} by IssueType [[${issue.fields.issuetype.name}]]`);
+        }
+        else if (checkRelations.length !== 0 && !checkRelations.includes(relation)) {
+          console.log(`! Skipped ${issue.key} by Relation Type ${relation}`);
+        }
+        else if (ignoreWithTextInSummary !== '' && issue.fields.summary.includes(ignoreWithTextInSummary)) {
+          console.log(`! Skipped ${issue.key} by Text in Summary ${issue.fields.summary} / '${ignoreWithTextInSummary}'`);
+        } else if(issue.fields.status.name === 'Closed') {
+          console.log('skipped by status','Closed')
+        }
+        else {
+          console.log('add', issue.key)
+          relatedIssues.push(issue.key);
+        }
+      });
+      if(task.key === 'CPP2-1048') {
+        console.log('task.fields',JSON.stringify(task.fields))
+      }
       const taskData = {
         id: task.key,
         summary: task.fields.summary,
         story: storyKey,
-        related: '',
+        related: relatedIssues.length ? relatedIssues.join(',') : '',
         sp: task.fields.customfield_10223 || '',
         date,
         time,
@@ -104,6 +146,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         v: version,
         sprint: taskSprint
       }
+
       const getSprintToColumn = (sprint) => {
         if (!sprint || !sprint.includes) {
           return null
@@ -123,7 +166,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
           return null
         }
       }
-      const newSprint = (dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || getSprintToColumn(taskSprint) || 'column-1'
+      const newSprint = (taskSprint && dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || getSprintToColumn(taskSprint) || 'column-1'
 
       if (!alreadyAdded.includes(task.key) && task.status !== 'Closed') {
         if (updateDbDirectly) {

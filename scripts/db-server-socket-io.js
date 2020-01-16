@@ -202,6 +202,10 @@ app.get('/loadFromJira', async (req, res) => {
     try {
       const jql =  'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
       const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
+
+      // const jql = 'key=CPP0-141'
+      // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
+
       const loadTasks = 'true'
 
       const dbJSONFile = getDb()
