@@ -2,52 +2,62 @@ import React from 'react'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 
-const Story = styled.div`
-transition: .2s all;
-max-height: 70px;
-padding: 4px;
-border: 1px solid lightgray;
-overflow: hidden;
-margin: 0 !important;
-background-color: ${({ selected }) => selected ? 'rgba(50, 115, 220, .7)' : 'none'} !important;
-`
-
 const Container = styled.div`
 margin:3px;
-border: 1px solid lightgrey;
-border-radius: 2px;
 width: 100%;
 overflow: hidden;
 background: rgba(255,255,255,.8);
 `
-const Title = styled.div`
-transition: all .2s;
-padding:3px;
-font-size:1.2rem;
-width: 100%;
-text-align:center;
-background: ${({ error, fit }) => error ? 'lightcoral' : (fit ? 'lightgreen' : 'none')}
-opacity: .7;
-z-index: 2;
+const Row = styled.div`
+display: flex;
+flex-direction: colummn;
 `
 const TaskList = styled.div`
 padding:3px;
 min-width: 100px;
 `
-const TaskLink = styled.a`
-text-decoration: none !important;
-font-size:16px;
+const StoryLine = styled.div`
+padding:3px;
+margin-left:  ${({ startSprint }) => (startSprint) * 100 / 6 + '%'}
+margin-bottom: 1px
+width: ${({ startSprint, endSprint }) => (endSprint - startSprint + 1) * 100 / 6 + '%'}
+background:  ${({ startSprint }) => startSprint === 0 ? 'red' : '#3273DC'}
+color: white;
+border-radius: 3px;
+overflow: hidden;
+font-size: 10px;
 `
 
-export default ({ title, sprintStories }) => (
+export default ({ storySprintIndex, storyIndex, taskFilter }) => (
   <AppContext.Consumer>
-    {({ selectStory, selectedStory }) => (
-      <Container><Title>{title}</Title><TaskList>
-        {sprintStories.map((story) => {
-          return story ? <Story selected={selectedStory === story.id} key={'pb-story' + story.id} onClick={() => selectStory(story.id)} className={`message is-small story${story.id}`}>
-            <TaskLink title='story' href={`https://jira.wiley.com/browse/${story.id}`}>{story.id}</TaskLink>{story.summary}
-          </Story> : ''
-        })}
-      </TaskList></Container>)}
+    {({ selectStory, selectedStory }) => {
+      return (
+        <Container>
+          <TaskList>
+            {storySprintIndex && Object.entries(storySprintIndex).map(([storyId, value]) => {
+              if (
+                (
+                  !selectedStory ||
+                 selectedStory === storyId
+                ) &&
+              (
+                taskFilter === '' ||
+                storyId.includes(taskFilter)) ||
+                (storyIndex[storyId] && storyIndex[storyId].summary.includes(taskFilter))
+              ) {
+                const summary = (storyIndex[storyId] && storyIndex[storyId].summary) || ''
+
+                return (<Row>
+                  <StoryLine onClick={() => selectStory(storyId)} startSprint={value[0] - 1} endSprint={value[1] - 1}>{storyId} ({value[0] - 1}-{value[1] - 1}) {summary}</StoryLine>
+                </Row>)
+              } else {
+                return ''
+              }
+            })}
+          </TaskList>
+        </Container>
+      )
+    }}
   </AppContext.Consumer>
+
 )

@@ -14,6 +14,7 @@ import RelationsProgramBoard from './components/RelationsProgramBoard'
 import 'bulma/css/bulma.css'
 import './App.css'
 import ProgramBoard from './components/ProgramBoard'
+import VersionBoard from './components/VersionBoard'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
 const defaultForm = { id: '', description: 'empty', teamName: '', summary: '', related: '', sp: '', story: '' }
@@ -222,7 +223,10 @@ const Content = () => {
 
         <Sprints taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
-        <ProgramBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
+        <ProgramBoard taskFilter={taskFilter} storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
+
+        {/* <VersionBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} /> */}
+
       </div>}
     </AppContext.Provider>
   </div>
