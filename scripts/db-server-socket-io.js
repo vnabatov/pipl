@@ -194,7 +194,7 @@ app.get('/db', function (req, res) {
 app.get('/reset', function (req, res) {
   let defaultConfig = require('../db/generation-config.json')
   const newDb = { stories: [], tasks: [], sprints: [] }
-  const columns = defaultConfig.sprintNames.reduce((acc, sprintName, index) => {
+  const createColumns = () => defaultConfig.sprintNames.reduce((acc, sprintName, index) => {
     acc['column-' + (index + 1)] = {
       'id': 'column-' + (index + 1),
       'title': sprintName,
@@ -209,7 +209,7 @@ app.get('/reset', function (req, res) {
     newDb.sprints.push({
       id,
       teamName,
-      columns,
+      columns: createColumns(),
       'columnOrder': defaultConfig.sprintNames.map((val, key) => 'column-' + (key + 1)),
       'dirty': true
     })
@@ -236,12 +236,11 @@ app.get('/loadFromJira', async (req, res) => {
     let newStories = []
 
     try {
-      // const jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
-      // const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('${jql}') AND status != Closed`
+      const jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
+      const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('${jql}') AND status != Closed`
 
-      const jql = 'key=CPP0-141'
+      // const jql = 'key=CPP0-141'
       // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
-      const jql2 = 'key=CPP4-349'
 
       const loadTasks = 'true'
 
