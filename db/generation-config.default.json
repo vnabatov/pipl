@@ -1,0 +1,63 @@
+{
+  "teams": [
+    {
+      "id": "CPP1",
+      "teamName": "CPP1 - Challenge Accepted"
+    },
+    {
+      "id": "CPP2",
+      "teamName": "CPP2 - Already Done"
+    },
+    {
+      "id": "CPP3",
+      "teamName": "CPP3 - Content Brew Masters"
+    },
+    {
+      "id": "CPP4",
+      "teamName": "CPP4 - Integration"
+    },
+    {
+      "id": "CPP5",
+      "teamName": "CPP5 - Delivery"
+    },
+    {
+      "id": "CPP6",
+      "teamName": "CPP6 - Test Project"
+    },
+    {
+      "id": "CPP7",
+      "teamName": "CPP7 - FALCON"
+    },
+    {
+      "id": "CPP8",
+      "teamName": "CPP8 - Test Project"
+    },
+    {
+      "id": "CPP9",
+      "teamName": "CPP9 - Rocky"
+    },
+    {
+      "id": "OUTER",
+      "teamName": "Outer"
+    },
+    {
+      "id": "DevOps",
+      "teamName": "DevOps"
+    },
+    {
+      "id": "default",
+      "teamName": "default"
+    }
+  ],
+  "sprintNames": ["Backlog","Sprint 1(13)","Sprint 2(14)","Sprint 3(15)","Sprint 4(16)", "Sprint 5(17)"],
+  "sprintMap":{
+    "FY20 14 UI": "column-2"
+  },
+  "sprintSearchForColumns": {
+    " 14": "column-2",
+    " 15": "column-3",
+    " 16": "column-4",
+    " 17": "column-5",
+    " 18": "column-6"
+  }
+}

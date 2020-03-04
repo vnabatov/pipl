@@ -6,8 +6,10 @@ const dbJSONFile = require('../db/lowdb.json')
 const {
   loadTasks = false,
   maxResults = 3000,
-  jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC',
-  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
+  // jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC',
+  jql = 'key = CPP0-1871',
+  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key = CPP0-1871') AND status != Closed`
+  // jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
 } = require('yargs').argv
 
 console.log({ maxResults, loadTasks, jql, jql2 })

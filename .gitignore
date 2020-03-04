@@ -11,6 +11,7 @@
 # production
 /build
 /db/lowdb.json
+/db/generation-config.json
 
 # misc
 .DS_Store

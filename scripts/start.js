@@ -314,3 +314,7 @@ if (!fs.existsSync('db/lowdb.json')) {
 } else {
   require('./db-server-socket-io')
 }
+
+if (!fs.existsSync('db/generation-config.json')) {
+  fs.createReadStream('db/generation-config.default.json').pipe(fs.createWriteStream('db/generation-config.json'))
+}

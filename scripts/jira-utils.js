@@ -51,14 +51,13 @@ const loadStoriesFromJira = (jiraData, dbJSON) => {
 
 const getInwardOutwardIssue = (issuelink, inwardIssues = true, outwardIssues = true) => {
   if (outwardIssues && issuelink.outwardIssue) {
-    return {...issuelink.outwardIssue, relationIO: 'outward'};
+    return { ...issuelink.outwardIssue, relationIO: 'outward' }
   }
   if (inwardIssues && issuelink.inwardIssue) {
-    return {...issuelink.inwardIssue, relationIO: 'inward'};
-
+    return { ...issuelink.inwardIssue, relationIO: 'inward' }
   }
-  return null;
-};
+  return null
+}
 
 const loadTasksFromJira = (jiraData, dbJSON) => {
   const newTasks = []
@@ -106,32 +105,29 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
       const relatedIssueTypes = ['Task', 'Sub-task']
       const checkRelations = []
       const ignoreWithTextInSummary = ''
-      const relatedIssues = [];
+      const relatedIssues = []
 
       issueLinks.forEach(issuelink => {
-        const issue = getInwardOutwardIssue(issuelink);
-        const relation = issuelink.type[issue.relationIO];
+        const issue = getInwardOutwardIssue(issuelink)
+        const relation = issuelink.type[issue.relationIO]
 
         console.log('add?', issue.key)
 
         if (!relatedIssueTypes.includes(issue.fields.issuetype.name)) {
-          console.log(`! Skipped ${issue.key} by IssueType [[${issue.fields.issuetype.name}]]`);
-        }
-        else if (checkRelations.length !== 0 && !checkRelations.includes(relation)) {
-          console.log(`! Skipped ${issue.key} by Relation Type ${relation}`);
-        }
-        else if (ignoreWithTextInSummary !== '' && issue.fields.summary.includes(ignoreWithTextInSummary)) {
-          console.log(`! Skipped ${issue.key} by Text in Summary ${issue.fields.summary} / '${ignoreWithTextInSummary}'`);
-        } else if(issue.fields.status.name === 'Closed') {
-          console.log('skipped by status','Closed')
-        }
-        else {
+          console.log(`! Skipped ${issue.key} by IssueType [[${issue.fields.issuetype.name}]]`)
+        } else if (checkRelations.length !== 0 && !checkRelations.includes(relation)) {
+          console.log(`! Skipped ${issue.key} by Relation Type ${relation}`)
+        } else if (ignoreWithTextInSummary !== '' && issue.fields.summary.includes(ignoreWithTextInSummary)) {
+          console.log(`! Skipped ${issue.key} by Text in Summary ${issue.fields.summary} / '${ignoreWithTextInSummary}'`)
+        } else if (issue.fields.status.name === 'Closed') {
+          console.log('skipped by status', 'Closed')
+        } else {
           console.log('add', issue.key)
-          relatedIssues.push(issue.key);
+          relatedIssues.push(issue.key)
         }
-      });
-      if(task.key === 'CPP2-1048') {
-        console.log('task.fields',JSON.stringify(task.fields))
+      })
+      if (task.key === 'CPP2-1048') {
+        console.log('task.fields', JSON.stringify(task.fields))
       }
       const taskData = {
         id: task.key,
@@ -152,18 +148,14 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
           return null
         }
 
-        if (sprint.includes(' 14')){
-          return 'column-2'
-        } else if (sprint.includes(' 15')){
-          return 'column-3'
-        } else if (sprint.includes(' 16')){
-          return 'column-4'
-        } else if (sprint.includes(' 17')){
-          return 'column-5'
-        } else if (sprint.includes(' 18')){
-          return 'column-6'
-        } else {
-          return null
+        if (dbJSON.sprintSearchForColumns) {
+          let targetColumn = null
+          Object.entries(dbJSON.sprintSearchForColumns).forEach((search, column) => {
+            if (sprint.includes(search)) {
+              targetColumn = column
+            }
+          })
+          return targetColumn
         }
       }
       const newSprint = (taskSprint && dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || getSprintToColumn(taskSprint) || 'column-1'

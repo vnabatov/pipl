@@ -189,6 +189,39 @@ app.get('/db', function (req, res) {
   res.send(JSON.stringify(getDb()))
 })
 
+app.get('/reset', function (req, res) {
+  let defaultDB = require('../db/lowdb.default.json')
+  db.setState(defaultDB).write()
+  res.redirect('/')
+})
+
+app.get('/resetAndGenerate', function (req, res) {
+  let defaultConfig = require('../db/generation-config.json')
+  const newDb = { stories: [], tasks: [], sprints: [] }
+  const columns = defaultConfig.sprintNames.reduce((acc, sprintName, index) => {
+    acc['column-' + (index + 1)] = {
+      'id': 'column-' + (index + 1),
+      'title': sprintName,
+      'size': '40',
+      'taskIds': []
+    }
+    return acc
+  }, {})
+  newDb.sprintsMap = defaultConfig.sprintsMap
+  newDb.sprintSearchForColumns = defaultConfig.sprintSearchForColumns
+  defaultConfig.teams.forEach(({ id, teamName }) => {
+    newDb.sprints.push({
+      id,
+      teamName,
+      columns,
+      'columnOrder': defaultConfig.sprintNames.map((val, key) => 'column-' + (key + 1)),
+      'dirty': true
+    })
+  })
+  db.setState(newDb).write()
+  res.redirect('/')
+})
+
 app.get('/dbCSV', function (req, res) {
   const { tasks, taskPostionsCache } = getDb()
   const fields = ['id', 'story', 'sp', 'summary', 'teamName', 'taskPostion', 'v', 'date', 'time', 'dateChange', 'timeChange', 'related']
