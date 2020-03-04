@@ -190,12 +190,6 @@ app.get('/db', function (req, res) {
 })
 
 app.get('/reset', function (req, res) {
-  let defaultDB = require('../db/lowdb.default.json')
-  db.setState(defaultDB).write()
-  res.redirect('/')
-})
-
-app.get('/resetAndGenerate', function (req, res) {
   let defaultConfig = require('../db/generation-config.json')
   const newDb = { stories: [], tasks: [], sprints: [] }
   const columns = defaultConfig.sprintNames.reduce((acc, sprintName, index) => {
@@ -219,7 +213,7 @@ app.get('/resetAndGenerate', function (req, res) {
     })
   })
   db.setState(newDb).write()
-  res.redirect('/')
+  res.send('ok')
 })
 
 app.get('/dbCSV', function (req, res) {
@@ -240,11 +234,11 @@ app.get('/loadFromJira', async (req, res) => {
     let newStories = []
 
     try {
-      const jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
-      const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
+      // const jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
+      // const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
 
-      // const jql = 'key=CPP0-141'
-      // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
+      const jql = 'key=CPP0-141'
+      const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
 
       const loadTasks = 'true'
 

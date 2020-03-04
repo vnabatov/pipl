@@ -150,7 +150,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
 
         if (dbJSON.sprintSearchForColumns) {
           let targetColumn = null
-          Object.entries(dbJSON.sprintSearchForColumns).forEach((search, column) => {
+          Object.entries(dbJSON.sprintSearchForColumns).forEach(([search, column]) => {
             if (sprint.includes(search)) {
               targetColumn = column
             }

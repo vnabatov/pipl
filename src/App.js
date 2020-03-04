@@ -14,7 +14,7 @@ import RelationsProgramBoard from './components/RelationsProgramBoard'
 import 'bulma/css/bulma.css'
 import './App.css'
 import ProgramBoard from './components/ProgramBoard'
-import VersionBoard from './components/VersionBoard'
+// import VersionBoard from './components/VersionBoard'
 
 const api = { db: '/db', tasks: '/tasks', sprints: '/sprints', columns: '/columns' }
 const defaultForm = { id: '', description: 'empty', teamName: '', summary: '', related: '', sp: '', story: '' }
