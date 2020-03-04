@@ -41,9 +41,9 @@ const loadStoriesFromJira = (jiraData, dbJSON) => {
       newStories.push({ ...story, date, time })
 
       alreadyAdded.push(story.id)
-      console.log('Added:', story.id)
+      console.log('Added Story:', story.id)
     } else {
-      console.log('Already exists:', story.id)
+      console.log('Story Already exists:', story.id)
     }
   })
   return newStories
@@ -64,12 +64,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
 
   jiraData.issues.forEach(task => {
     const teamId = task.key.split('-')[0]
-    let sprint = dbJSON.sprints.find(({ id }) => id === teamId)
-
-    if (!sprint) {
-      console.log('sprint not found, trying default')
-      sprint = dbJSON.sprints.find(({ id }) => id === 'default')
-    }
+    const sprint = dbJSON.sprints.find(({ id }) => id === teamId) || dbJSON.sprints.find(({ id }) => id === 'default')
 
     if (sprint) {
       let taskSprint = ''
@@ -102,7 +97,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
       }
 
       const issueLinks = task.fields.issuelinks
-      const relatedIssueTypes = ['Task', 'Sub-task']
+      const relatedIssueTypes = ['Task', 'Sub-task', 'Technical']
       const checkRelations = []
       const ignoreWithTextInSummary = ''
       const relatedIssues = []
@@ -111,24 +106,22 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         const issue = getInwardOutwardIssue(issuelink)
         const relation = issuelink.type[issue.relationIO]
 
-        console.log('add?', issue.key)
+        // console.log('   add link', issue.key, '?')
 
         if (!relatedIssueTypes.includes(issue.fields.issuetype.name)) {
-          console.log(`! Skipped ${issue.key} by IssueType [[${issue.fields.issuetype.name}]]`)
+          // console.log(`   ! Skipped ${issue.key} by IssueType [[${issue.fields.issuetype.name}]]`)
         } else if (checkRelations.length !== 0 && !checkRelations.includes(relation)) {
-          console.log(`! Skipped ${issue.key} by Relation Type ${relation}`)
+          // console.log(`   ! Skipped ${issue.key} by Relation Type ${relation}`)
         } else if (ignoreWithTextInSummary !== '' && issue.fields.summary.includes(ignoreWithTextInSummary)) {
-          console.log(`! Skipped ${issue.key} by Text in Summary ${issue.fields.summary} / '${ignoreWithTextInSummary}'`)
+          // console.log(`   ! Skipped ${issue.key} by Text in Summary ${issue.fields.summary} / '${ignoreWithTextInSummary}'`)
         } else if (issue.fields.status.name === 'Closed') {
-          console.log('skipped by status', 'Closed')
+          // console.log('   skipped by status', 'Closed')
         } else {
-          console.log('add', issue.key)
+          // console.log('   Yes - add', issue.key)
           relatedIssues.push(issue.key)
         }
       })
-      if (task.key === 'CPP2-1048') {
-        console.log('task.fields', JSON.stringify(task.fields))
-      }
+
       const taskData = {
         id: task.key,
         summary: task.fields.summary,
@@ -143,29 +136,28 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         sprint: taskSprint
       }
 
-      const getSprintToColumn = (sprint) => {
-        if (!sprint || !sprint.includes) {
+      const getSprintToColumn = (sprintName) => {
+        if (!sprintName || !sprintName.includes) {
           return null
         }
 
         if (dbJSON.sprintSearchForColumns) {
           let targetColumn = null
           Object.entries(dbJSON.sprintSearchForColumns).forEach(([search, column]) => {
-            if (sprint.includes(search)) {
+            if (sprintName.includes(search)) {
               targetColumn = column
             }
           })
           return targetColumn
         }
       }
-      const newSprint = (taskSprint && dbJSON.sprintMap && taskSprint && dbJSON.sprintMap[taskSprint]) || getSprintToColumn(taskSprint) || 'column-1'
+      const newSprintColumn = getSprintToColumn(taskSprint) || 'column-1'
 
       if (!alreadyAdded.includes(task.key) && task.status !== 'Closed') {
         if (updateDbDirectly) {
           dbJSON.tasks.push({ ...taskData, teamName: sprint.teamName, status: undefined })
-          sprint.columns[newSprint].taskIds.push(taskData.id)
-
-          console.log('sprint (team) = [', sprint && sprint.teamName, '] task =', taskData.id)
+          sprint.columns[newSprintColumn].taskIds.push(taskData.id)
+          console.log('sprint (team) = [', sprint.teamName, '] task =', taskData.id, newSprintColumn, JSON.stringify(dbJSON.sprint))
         }
 
         newTasks.push({ ...taskData, teamName: sprint.teamName, status: undefined })
@@ -174,14 +166,12 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
       } else {
         console.log('Already exists: sprint (team) = [', sprint && sprint.teamName, '] task =', task.key)
 
-        // moving to sprint set in jira
         Object.entries(sprint.columns).forEach(([key, val]) => {
-          console.log(key, val)
           if (val.taskIds && val.taskIds.includes(taskData.id)) {
             sprint.columns[key].taskIds = val.taskIds.filter(id => id !== taskData.id)
           }
         })
-        sprint.columns[newSprint].taskIds.push(taskData.id)
+        sprint.columns[newSprintColumn].taskIds.push(taskData.id)
       }
     } else {
       console.log('sprint not found')

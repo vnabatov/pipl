@@ -25,9 +25,11 @@ const updateTask = (parsedData) => {
 
   const newTaskId = parsedData.id.toString()
   const oldTaskId = parsedData.oldId && parsedData.oldId.toString()
+  const teamName = parsedData.teamName
+
   const tasks = db.get('tasks')
 
-  console.log('oldTaskId, newTaskId', oldTaskId, newTaskId)
+  console.log('oldTaskId, newTaskId', oldTaskId, newTaskId, teamName)
 
   const task = tasks
     .find({ id: oldTaskId || newTaskId })
@@ -63,7 +65,8 @@ const updateTask = (parsedData) => {
           .write()
       })
 
-      db.get('sprints')
+      console.log(parsedData.teamName, newTaskId)
+      db.get('sprints', parsedData.teamName)
         .find({ teamName: parsedData.teamName })
         .get('columns.column-1.taskIds')
         .push(newTaskId)
@@ -107,9 +110,8 @@ const updateTask = (parsedData) => {
       .write()
   } else {
     const newTask = { ...parsedData, time, date }
-    console.log('newTaskId', newTaskId)
+
     if (!newTaskId || !newTaskId.length) { newTask.id = (tasks.value().length ? Math.max(...tasks.value().map(({ id }) => isNaN(id.replace(/[0-9a-zA-Z]+-/, '')) ? 0 : id.replace(/[0-9a-zA-Z]+-/, ''))) + 1 : 1).toString() }
-    console.log('newTask.id', newTask.id)
 
     db.get('tasks')
       .push(newTask)
@@ -235,10 +237,11 @@ app.get('/loadFromJira', async (req, res) => {
 
     try {
       // const jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
-      // const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC') AND status != Closed`
+      // const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('${jql}') AND status != Closed`
 
       const jql = 'key=CPP0-141'
-      const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
+      // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
+      const jql2 = 'key=CPP4-349'
 
       const loadTasks = 'true'
 
@@ -273,11 +276,7 @@ app.get('/loadFromJira', async (req, res) => {
           updateTask(newTask)
         })
       }
-      console.log('stories')
-      console.log(JSON.stringify(newStories))
-      console.log('tasks')
-      console.log(JSON.stringify(newTasks))
-
+      console.log('load completed')
       res.send(JSON.stringify({ newStories, newTasks }))
     }
   }

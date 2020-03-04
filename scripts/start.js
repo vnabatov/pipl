@@ -16,7 +16,6 @@ var clearConsole = require('react-dev-utils/clearConsole')
 var checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 var formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
 var getProcessForPort = require('react-dev-utils/getProcessForPort')
-var openBrowser = require('react-dev-utils/openBrowser')
 var prompt = require('react-dev-utils/prompt')
 var fs = require('fs')
 var config = require('../config/webpack.config.dev')
@@ -270,7 +269,7 @@ function runDevServer (host, port, protocol) {
     console.log(chalk.cyan('Starting the development server...'))
     console.log()
 
-    openBrowser(protocol + '://' + host + ':' + port + '/')
+    // openBrowser(protocol + '://' + host + ':' + port + '/')
   })
 }
 
