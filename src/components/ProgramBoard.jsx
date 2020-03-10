@@ -55,7 +55,7 @@ export default ({ taskFilter, stories, tasks, sprints, taskStoryIndex, storyInde
       <div>
         <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Program board</PanelName>
         <UnmountClosed isOpened={isOpened}>
-          <ProgramBoardColumnStories storyIndex={storyIndex} taskFilter={taskFilter} storySprintIndex={storySprintIndex} />
+          <ProgramBoardColumnStories sprints={sprints} storyIndex={storyIndex} taskFilter={taskFilter} storySprintIndex={storySprintIndex} />
 
           {sprints && tasks && sprints.map(sprint => <SprintTable key={'pb-sprint' + sprint.teamName}>
             {sprint.columnOrder.map((columnId) => {
@@ -66,6 +66,7 @@ export default ({ taskFilter, stories, tasks, sprints, taskStoryIndex, storyInde
                   key={column.id}
                   title={column.title}
                   stories={stories}
+                  sprints={sprints}
                   tasks={sprintTasks}
                 />
               } else {

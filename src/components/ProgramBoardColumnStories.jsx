@@ -27,11 +27,18 @@ border-radius: 3px;
 overflow: hidden;
 font-size: 10px;
 `
-
-export default ({ storySprintIndex, storyIndex, taskFilter }) => (
+const Sprint = styled.div`
+width: ${100 / 6 + '%'};
+display: inline-block;
+text-align: center;
+`
+export default ({ sprints, storySprintIndex, storyIndex, taskFilter }) => (
   <AppContext.Consumer>
     {({ selectStory, selectedStory }) => {
-      return (
+      return (<div>
+        <Container>
+          {sprints && Object.entries(sprints[0].columns).map(([name, value]) => <Sprint>{value.title}</Sprint>)}
+        </Container>
         <Container>
           <TaskList>
             {storySprintIndex && Object.entries(storySprintIndex).map(([storyId, value]) => {
@@ -54,7 +61,7 @@ export default ({ storySprintIndex, storyIndex, taskFilter }) => (
             })}
           </TaskList>
         </Container>
-      )
+      </div>)
     }}
   </AppContext.Consumer>
 

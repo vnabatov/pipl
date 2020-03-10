@@ -229,7 +229,7 @@ app.get('/dbCSV', function (req, res) {
 
 let loadFromJiraInProgress = false
 app.get('/loadFromJira', async (req, res) => {
-  console.log('load')
+  console.log('loadFromJira')
   if (!loadFromJiraInProgress) {
     loadFromJiraInProgress = true
     let newTasks = []
