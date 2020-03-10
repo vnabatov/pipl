@@ -191,14 +191,17 @@ const Content = () => {
     // selectedTask = taskData.id
   }
 
-  const selectStory = story => (selectedStory = (selectedStory !== story ? story : ''))
+  const redrawRelations = () => {
+    relationsRedraw = Date.now()
+  }
+
+  const selectStory = story => {
+    selectedStory = (selectedStory !== story ? story : '')
+    setTimeout(redrawRelations, 1000)
+  }
 
   const addStory = (story) => {
     socket.emit('story:create', JSON.stringify(story))
-  }
-
-  const redrawRelations = () => {
-    relationsRedraw = Date.now()
   }
 
   return <div className='container is-widescreen'>
