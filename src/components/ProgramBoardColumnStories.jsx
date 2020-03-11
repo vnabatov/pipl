@@ -46,14 +46,14 @@ export default ({ sprints, storySprintIndex, storyIndex, taskFilter }) => (
               let show = !selectedStory && !taskFilter
 
               if (selectedStory) {
-                show = selectedStory === storyId
+                show = selectedStory === storyId || storyIndex[selectedStory].relatedIssues.includes(storyId)
               }
               if (taskFilter) {
                 show = storyId.includes(taskFilter) || summary.includes(taskFilter)
               }
               if (show) {
                 return (<Row>
-                  <StoryLine onClick={() => selectStory(storyId)} startSprint={value[0] - 1} endSprint={value[1] - 1}>{storyId} ({value[0] - 1}-{value[1] - 1}) {summary}</StoryLine>
+                  <StoryLine id={`pbs-${storyId}`} className={`pbs-${storyId}`} onClick={() => selectStory(storyId)} startSprint={value[0] - 1} endSprint={value[1] - 1}>{storyId} ({value[0] - 1}-{value[1] - 1}) {summary}</StoryLine>
                 </Row>)
               } else {
                 return ''

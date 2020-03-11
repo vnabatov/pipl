@@ -248,7 +248,7 @@ app.get('/loadFromJira', async (req, res) => {
 
       prepareAlreadyAdded(dbJSONFile)
 
-      const storiesData = await getIssuesByFilter(jql, dbJSONFile)
+      const storiesData = await getIssuesByFilter(jql)
 
       console.log('loadStoriesFromJira')
 
@@ -264,7 +264,7 @@ app.get('/loadFromJira', async (req, res) => {
       console.log(e)
     } finally {
       loadFromJiraInProgress = false
-
+      const result = JSON.stringify({ newStories, newTasks })
       if (newStories.length) {
         newStories.forEach(newStory => {
           createStory(newStory)
@@ -276,7 +276,7 @@ app.get('/loadFromJira', async (req, res) => {
         })
       }
       console.log('load completed')
-      res.send(JSON.stringify({ newStories, newTasks }))
+      res.send(result)
     }
   }
 })

@@ -9,7 +9,7 @@ const showRelationForTask = (link, task, color = 'red') => {
     borderWidth: 1
   }
   return task !== link && document.querySelector(`.story${link}`) && document.querySelector(`.story${task}`)
-    ? <LineTo key={`story${link}-story${task}`} fromAnchor='right' toAnchor='left' {...style} from={`story${link}`} to={`story${task}`} />
+    ? <LineTo key={`story-${link}-story-${task}`} fromAnchor='right' toAnchor='left' {...style} from={`story${link}`} to={`story${task}`} />
     : ''
 }
 

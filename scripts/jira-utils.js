@@ -30,15 +30,38 @@ const prepareAlreadyAdded = (dbJSON) => {
 }
 
 const loadStoriesFromJira = (jiraData, dbJSON) => {
-  const storiesFromJira = jiraData.issues.map(({ key, fields: { summary, customfield_11220: epicId } }) => ({ id: key, summary, epicId }))
+  const storiesFromJira = jiraData.issues.map(({ key, fields: { summary, customfield_11220: epicId, issuelinks } }) => ({ id: key, summary, epicId, issuelinks }))
   const newStories = []
   storiesFromJira.forEach(story => {
     if (!alreadyAdded.includes(story.id)) {
-      if (updateDbDirectly) {
-        dbJSON.stories.push({ ...story, date, time })
-      }
+      const relatedIssues = []
+      const relatedIssueTypes = ['Story', 'Technical']
+      const checkRelations = []
+      const ignoreWithTextInSummary = ''
 
-      newStories.push({ ...story, date, time })
+      story.issuelinks.length && story.issuelinks.forEach(issuelink => {
+        const issue = getInwardOutwardIssue(issuelink)
+        const relation = issuelink.type[issue.relationIO]
+
+        // console.log('   add link', issue.key, '?')
+
+        if (!relatedIssueTypes.includes(issue.fields.issuetype.name)) {
+          // console.log(`   ! Skipped ${issue.key} by IssueType [[${issue.fields.issuetype.name}]]`)
+        } else if (checkRelations.length !== 0 && !checkRelations.includes(relation)) {
+          // console.log(`   ! Skipped ${issue.key} by Relation Type ${relation}`)
+        } else if (ignoreWithTextInSummary !== '' && issue.fields.summary.includes(ignoreWithTextInSummary)) {
+          // console.log(`   ! Skipped ${issue.key} by Text in Summary ${issue.fields.summary} / '${ignoreWithTextInSummary}'`)
+        } else if (issue.fields.status.name === 'Closed') {
+          // console.log('   skipped by status', 'Closed')
+        } else {
+          // console.log('   Yes - add', issue.key)
+          relatedIssues.push(issue.key)
+        }
+      })
+
+      story.issuelinks = undefined
+
+      newStories.push({ ...story, date, time, relatedIssues })
 
       alreadyAdded.push(story.id)
       console.log('Added Story:', story.id)

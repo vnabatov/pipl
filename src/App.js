@@ -10,6 +10,7 @@ import Stories from './components/Stories'
 import AppContext from './AppContext'
 import Relations from './components/Relations'
 import RelationsProgramBoard from './components/RelationsProgramBoard'
+import RelationsProgramBoardStories from './components/RelationsProgramBoardStories'
 
 import 'bulma/css/bulma.css'
 import './App.css'
@@ -137,6 +138,7 @@ const NavbarContainer = () => {
         compactToggle: () => (isCompact = !isCompact)
       }} />
       {showRelations && dbs && <RelationsProgramBoard showRelations={showRelations} relationsRedraw={relationsRedraw} tasks={dbs.tasks} selectedStory={selectedStory} />}
+      {showRelations && dbs && <RelationsProgramBoardStories showRelations={showRelations} relationsRedraw={relationsRedraw} stories={dbs.stories} selectedStory={selectedStory} />}
       {showRelations && dbs && <Relations allRelations={allRelations} relationsRedraw={relationsRedraw} tasks={dbs.tasks} selectedId={form.id} />}
     </AppContext.Provider>
   </div>
@@ -222,6 +224,8 @@ const Content = () => {
       isCompact
     }}>
       {(!dbs) ? 'Loading' : <div className='content'>
+        {selectedStory ? <div onClick={() => selectStory('')}>Selected Story: {selectedStory}&times;</div> : ''}
+
         <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
         <Sprints taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />

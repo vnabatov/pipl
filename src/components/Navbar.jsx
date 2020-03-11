@@ -65,25 +65,25 @@ export default ({
           </div>
         </div> : ''}
 
-        <div class='navbar-item has-dropdown is-hoverable'>
-          <a class='navbar-link' href='#'>
+        <div className='navbar-item has-dropdown is-hoverable'>
+          <a className='navbar-link' href='#'>
             Download
           </a>
-          <div class='navbar-dropdown is-boxed'>
-            <a class='navbar-item' href='#' onClick={downloadDb}>
+          <div className='navbar-dropdown is-boxed'>
+            <a className='navbar-item' href='#' onClick={downloadDb}>
               JSON - full database
             </a>
-            <a class='navbar-item' href='#' onClick={downloadCSV}>
+            <a className='navbar-item' href='#' onClick={downloadCSV}>
               CSV - tasks and positions
             </a>
           </div>
         </div>
 
-        <div class='navbar-item has-dropdown is-hoverable'>
-          <a class='navbar-link' href='#'>
+        <div className='navbar-item has-dropdown is-hoverable'>
+          <a className='navbar-link' href='#'>
             Upload
           </a>
-          <div class='navbar-dropdown'>
+          <div className='navbar-dropdown'>
             <form
               action='/upload'
               style={{ display: 'inherit' }}
