@@ -6,7 +6,7 @@ import shallowequal from 'shallowequal'
 
 const Container = styled.div`
 ${({ isHidden }) => isHidden ? 'display: none;' : ''}}
-padding:3px;
+padding:1px;
 `
 
 const Grid = styled.div`
@@ -44,7 +44,7 @@ display: flex;
 font-weight: 700;
 justify-content: space-between;
 line-height: 1.25;
-padding: 4px;
+padding: 2px;
 position: relative;
 word-break: break-word;
 
@@ -57,7 +57,7 @@ ${({ noStory }) => noStory ? 'border-right: 3px solid #AB23D1;' : ''}}
 `
 
 const TicketBody = styled.div`
-padding: 3px;
+padding: 1px;
 word-break: break-word;
 `
 const Error = styled.div`

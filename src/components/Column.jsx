@@ -5,7 +5,7 @@ import { Droppable } from 'react-beautiful-dnd'
 import AppContext from '../AppContext'
 
 const Container = styled.div`
-margin:3px;
+margin:1px;
 border: 1px solid lightgrey;
 border-radius: 2px;
 width: 100%;
@@ -14,7 +14,7 @@ background: rgba(255,255,255,.8);
 `
 const Title = styled.div`
 transition: all .2s;
-padding:3px;
+padding:1px;
 font-size:1.2rem;
 width: 100%;
 text-align:center;
