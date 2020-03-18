@@ -28,11 +28,13 @@ min-height: 100%;
 `
 const HeaderItem = styled.div`
   align-self: center;
+  font-size: 12px;
   justify-self: center;
 `
 const HeaderA = styled.div`
    text-align:'center';
    alignSelf: 'center'; 
+   font-size: 12px;
    justify-self: 'center'; 
 `
 
