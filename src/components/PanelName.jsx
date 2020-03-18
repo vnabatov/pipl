@@ -6,4 +6,7 @@ ${({ isOpened }) => isOpened ? 'font-weight:bold' : ''}}
 &:hover {
   color: coral
 }
+&::before {
+  content: '${({ isOpened }) => isOpened ? '🟢' : '🟠'} ';
+}
 `
