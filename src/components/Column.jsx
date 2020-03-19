@@ -60,7 +60,7 @@ export default memo(({ title, tasks, column, teamName }) => {
   return <AppContext.Consumer>{({ updateColumnCount, taskLastUpdate }) => (<Container>
     <Title error={parseFloat(parseFloat(column.size).toFixed(2)) < parseFloat(spSum.toFixed(2))} fit={parseFloat(column.size).toFixed(2) === spSum.toFixed(2)}>
       <HeaderItem>{title}</HeaderItem>
-      <input title='capacity' style={{width: 30, border: '1px solid gray', textAlign:'center', alignSelf: 'center', justifySelf: 'center', borderRadius:50}} defaultValue={column.size} type='text' onChange={(e) => updateColumnCount(column.id, teamName, e.target.value)} />
+      <input title='capacity' style={{width: 30, border: '1px solid rgba(0,0,0,.1)', textAlign:'center', alignSelf: 'center', justifySelf: 'center', borderRadius:50}} defaultValue={column.size} type='text' onChange={(e) => updateColumnCount(column.id, teamName, e.target.value)} />
       <HeaderA>
         - {spSum} =&nbsp;<strong> {column.size - spSum}</strong>
       </HeaderA>
