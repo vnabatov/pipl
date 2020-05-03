@@ -1,40 +1,56 @@
 {
   "teams": [
     {
-      "id": "CPP1",
-      "teamName": "CPP1 - Challenge Accepted"
+      "id": "Codemasters Team",
+      "teamName": "Codemasters Team"
     },
     {
-      "id": "CPP2",
-      "teamName": "CPP2 - Already Done"
+      "id": "Alpha Team",
+      "teamName": "Alpha Team"
     },
     {
-      "id": "CPP3",
-      "teamName": "CPP3 - Content Brew Masters"
+      "id": "Falcons Team",
+      "teamName": "Falcons Team"
     },
     {
-      "id": "CPP4",
-      "teamName": "CPP4 - Integration"
+      "id": "XDPS Team",
+      "teamName": "XDPS Team"
     },
     {
-      "id": "CPP5",
-      "teamName": "CPP5 - Delivery"
+      "id": "Apollo Team",
+      "teamName": "Apollo Team"
     },
     {
-      "id": "CPP6",
-      "teamName": "CPP6 - Test Project"
+      "id": "Rocky Team",
+      "teamName": "Rocky Team"
     },
     {
-      "id": "CPP7",
-      "teamName": "CPP7 - FALCON"
+      "id": "JIT  Team",
+      "teamName": "JIT  Team"
     },
     {
-      "id": "CPP8",
-      "teamName": "CPP8 - Test Project"
+      "id": "0xC0FFEE Team",
+      "teamName": "0xC0FFEE Team"
     },
     {
-      "id": "CPP9",
-      "teamName": "CPP9 - Rocky"
+      "id": "Delivery Team",
+      "teamName": "Delivery Team"
+    },
+    {
+      "id": "Phoenix Team",
+      "teamName": "Phoenix Team"
+    },
+    {
+      "id": "Content Services Team",
+      "teamName": "Content Services Team"
+    },
+    {
+      "id": "The Model Team",
+      "teamName": "The Model Team"
+    },
+    {
+      "id": "Virtual UI Team",
+      "teamName": "Virtual UI Team"
     },
     {
       "id": "OUTER",
@@ -49,15 +65,22 @@
       "teamName": "default"
     }
   ],
-  "sprintNames": ["Backlog","Sprint 1(14)","Sprint 2(15)","Sprint 3(16)","Sprint 4(17)", "Sprint 5(18)"],
+  "sprintNames": ["Backlog","Sprint 1","Sprint 2","Sprint 3","Sprint 4", "Sprint 5"],
   "sprintMap":{
     "FY20 14 UI": "column-2"
   },
   "sprintSearchForColumns": {
-    " 14": "column-2",
-    " 15": "column-3",
-    " 16": "column-4",
-    " 17": "column-5",
-    " 18": "column-6"
+    " 2": "column-3",
+    " 3": "column-4",
+    " 4": "column-5",
+    " 5": "column-6",
+
+    " 14": "column-1",
+    " 15": "column-1",
+    " 16": "column-1",
+    " 17": "column-1",
+    " 18": "column-1", 
+
+    " 1": "column-2"
   }
 }

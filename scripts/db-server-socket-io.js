@@ -9,6 +9,9 @@ const fileUpload = require('express-fileupload')
 const stringHash = require('string-hash')
 const { prepareAlreadyAdded, getIssuesByFilter, loadStoriesFromJira, loadTasksFromJira } = require('./jira-utils')
 const { Parser } = require('json2csv')
+const { info, error } = require('./logger')
+
+info('DB server started');
 
 const db = lowdb(adapter)
 app.use(fileUpload())
@@ -29,7 +32,7 @@ const updateTask = (parsedData) => {
 
   const tasks = db.get('tasks')
 
-  console.log('oldTaskId, newTaskId', oldTaskId, newTaskId, teamName)
+  info('oldTaskId, newTaskId', oldTaskId, newTaskId, teamName)
 
   const task = tasks
     .find({ id: oldTaskId || newTaskId })
@@ -38,7 +41,7 @@ const updateTask = (parsedData) => {
     .find({ id: newTaskId })
 
   if (oldTaskId !== newTaskId && taskNewIdDuplicate.value()) {
-    console.log(newTaskId, 'exists already, cant add')
+    info(newTaskId, 'exists already, cant add')
     return
   }
 
@@ -65,7 +68,7 @@ const updateTask = (parsedData) => {
           .write()
       })
 
-      console.log(parsedData.teamName, newTaskId)
+      info(parsedData.teamName, newTaskId)
       db.get('sprints', parsedData.teamName)
         .find({ teamName: parsedData.teamName })
         .get('columns.column-1.taskIds')
@@ -94,8 +97,8 @@ const updateTask = (parsedData) => {
           .pull(oldTaskId)
           .write()
 
-        console.log('remove', `columns.${columnId}.taskIds`, oldTaskId)
-        console.log('add', `columns.${columnId}.taskIds`, newTaskId)
+        info('remove', `columns.${columnId}.taskIds`, oldTaskId)
+        info('add', `columns.${columnId}.taskIds`, newTaskId)
 
         db.get('sprints')
           .find({ teamName })
@@ -179,7 +182,7 @@ const getDb = () => {
     taskLastUpdate[task.id] = task['dateChange'] + task['timeChange']
   })
   const taskLastUpdateHash = stringHash(JSON.stringify(taskLastUpdate) + JSON.stringify(taskPostionsCache))
-  console.log(taskLastUpdateHash)
+
   const storyIndex = {}
   state.stories.forEach(story => {
     storyIndex[story.id] = story
@@ -229,15 +232,18 @@ app.get('/dbCSV', function (req, res) {
 
 let loadFromJiraInProgress = false
 app.get('/loadFromJira', async (req, res) => {
-  console.log('loadFromJira')
+  info('loadFromJira')
   if (!loadFromJiraInProgress) {
     loadFromJiraInProgress = true
     let newTasks = []
     let newStories = []
 
     try {
-      const jql = 'project = CPP-Master AND issuetype = Story AND ("Planned In" = FY20-Q1 OR "Planned In" = FY20-Q2 OR "Planned In" = FY20-Q3 OR "Planned In" = FY20-Q4) AND status != Closed ORDER BY key ASC'
-      const jql2 = `issuetype in (Task, "Technical Story") AND issueFunction in linkedIssuesOf('${jql}') AND status != Closed`
+      const jql = 'key = RES-49'
+      const jql2 = `key = CMH-2191`
+
+      info('loadFromJira jql', jql)
+      info('loadFromJira jql2', jql2)
 
       // const jql = 'key=CPP0-141'
       // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
@@ -250,18 +256,18 @@ app.get('/loadFromJira', async (req, res) => {
 
       const storiesData = await getIssuesByFilter(jql)
 
-      console.log('loadStoriesFromJira')
+      info('loadStoriesFromJira')
 
       newStories = loadStoriesFromJira(storiesData, dbJSONFile)
 
       if (loadTasks === 'true') {
-        console.log('loadTasks')
+        info('loadTasks')
 
         const taskData = await getIssuesByFilter(jql2)
         newTasks = loadTasksFromJira(taskData, dbJSONFile)
       }
     } catch (e) {
-      console.log(e)
+      error(e)
     } finally {
       loadFromJiraInProgress = false
       const result = JSON.stringify({ newStories, newTasks })
@@ -275,7 +281,7 @@ app.get('/loadFromJira', async (req, res) => {
           updateTask(newTask)
         })
       }
-      console.log('load completed')
+      info('load completed')
       res.send(result)
     }
   }
@@ -303,7 +309,7 @@ app.post('/upload', function (req, res) {
 })
 
 io.on('connect', function (socket) {
-  console.log('connect')
+  info('connect')
   socket.emit('db', JSON.stringify(getDb()))
 
   socket.on('sprint:update', (data) => {
@@ -346,7 +352,7 @@ io.on('connect', function (socket) {
   socket.on('task:update', (data) => {
     const parsedData = JSON.parse(data)
 
-    console.log('task:update', parsedData)
+    info('task:update', parsedData)
     updateTask(parsedData)
 
     const dbNew = JSON.stringify(getDb())
@@ -388,5 +394,5 @@ io.on('connect', function (socket) {
 })
 
 http.listen(3001, function () {
-  console.log('listening on *:3001')
+  info('listening on *:3001')
 })

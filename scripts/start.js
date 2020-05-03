@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'development'
+const { info } = require('./logger')
 
 // Load environment variables from .env file. Suppress warnings using silent
 // if this file is missing. dotenv will never modify any environment variables
@@ -56,10 +57,7 @@ function setupCompiler (host, port, protocol) {
   // bundle, so if you refresh, it'll wait instead of serving the old one.
   // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
   compiler.plugin('invalid', function () {
-    if (isInteractive) {
-      clearConsole()
-    }
-    console.log('Compiling...')
+    info('Compiling...')
   })
 
   var isFirstCompile = true
@@ -67,10 +65,6 @@ function setupCompiler (host, port, protocol) {
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.plugin('done', function (stats) {
-    if (isInteractive) {
-      clearConsole()
-    }
-
     // We have switched off the default Webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.
@@ -79,21 +73,16 @@ function setupCompiler (host, port, protocol) {
     var showInstructions = isSuccessful && (isInteractive || isFirstCompile)
 
     if (isSuccessful) {
-      console.log(chalk.green('Compiled successfully!'))
     }
 
     if (showInstructions) {
-      console.log()
-      console.log('The app is running at:' + chalk.cyan(protocol + '://' + host + ':' + port + '/'))
-      console.log('The db is running at 3001')
-      console.log()
+      info('The UI App is running at: ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'))
       isFirstCompile = false
     }
 
     // If errors exist, only show errors.
     if (messages.errors.length) {
-      console.log(chalk.red('Failed to compile.'))
-      console.log()
+      info(chalk.red('Failed to compile.'))
       messages.errors.forEach(message => {
         console.log(message)
         console.log()
@@ -103,16 +92,11 @@ function setupCompiler (host, port, protocol) {
 
     // Show warnings if no errors were found.
     if (messages.warnings.length) {
-      console.log(chalk.yellow('Compiled with warnings.'))
-      console.log()
+      info(chalk.yellow('Compiled with warnings.'))
       messages.warnings.forEach(message => {
         console.log(message)
         console.log()
       })
-      // Teach some ESLint tricks.
-      console.log('You may use special comments to disable some warnings.')
-      console.log('Use ' + chalk.yellow('// eslint-disable-next-line') + ' to ignore the next line.')
-      console.log('Use ' + chalk.yellow('/* eslint-disable */') + ' to ignore all warnings in a file.')
     }
   })
 }
@@ -266,9 +250,6 @@ function runDevServer (host, port, protocol) {
     if (isInteractive) {
       clearConsole()
     }
-    console.log(chalk.cyan('Starting the development server...'))
-    console.log()
-
     // openBrowser(protocol + '://' + host + ':' + port + '/')
   })
 }
@@ -306,12 +287,14 @@ detect(DEFAULT_PORT).then(port => {
   }
 })
 
+const runDbServer = () => require('./db-server-socket-io')
+
 // create db from default if its empty
 if (!fs.existsSync('db/lowdb.json')) {
   const stream = fs.createReadStream('db/lowdb.default.json').pipe(fs.createWriteStream('db/lowdb.json'))
-  stream.on('close', () => { require('./db-server-socket-io') })
+  stream.on('close', () => { runDbServer() })
 } else {
-  require('./db-server-socket-io')
+  runDbServer()
 }
 
 if (!fs.existsSync('db/generation-config.json')) {

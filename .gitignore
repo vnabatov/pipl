@@ -12,6 +12,7 @@
 /build
 /db/lowdb.json
 /db/generation-config.json
+/scripts/app.log
 
 # misc
 .DS_Store

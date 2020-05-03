@@ -69,7 +69,7 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
   let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / epic:${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
-    <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Stories</PanelName>
+    <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Epics</PanelName>
     <UnmountClosed isOpened={isOpened}>
       <StoryFilters>
         <ReactSelect
@@ -77,7 +77,7 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
           options={storiesSelectItems}
           value={{
             value: storiesFilter.search && storiesFilter.search.value,
-            label: (storiesFilter.search && storiesFilter.search.label) || 'All Stories'
+            label: (storiesFilter.search && storiesFilter.search.label) || 'All Epics'
           }}
           onChange={selectedOption => updateForm('search', selectedOption)}
         />
