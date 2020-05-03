@@ -239,14 +239,16 @@ app.get('/loadFromJira', async (req, res) => {
     let newStories = []
 
     try {
-      const jql = 'key = RES-49'
-      const jql2 = `key = CMH-2191`
+      const jql = 'project in (ACD, RES, CPL, PRL) AND issuetype = Epic AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
+      const jql2 = 'project in (ACD, RES, CPL, PRL) AND issuetype in ("Technical Story", Story) AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
 
       info('loadFromJira jql', jql)
       info('loadFromJira jql2', jql2)
 
+      // const jql = 'project in (CPP0, ACD, RES, CPL, PRL) AND issuetype = Epic AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
+
       // const jql = 'key=CPP0-141'
-      // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-141')`
+      // const jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('project in (CPP0, ACD, RES, CPL, PRL) AND issuetype = Epic AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed')`
 
       const loadTasks = 'true'
 
@@ -270,7 +272,7 @@ app.get('/loadFromJira', async (req, res) => {
       error(e)
     } finally {
       loadFromJiraInProgress = false
-      const result = JSON.stringify({ newStories, newTasks })
+      const result = JSON.stringify({ newStories, newTasks, jql, jql2 })
       if (newStories.length) {
         newStories.forEach(newStory => {
           createStory(newStory)
