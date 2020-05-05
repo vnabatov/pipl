@@ -8,6 +8,7 @@ export default ({
   downloadDb,
   downloadCSV,
   updateTaskFilter,
+  updateBUFilter,
   taskFilter,
   isCompact,
   form,
@@ -39,7 +40,7 @@ export default ({
       </div>
       <div className='navbar-end'>
 
-        <div className='navbar-item'>
+      <div className='navbar-item'>
           <input
             type='text'
             className='input'
@@ -50,6 +51,19 @@ export default ({
               updateFilterDebounced(e.target.value)
             }}
           />
+        </div>
+
+        <div className='navbar-item'>
+          <div className='select'>
+            <select  
+              onChange={(e) => {
+                e.persist()
+                updateBUFilter(e.target.value)
+              }}
+              >
+                {['All','Research', 'Academic', 'Content Platform', 'Professional Learning','Empty'].map(bu=><option value={bu}>CPP BU: {bu}</option>)}
+            </select>
+          </div>
         </div>
 
         {dbs ? <div className='navbar-item'>

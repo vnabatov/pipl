@@ -31,7 +31,8 @@ const prepareAlreadyAdded = (dbJSON) => {
 }
 
 const loadStoriesFromJira = (jiraData, dbJSON) => {
-  const storiesFromJira = jiraData.issues.map(({ key, fields: { summary, customfield_11220: epicId, issuelinks } }) => ({ id: key, summary, epicId, issuelinks }))
+  const storiesFromJira = jiraData.issues.map(({ key, fields: { summary, customfield_18237: bu, customfield_11220: epicId, issuelinks } }) => 
+  ({ id: key, summary, epicId, issuelinks, bu: bu && bu.value }))
   const newStories = []
   storiesFromJira.forEach(story => {
     if (!alreadyAdded.includes(story.id)) {
@@ -161,6 +162,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         sp: task.fields.customfield_10223 || '',
         date,
         time,
+        bu: task.fields.customfield_18237 && task.fields.customfield_18237.value || '',
         dateChange: date,
         timeChange: time,
         v: version,

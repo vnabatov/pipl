@@ -28,6 +28,7 @@ let showRelations = true
 let selectedStory = ''
 let selectedTask = ''
 let taskFilter = ''
+let BUFilter = 'All'
 let relationsRedraw = ''
 
 let dbs
@@ -63,6 +64,7 @@ const NavbarContainer = () => {
   use(() => dbs && dbs.sprints.map(({ teamName }) => teamName))
   use(() => dbs && dbs.taskLastUpdate)
   use(() => taskFilter)
+  use(() => BUFilter)
 
   const clearForm = () => {
     form = { ...defaultForm }
@@ -128,6 +130,8 @@ const NavbarContainer = () => {
         dbs,
         taskFilter,
         updateTaskFilter: (v) => (taskFilter = v),
+        BUFilter,
+        updateBUFilter: (v) => (BUFilter = v),
         isMenuOpen,
         allRelations,
         showRelations,
@@ -154,6 +158,7 @@ const Content = () => {
   use(() => storiesFilter)
   use(() => allRelations)
   use(() => taskFilter)
+  use(() => BUFilter)
 
   const clearForm = () => {
     form = { ...defaultForm }
@@ -223,14 +228,14 @@ const Content = () => {
       taskPostionsCache: dbs && dbs.taskPostionsCache,
       isCompact
     }}>
+      
       {(!dbs) ? 'Loading' : <div className='content'>
-        {selectedStory ? <div onClick={() => selectStory('')}>Selected Story: {selectedStory}&times;</div> : ''}
+        {selectedStory ? <button onClick={() => selectStory('')}>Selected Epic: {selectedStory}&times;</button> : ''}
+        <Stories BUFilter={BUFilter} addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
-        <Stories addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
+        <Sprints BUFilter={BUFilter} taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
-        <Sprints taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
-
-        <ProgramBoard taskFilter={taskFilter} storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
+        <ProgramBoard BUFilter={BUFilter} taskFilter={taskFilter} storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         {/* <VersionBoard storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} /> */}
 

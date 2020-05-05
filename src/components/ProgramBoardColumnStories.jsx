@@ -32,7 +32,7 @@ width: ${100 / 6 + '%'};
 display: inline-block;
 text-align: center;
 `
-export default ({ sprints, storySprintIndex, storyIndex, taskFilter }) => (
+export default ({ BUFilter, sprints, storySprintIndex, storyIndex, taskFilter }) => (
   <AppContext.Consumer>
     {({ selectStory, selectedStory }) => {
       return (<div>
@@ -43,13 +43,21 @@ export default ({ sprints, storySprintIndex, storyIndex, taskFilter }) => (
           <TaskList>
             {storySprintIndex && Object.entries(storySprintIndex).map(([storyId, value]) => {
               const summary = (storyIndex[storyId] && storyIndex[storyId].summary) || ''
+              const bu = storyIndex[storyId] && storyIndex[storyId].bu
+
               let show = !selectedStory && !taskFilter
 
               if (selectedStory) {
-                show = selectedStory === storyId || storyIndex[selectedStory].relatedIssues.includes(storyId)
+                show = (selectedStory === storyId || storyIndex[selectedStory].relatedIssues.includes(storyId))
               }
               if (taskFilter) {
-                show = storyId.includes(taskFilter) || summary.includes(taskFilter)
+                show = (storyId.includes(taskFilter) || summary.includes(taskFilter))
+              }
+              if (BUFilter !== 'All' && BUFilter !== 'Empty') {
+                show = bu === BUFilter
+              }
+              if (BUFilter === 'Empty') {
+                show = !bu 
               }
               if (show) {
                 return (<Row>

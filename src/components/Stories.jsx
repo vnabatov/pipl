@@ -63,7 +63,7 @@ grid-column-gap: 3px;
 `
 const getTaskCountForStory = (tasks, story) => tasks.filter(task => task.story === story).length
 
-export default ({ stories, tasks, storiesFilter, addStory }) => {
+export default ({ stories, BUFilter, tasks, storiesFilter }) => {
   const [isOpened, setOpened] = useState(false)
   const updateForm = (field, value) => (storiesFilter[field] = value)
   let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / epic:${epicId} / ${summary}` }))
@@ -94,12 +94,13 @@ export default ({ stories, tasks, storiesFilter, addStory }) => {
         }}>Clear</div>
       </StoryFilters>
       <Container>
-        {stories.length && stories.map(({ id, summary, epicId }) => {
+        {stories.length && stories.map(({ id, summary, epicId, bu }) => {
           const taskCount = getTaskCountForStory(tasks, id)
           return (
             (!storiesFilter.epicId || storiesFilter.epicId === epicId) &&
           (!storiesFilter.search || !storiesFilter.search.value || storiesFilter.search.value === id) &&
-          (!storiesFilter.withTasks || (storiesFilter.withTasks === 'withTasks' && taskCount > 0) || (storiesFilter.withTasks === 'withoutTasks' && taskCount === 0))
+          (!storiesFilter.withTasks || (storiesFilter.withTasks === 'withTasks' && taskCount > 0) || (storiesFilter.withTasks === 'withoutTasks' && taskCount === 0)) &&
+          (!BUFilter || BUFilter === 'All' || BUFilter === bu || (!bu && BUFilter === 'Empty'))
           )
             ? <Story key={'story' + id} title={summary} onClick={() => selectStory(id)} className='message is-small'>
               <StoryHeader noTasks={taskCount === 0} selected={id === selectedStory}>
