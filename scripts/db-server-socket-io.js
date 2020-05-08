@@ -234,8 +234,9 @@ let loadFromJiraInProgress = false
 app.get('/loadFromJira', async (req, res) => {
   info('loadFromJira')
 
-  const jql = 'project in (ACD, RES, CPL, PRL) AND issuetype = Epic AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
-  const jql2 = 'project in (ACD, RES, CPL, PRL) AND issuetype in ("Technical Story", Story) AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
+  const jql = 'project in (ACD, RES, CPL, PRL, CMH, XDPS, LM, JPCMS, JQA, VIB, PAF, EEO, VLT, CKCS	,CCH, DS, DSS, PERT, MT, CS, XIRS, PDH, Coltrane, CPDCM, CAPI, CONV, XRV, WIMC, WMMS) AND issuetype = Epic AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
+
+  const jql2 = 'project in (ACD, RES, CPL, PRL, CMH, XDPS, LM, JPCMS, JQA, VIB, PAF, EEO, VLT, CKCS	,CCH, DS, DSS, PERT, MT, CS, XIRS, PDH, Coltrane, CPDCM, CAPI, CONV, XRV, WIMC, WMMS) AND issuetype in ("Technical Story", Story) AND cf[13699] in ("FY20-Q2","FY20-Q3","FY20-Q4", "FY21-Q1") and status!=closed'
 
   info('loadFromJira jql', jql)
   info('loadFromJira jql2', jql2)
@@ -251,7 +252,7 @@ app.get('/loadFromJira', async (req, res) => {
     let newStories = []
 
     try {
-    
+
       const loadTasks = 'true'
 
       const dbJSONFile = getDb()
