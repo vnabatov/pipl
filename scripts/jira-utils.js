@@ -129,7 +129,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
       let storyKey = task.fields.customfield_11220
 
       const issueLinks = task.fields.issuelinks
-      const relatedIssueTypes = ['Task', 'Technical', 'Technical Story', 'Story']
+      const relatedIssueTypes = ['Task', 'Technical', 'Technical Story', 'Story', 'Task', 'Bug']
       const checkRelations = []
       const ignoreWithTextInSummary = ''
       const relatedIssues = []
