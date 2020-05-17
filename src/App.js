@@ -11,6 +11,7 @@ import AppContext from './AppContext'
 import Relations from './components/Relations'
 import RelationsProgramBoard from './components/RelationsProgramBoard'
 import RelationsProgramBoardStories from './components/RelationsProgramBoardStories'
+import ReactSelect from 'react-select'
 
 import 'bulma/css/bulma.css'
 import './App.css'
@@ -30,6 +31,8 @@ let selectedTask = ''
 let taskFilter = ''
 let BUFilter = 'All'
 let relationsRedraw = ''
+const defaultComponentFilter = { value: 0, label: 'All Components' }
+let componentFilter = defaultComponentFilter;
 
 let dbs
 let storiesFilter = {}
@@ -159,6 +162,11 @@ const Content = () => {
   use(() => allRelations)
   use(() => taskFilter)
   use(() => BUFilter)
+  use(() => componentFilter)
+
+  const setComponentFilter = (component) => {
+    componentFilter = component
+  }
 
   const clearForm = () => {
     form = { ...defaultForm }
@@ -228,12 +236,22 @@ const Content = () => {
       taskPostionsCache: dbs && dbs.taskPostionsCache,
       isCompact
     }}>
-      
       {(!dbs) ? 'Loading' : <div className='content'>
+        <div style={{width: '300px'}}>
+          <ReactSelect
+            isMulti
+            key="component-select"
+            options={[defaultComponentFilter, ...dbs.components.map((component) => ({ value: component, label: component }))]}
+            value={componentFilter}
+            onChange={setComponentFilter}
+          />
+        </div>
+
         {selectedStory ? <button onClick={() => selectStory('')}>Selected Epic: {selectedStory}&times;</button> : ''}
+
         <Stories BUFilter={BUFilter} addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
-        <Sprints BUFilter={BUFilter} taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+        <Sprints BUFilter={BUFilter} componentFilter={componentFilter} taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
 
         <ProgramBoard BUFilter={BUFilter} taskFilter={taskFilter} storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 

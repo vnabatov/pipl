@@ -161,6 +161,7 @@ const getDb = () => {
   })
 
   const taskStoryIndex = {}
+  const components = {}
   state.tasks.forEach(task => {
     if (task.story && task.story.includes(' ')) {
       task.story = task.story.split(' ')[0]
@@ -168,7 +169,11 @@ const getDb = () => {
     if (task.story && task.story.includes(',')) {
       task.story = task.story.split(',')[0]
     }
-
+    if(task.components && task.components.length) {
+      task.components.forEach((component) => {
+        components[component] = ''
+      })
+    }
     taskStoryIndex[task.id] = task.story
   })
 
@@ -187,7 +192,7 @@ const getDb = () => {
   state.stories.forEach(story => {
     storyIndex[story.id] = story
   })
-  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate, taskLastUpdateHash })
+  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate, taskLastUpdateHash,components: Object.keys(components) })
 }
 
 app.get('/db', function (req, res) {
@@ -234,9 +239,9 @@ let loadFromJiraInProgress = false
 app.get('/loadFromJira', async (req, res) => {
   info('loadFromJira')
 
-  const jql = req.query.jql1 || 'filter=PIPL_EPICS'
+  const jql = req.query.jql1 || 'key=CKCS-81'
 
-  const jql2 = req.query.jql2 || 'filter=PIPL_TICKETS'
+  const jql2 = req.query.jql2 || 'key=CKCS-80 or KEY=VIB-10'
 
   info('loadFromJira jql', jql)
   info('loadFromJira jql2', jql2)
@@ -252,7 +257,6 @@ app.get('/loadFromJira', async (req, res) => {
     let newStories = []
 
     try {
-
       const loadTasks = 'true'
 
       const dbJSONFile = getDb()

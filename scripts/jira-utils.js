@@ -137,7 +137,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
       issueLinks.forEach(issuelink => {
         const issue = getInwardOutwardIssue(issuelink)
         const relation = issuelink.type[issue.relationIO]
-
+        
         debug('   add link', issue.key, '?')
 
         if (!relatedIssueTypes.includes(issue.fields.issuetype.name)) {
@@ -161,6 +161,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         related: relatedIssues.length ? relatedIssues.join(',') : '',
         sp: task.fields.customfield_10223 || '',
         date,
+        components: task.fields.components && task.fields.components.length && task.fields.components.map(({ name }) => name),
         time,
         bu: task.fields.customfield_18237 && task.fields.customfield_18237.value || '',
         dateChange: date,

@@ -3,7 +3,7 @@ import SprintsTable from './SprintsTable'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 
-export default ({ tasks, taskFilter, BUFilter, sprints, setData }) => {
+export default ({ tasks, componentFilter, taskFilter, BUFilter, sprints, setData }) => {
   let filteredTasks = tasks
   if (taskFilter.length) {
     if (taskFilter[0] === '/') {
@@ -19,6 +19,18 @@ export default ({ tasks, taskFilter, BUFilter, sprints, setData }) => {
     } else {
       filteredTasks = tasks.filter(task => task.bu === BUFilter)
     }
+  }
+
+  if(componentFilter && componentFilter.value) {
+    filteredTasks = tasks.filter(task => {
+      let show = false;
+      componentFilter.forEach(filter => {
+          if(show || task.components.includes(filter)) {
+            show = true
+          }
+      })
+      return show
+    })
   }
 
   return (
