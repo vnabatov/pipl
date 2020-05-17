@@ -23,11 +23,8 @@ export default ({ tasks, componentFilter, taskFilter, BUFilter, sprints, setData
 
   if (componentFilter && componentFilter.length) {
     filteredTasks = tasks.filter(task => {
-      let show = false
-      console.log(componentFilter)
-
+      let show = !task.components || task.components.length === 0
       componentFilter.forEach(filter => {
-        console.log(task.components, filter)
         if (show || task.components.includes(filter.value)) {
           show = true
         }
