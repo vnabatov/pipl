@@ -57,7 +57,7 @@ export default ({ BUFilter, sprints, storySprintIndex, storyIndex, taskFilter })
                 show = bu === BUFilter
               }
               if (BUFilter === 'Empty') {
-                show = !bu 
+                show = !bu
               }
               if (show) {
                 return (<Row>

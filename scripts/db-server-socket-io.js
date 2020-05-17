@@ -11,7 +11,7 @@ const { prepareAlreadyAdded, getIssuesByFilter, loadStoriesFromJira, loadTasksFr
 const { Parser } = require('json2csv')
 const { info, error } = require('./logger')
 
-info('DB server started');
+info('DB server started')
 
 const db = lowdb(adapter)
 app.use(fileUpload())
@@ -169,7 +169,7 @@ const getDb = () => {
     if (task.story && task.story.includes(',')) {
       task.story = task.story.split(',')[0]
     }
-    if(task.components && task.components.length) {
+    if (task.components && task.components.length) {
       task.components.forEach((component) => {
         components[component] = ''
       })
@@ -184,7 +184,7 @@ const getDb = () => {
 
   const taskLastUpdate = {}
   state.tasks.forEach(task => {
-    taskLastUpdate[task.id] = task['dateChange'] + task['timeChange']
+    taskLastUpdate[task.id] = task.dateChange + task.timeChange
   })
   const taskLastUpdateHash = stringHash(JSON.stringify(taskLastUpdate) + JSON.stringify(taskPostionsCache))
 
@@ -192,7 +192,7 @@ const getDb = () => {
   state.stories.forEach(story => {
     storyIndex[story.id] = story
   })
-  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate, taskLastUpdateHash,components: Object.keys(components) })
+  return ({ ...state, taskPostionsCache, dependendTasks, taskStoryIndex, taskIndex, storyIndex, taskLastUpdate, taskLastUpdateHash, components: Object.keys(components) })
 }
 
 app.get('/db', function (req, res) {
@@ -200,14 +200,14 @@ app.get('/db', function (req, res) {
 })
 
 app.get('/reset', function (req, res) {
-  let defaultConfig = require('../db/generation-config.json')
+  const defaultConfig = require('../db/generation-config.json')
   const newDb = { stories: [], tasks: [], sprints: [] }
   const createColumns = () => defaultConfig.sprintNames.reduce((acc, sprintName, index) => {
     acc['column-' + (index + 1)] = {
-      'id': 'column-' + (index + 1),
-      'title': sprintName,
-      'size': '40',
-      'taskIds': []
+      id: 'column-' + (index + 1),
+      title: sprintName,
+      size: '40',
+      taskIds: []
     }
     return acc
   }, {})
@@ -218,8 +218,8 @@ app.get('/reset', function (req, res) {
       id,
       teamName,
       columns: createColumns(),
-      'columnOrder': defaultConfig.sprintNames.map((val, key) => 'column-' + (key + 1)),
-      'dirty': true
+      columnOrder: defaultConfig.sprintNames.map((val, key) => 'column-' + (key + 1)),
+      dirty: true
     })
   })
   db.setState(newDb).write()
@@ -238,7 +238,7 @@ app.get('/dbCSV', function (req, res) {
 let loadFromJiraInProgress = false
 app.get('/loadFromJira', async (req, res) => {
   info('loadFromJira')
-  
+
   const jql = req.query.jql1 || 'filter=PIPL_EPICS'
 
   const jql2 = req.query.jql2 || 'filter=PIPL_TICKETS'

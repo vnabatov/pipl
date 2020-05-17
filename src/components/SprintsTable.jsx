@@ -3,9 +3,7 @@ import React, { useState } from 'react'
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
-import AppContext from '../AppContext'
-import { UnmountClosed } from 'react-collapse'
-import PanelName from './PanelName'
+import Panel from './Panel'
 
 const SprintTable = styled.div`
 display: flex;
@@ -14,7 +12,7 @@ justify-content: space-between;
 `
 
 export default ({ sprintDb, setData, tasksDb }) => {
-  const [isOpened, setOpened] = useState(false)
+  const [isOpened, setOpened] = useState(true)
 
   const onDragEnd = ({ destination, source, draggableId }) => {
     if (!destination) {
@@ -51,13 +49,12 @@ export default ({ sprintDb, setData, tasksDb }) => {
     setData(sprintDb, sprintDb.teamName)
   }
   return (
-    <AppContext.Consumer>{({ redrawRelations }) => (<div id={sprintDb.teamName}>
-      <PanelName isOpened={isOpened} onClick={() => {
-        setOpened(!isOpened)
-        redrawRelations()
-      }}>{sprintDb.teamName}{sprintDb.dirty ? '🔄' : ''}</PanelName>
-      <UnmountClosed isOpened={isOpened}>
-        {isOpened ? <SprintTable>
+      <Panel
+        id={sprintDb.teamName}
+        defaultOpen={true}
+        name={`${sprintDb.teamName} ${sprintDb.dirty ? '🔄' : ''}`}
+      >
+        <SprintTable>
           <DragDropContext onDragEnd={onDragEnd}>
             {
               sprintDb.columnOrder.map((columnId) => {
@@ -69,13 +66,12 @@ export default ({ sprintDb, setData, tasksDb }) => {
                   key={sprintDb.teamName + column.id}
                   column={column}
                   title={column.title}
-                  tasks={tasks} />
+                  tasks={tasks}
+                />
               })
             }
           </DragDropContext>
-        </SprintTable> : ''}
-      </UnmountClosed>
-    </div>)}
-    </AppContext.Consumer>
+        </SprintTable> 
+      </Panel>
   )
 }

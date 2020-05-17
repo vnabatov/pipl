@@ -49,7 +49,7 @@ position: relative;
 word-break: break-word;
 
 ${({ isSmall }) => isSmall ? 'font-size: 0.6rem;' : ''}}
-${({ relationSameSprint }) => relationSameSprint ? `background-color: orange;` : ''}}
+${({ relationSameSprint }) => relationSameSprint ? 'background-color: orange;' : ''}}
 ${({ relationEarlier }) => relationEarlier ? 'background-color: #D12341;' : ''}}
 ${({ relationBacklog }) => relationBacklog ? 'background-color: red;' : ''}}
 ${({ selectedStory }) => selectedStory ? 'border-top: 3px solid green;' : ''}}
@@ -152,18 +152,18 @@ const Task = memo(({
       </Error>
     </TicketBody>
   </Ticket> : <TicketHeader
-    isSmall
-    key={'task-' + task.id}
-    onClick={() => selectTask(task)}
-    selectedTask={isSelectedTask}
-    selectedStory={isSelectedStory}
-    title={task.summary + '/' + task.description}
-    relationEarlier={relationEarlier}
-    relationSameSprint={relationSameSprint}
-    relationBacklog={relationBacklog}
-  >
+                                                             isSmall
+                                                             key={'task-' + task.id}
+                                                             onClick={() => selectTask(task)}
+                                                             selectedTask={isSelectedTask}
+                                                             selectedStory={isSelectedStory}
+                                                             title={task.summary + '/' + task.description}
+                                                             relationEarlier={relationEarlier}
+                                                             relationSameSprint={relationSameSprint}
+                                                             relationBacklog={relationBacklog}
+                                                                       >
 #{task.id} / {task.summary} / {task.sp}SP
-    <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
+                                                             <button className='delete is-small' aria-label='delete' onClick={() => deleteTask(task.id)} />
   </TicketHeader>
 }, (prevProps, nextProps) => {
   const isPropsEqual = shallowequal(prevProps.task, prevProps.task) &&
@@ -202,7 +202,8 @@ export default ({ task, index }) => {
             dependendTasks,
             selectTask,
             selectedTask
-          }} />
+          }}
+          />
         </Container>
       )}
       </Draggable>

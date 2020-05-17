@@ -237,3 +237,7 @@ input[type='search']::-webkit-search-cancel-button, input[type='search']::-webki
 
 
 /* <date> */
+
+.navbar {
+  min-width: 1800px;
+}

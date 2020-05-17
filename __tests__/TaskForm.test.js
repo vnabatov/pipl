@@ -12,7 +12,9 @@ describe('TaskForm', () => {
       dependendTasks: {},
       taskPostionsCache: {},
       isCompact: false
-    }}><TaskForm /></AppContext.Provider>)
+    }}
+    ><TaskForm />
+    </AppContext.Provider>)
     expect(taskForm.toJSON()).toMatchSnapshot()
   })
 })

@@ -21,10 +21,10 @@ export default ({ stories, sprints, taskStoryIndex, storyIndex }) => {
   const storyColumns = {}
   Object.entries(sprints[0].columns).forEach(([id, value]) => (storyColumns[id] = { ...value, taskIds: [] }))
   const storySprint = {
-    'id': '0',
-    'teamName': 'Stories',
-    'columns': storyColumns,
-    'columnOrder': sprints[0].columnOrder.slice(1)
+    id: '0',
+    teamName: 'Stories',
+    columns: storyColumns,
+    columnOrder: sprints[0].columnOrder.slice(1)
   }
   console.log(sprints)
   sprints.forEach(sprint => {
@@ -45,7 +45,7 @@ export default ({ stories, sprints, taskStoryIndex, storyIndex }) => {
       <div>
         <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Version board</PanelName>
         <UnmountClosed isOpened={isOpened}>
-          <SprintTable key={'pb-sprint-stories'}>
+          <SprintTable key='pb-sprint-stories'>
             <TeamName>Stories</TeamName>
             {storySprint.columnOrder.map((columnId) => {
               const column = storySprint.columns[columnId]

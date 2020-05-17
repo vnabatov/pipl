@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import AppContext from '../AppContext'
 import ReactSelect from 'react-select'
-import { UnmountClosed } from 'react-collapse'
-import PanelName from './PanelName'
+import Panel from './Panel'
 
 const Container = styled.div`
 display: grid;
@@ -12,7 +11,7 @@ grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 grid-row-gap: 3px;
 grid-column-gap: 3px;
 overflow-y: scroll;
-max-height: 400px;
+max-height: 700px;
 `
 const Story = styled.div`
 height: 100px;
@@ -66,11 +65,10 @@ const getTaskCountForStory = (tasks, story) => tasks.filter(task => task.story =
 export default ({ stories, BUFilter, tasks, storiesFilter }) => {
   const [isOpened, setOpened] = useState(false)
   const updateForm = (field, value) => (storiesFilter[field] = value)
-  let storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / epic:${epicId} / ${summary}` }))
+  const storiesSelectItems = stories.map(({ id, summary, epicId }) => ({ value: id, label: `${id} / epic:${epicId} / ${summary}` }))
   storiesSelectItems.unshift({ value: '', label: 'All Stories' })
   return <AppContext.Consumer>{({ selectedStory, selectStory }) => (<div>
-    <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Epics</PanelName>
-    <UnmountClosed isOpened={isOpened}>
+    <Panel name="Epics">
       <StoryFilters>
         <ReactSelect
           key='stories'
@@ -87,11 +85,14 @@ export default ({ stories, BUFilter, tasks, storiesFilter }) => {
           value={{ value: storiesFilter.withTasks, label: storiesFilter.withTasks || 'All' }}
           onChange={selectedOption => updateForm('withTasks', selectedOption.value)}
         />
-        <div className='button is-small' type='button' onClick={() => {
-          updateForm('epicId', null)
-          updateForm('search', null)
-          updateForm('withTasks', null)
-        }}>Clear</div>
+        <div
+          className='button is-small' type='button' onClick={() => {
+            updateForm('epicId', null)
+            updateForm('search', null)
+            updateForm('withTasks', null)
+          }}
+        >Clear
+        </div>
       </StoryFilters>
       <Container>
         {stories.length && stories.map(({ id, summary, epicId, bu }) => {
@@ -113,7 +114,7 @@ export default ({ stories, BUFilter, tasks, storiesFilter }) => {
             : ''
         })}
       </Container>
-    </UnmountClosed>
+    </Panel>
   </div>)}
   </AppContext.Consumer>
 }

@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import AppContext from '../AppContext'
 import ProgramBoardColumnTasks from './ProgramBoardColumnTasks'
 import ProgramBoardColumnStories from './ProgramBoardColumnStories'
-import { UnmountClosed } from 'react-collapse'
-import PanelName from './PanelName'
+import Panel from './Panel'
 
 const SprintTable = styled.div`
 display: flex;
@@ -19,10 +18,10 @@ export default ({ BUFilter, taskFilter, stories, tasks, sprints, taskStoryIndex,
   const storyColumns = {}
   Object.entries(sprints[0].columns).forEach(([id, value]) => (storyColumns[id] = { ...value, taskIds: [] }))
   const storySprint = {
-    'id': '0',
-    'teamName': 'Stories',
-    'columns': storyColumns,
-    'columnOrder': sprints[0].columnOrder.slice(1)
+    id: '0',
+    teamName: 'Stories',
+    columns: storyColumns,
+    columnOrder: sprints[0].columnOrder.slice(1)
   }
 
   sprints.forEach(sprint => {
@@ -53,10 +52,8 @@ export default ({ BUFilter, taskFilter, stories, tasks, sprints, taskStoryIndex,
   return (
     <AppContext.Consumer>{() => (
       <div>
-        <PanelName isOpened={isOpened} onClick={() => setOpened(!isOpened)}>Program board</PanelName>
-        <UnmountClosed isOpened={isOpened}>
+        <Panel name="Program board">
           <ProgramBoardColumnStories sprints={sprints} storyIndex={storyIndex} BUFilter={BUFilter} taskFilter={taskFilter} storySprintIndex={storySprintIndex} />
-
           {sprints && tasks && sprints.map(sprint => <SprintTable key={'pb-sprint' + sprint.teamName}>
             {sprint.columnOrder.map((columnId) => {
               if (storySprint.columns[columnId]) {
@@ -74,7 +71,7 @@ export default ({ BUFilter, taskFilter, stories, tasks, sprints, taskStoryIndex,
               }
             })}
           </SprintTable>)}
-        </UnmountClosed>
+        </Panel>
       </div>
     )}
     </AppContext.Consumer>

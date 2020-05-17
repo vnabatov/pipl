@@ -8,7 +8,7 @@ const {
   maxResults = 1000,
   updateDbDirectly = true,
   jql = 'key=CPP0-1061',
-  jql2 = `issuetype = Task AND issueFunction in linkedIssuesOf('key=CPP0-1061')`
+  jql2 = 'issuetype = Task AND issueFunction in linkedIssuesOf(\'key=CPP0-1061\')'
 } = require('yargs').argv
 
 const jira = new JiraClient({ host, basic_auth: { username, password } })
@@ -31,13 +31,13 @@ const prepareAlreadyAdded = (dbJSON) => {
 }
 
 const loadStoriesFromJira = (jiraData, dbJSON) => {
-  const storiesFromJira = jiraData.issues.map(({ key, fields: { summary, customfield_18237: bu, customfield_11220: epicId, issuelinks } }) => 
-  ({ id: key, summary, epicId, issuelinks, bu: bu && bu.value }))
+  const storiesFromJira = jiraData.issues.map(({ key, fields: { summary, customfield_18237: bu, customfield_11220: epicId, issuelinks } }) =>
+    ({ id: key, summary, epicId, issuelinks, bu: bu && bu.value }))
   const newStories = []
   storiesFromJira.forEach(story => {
     if (!alreadyAdded.includes(story.id)) {
       const relatedIssues = []
-      
+
       // const relatedIssueTypes = []
       // const checkRelations = []
       // const ignoreWithTextInSummary = ''
@@ -91,13 +91,13 @@ const getInwardOutwardIssue = (issuelink, inwardIssues = true, outwardIssues = t
 const getSprintRowByJiraKey = (task, dbJSON) => {
   const teamId = task.key.split('-')[0]
   return dbJSON.sprints.find(({ id }) => id === teamId) || dbJSON.sprints.find(({ id }) => id === 'default')
-} 
+}
 
 const getSprintRowByJiraTeam = (task, dbJSON) => {
   const teamId = task.fields.customfield_13593 && task.fields.customfield_13593[0] ? task.fields.customfield_13593[0].value : ''
   debug('teamId=', teamId)
   return dbJSON.sprints.find(({ id }) => id === teamId) || dbJSON.sprints.find(({ id }) => id === 'default')
-} 
+}
 
 const loadTasksFromJira = (jiraData, dbJSON) => {
   const newTasks = []
@@ -113,7 +113,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
         taskSprint = task.fields.customfield_10942 && task.fields.customfield_10942.length ? /.+name=([^,]+)/.exec(task.fields.customfield_10942[task.fields.customfield_10942.length - 1])[1] : ''
         debug('taskSprint=', taskSprint)
       } catch (e) {
-        debug(`can't get a sprint`, e)
+        debug('can\'t get a sprint', e)
       }
 
       let version = ''
@@ -122,11 +122,11 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
           version = task.fields.fixVersions.map(({ name }) => name).join(',')
           debug('version=', version)
         } catch (e) {
-          debug(`can't get a version`, e)
+          debug('can\'t get a version', e)
         }
       }
 
-      let storyKey = task.fields.customfield_11220
+      const storyKey = task.fields.customfield_11220
 
       const issueLinks = task.fields.issuelinks
       const relatedIssueTypes = ['Task', 'Technical', 'Technical Story', 'Story', 'Task', 'Bug']
@@ -137,7 +137,7 @@ const loadTasksFromJira = (jiraData, dbJSON) => {
       issueLinks.forEach(issuelink => {
         const issue = getInwardOutwardIssue(issuelink)
         const relation = issuelink.type[issue.relationIO]
-        
+
         debug('   add link', issue.key, '?')
 
         if (!relatedIssueTypes.includes(issue.fields.issuetype.name)) {

@@ -3,7 +3,6 @@ import axios from 'axios'
 import use from 'react-hoox'
 import { format } from 'date-fns'
 import io from 'socket.io-client'
-
 import Sprints from './components/Sprints'
 import Navbar from './components/Navbar'
 import Stories from './components/Stories'
@@ -12,6 +11,8 @@ import Relations from './components/Relations'
 import RelationsProgramBoard from './components/RelationsProgramBoard'
 import RelationsProgramBoardStories from './components/RelationsProgramBoardStories'
 import ReactSelect from 'react-select'
+import Separator from './components/Separator'
+import Panel from './components/Panel'
 
 import 'bulma/css/bulma.css'
 import './App.css'
@@ -27,15 +28,15 @@ let allRelations = false
 let isCompact = true
 let showRelations = true
 let selectedStory = ''
-let selectedTask = ''
+const selectedTask = ''
 let taskFilter = ''
 let BUFilter = 'All'
 let relationsRedraw = ''
-const defaultComponentFilter = { value: 0, label: 'All Components' }
-let componentFilter = defaultComponentFilter;
+const defaultComponentFilter = []
+let componentFilter = defaultComponentFilter
 
 let dbs
-let storiesFilter = {}
+const storiesFilter = {}
 
 const NETWORK = process.env.NETWORK || 'ws'
 let socket
@@ -123,7 +124,8 @@ const NavbarContainer = () => {
       dependendTasks: dbs && dbs.dependendTasks,
       taskPostionsCache: dbs && dbs.taskPostionsCache,
       isCompact
-    }}>
+    }}
+    >
 
       <Navbar {...{
         downloadDb,
@@ -134,7 +136,6 @@ const NavbarContainer = () => {
         taskFilter,
         updateTaskFilter: (v) => (taskFilter = v),
         BUFilter,
-        updateBUFilter: (v) => (BUFilter = v),
         isMenuOpen,
         allRelations,
         showRelations,
@@ -143,7 +144,8 @@ const NavbarContainer = () => {
         relationsToggle: () => (showRelations = !showRelations),
         allRelationsToggle: () => (allRelations = !allRelations),
         compactToggle: () => (isCompact = !isCompact)
-      }} />
+      }}
+      />
       {showRelations && dbs && <RelationsProgramBoard showRelations={showRelations} relationsRedraw={relationsRedraw} tasks={dbs.tasks} selectedStory={selectedStory} />}
       {showRelations && dbs && <RelationsProgramBoardStories showRelations={showRelations} relationsRedraw={relationsRedraw} stories={dbs.stories} selectedStory={selectedStory} />}
       {showRelations && dbs && <Relations allRelations={allRelations} relationsRedraw={relationsRedraw} tasks={dbs.tasks} selectedId={form.id} />}
@@ -151,6 +153,7 @@ const NavbarContainer = () => {
   </div>
 }
 
+let isOpenedAdditionalFilters = false
 const Content = () => {
   use(() => showRelations)
   use(() => isCompact)
@@ -163,6 +166,7 @@ const Content = () => {
   use(() => taskFilter)
   use(() => BUFilter)
   use(() => componentFilter)
+  use(() => isOpenedAdditionalFilters)
 
   const setComponentFilter = (component) => {
     componentFilter = component
@@ -235,23 +239,47 @@ const Content = () => {
       dependendTasks: dbs && dbs.dependendTasks,
       taskPostionsCache: dbs && dbs.taskPostionsCache,
       isCompact
-    }}>
+    }}
+    >
       {(!dbs) ? 'Loading' : <div className='content'>
-        <div style={{width: '300px'}}>
-          <ReactSelect
-            isMulti
-            key="component-select"
-            options={[defaultComponentFilter, ...dbs.components.map((component) => ({ value: component, label: component }))]}
-            value={componentFilter}
-            onChange={setComponentFilter}
-          />
-        </div>
+        <Separator header='Additional Filters' />
+
+        <Panel name="Additional Filters">
+          <h2>Business Unit</h2>
+          <div className='select'>
+            <select
+              onChange={(e) => {
+                e.persist()
+                BUFilter = e.target.value
+              }}
+            >
+              {['All', 'Research', 'Academic', 'Content Platform', 'Professional Learning', 'Empty'].map(bu => <option value={bu}>CPP BU: {bu}</option>)}
+            </select>
+          </div>
+
+          <div style={{ width: '262px' }}>
+            <h2>Components</h2>
+            <ReactSelect
+              isMulti
+              key='component-select'
+              options={[...dbs.components.map((component) => ({ value: component, label: component }))]}
+              value={componentFilter}
+              onChange={setComponentFilter}
+            />
+          </div>
+        </Panel>
 
         {selectedStory ? <button onClick={() => selectStory('')}>Selected Epic: {selectedStory}&times;</button> : ''}
 
+        <Separator header='Epics' />
+
         <Stories BUFilter={BUFilter} addStory={addStory} storiesFilter={storiesFilter} tasks={dbs.tasks} stories={dbs.stories} />
 
+        <Separator header={'Team\'s Sprints'} />
+
         <Sprints BUFilter={BUFilter} componentFilter={componentFilter} taskFilter={taskFilter} setData={setData} tasks={dbs.tasks} sprints={dbs.sprints} />
+
+        <Separator header='Program Board' />
 
         <ProgramBoard BUFilter={BUFilter} taskFilter={taskFilter} storyIndex={dbs.storyIndex} taskStoryIndex={dbs.taskStoryIndex} stories={dbs.stories} tasks={dbs.tasks} sprints={dbs.sprints} />
 
@@ -263,9 +291,9 @@ const Content = () => {
 }
 
 const App = () => {
-  return <Fragment>
+  return <div>
     <NavbarContainer />
     <Content />
-  </Fragment>
+    </div>
 }
 export default App

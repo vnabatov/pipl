@@ -28,7 +28,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
     <AppContext.Consumer>
       {({ deleteTask, updateTask, clearForm }) => <Form>
 
-        <div className='field is-horizontal' key={'id'}>
+        <div className='field is-horizontal' key='id'>
           <div className='field-label is-small'>
             <label className='label'>id</label>
           </div>
@@ -41,7 +41,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
           </div>
         </div>
 
-        <div className='field is-horizontal' key={'description'}>
+        <div className='field is-horizontal' key='description'>
           <div className='field-label is-small'>
             <label className='label'>description</label>
           </div>
@@ -54,7 +54,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
           </div>
         </div>
 
-        <div className='field is-horizontal' key={'sp'}>
+        <div className='field is-horizontal' key='sp'>
           <div className='field-label is-small'>
             <label className='label'>sp</label>
           </div>
@@ -67,7 +67,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
           </div>
         </div>
 
-        <div className='field is-horizontal' key={'summary'}>
+        <div className='field is-horizontal' key='summary'>
           <div className='field-label is-small'>
             <label className='label'>summary</label>
           </div>
@@ -111,8 +111,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
                   onChange={selectedOption => {
                     console.log(selectedOption.value)
                     setStory(selectedOption.value)
-                  }
-                  }
+                  }}
                 />
               </div>
             </div>
@@ -131,8 +130,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
                   isMulti
                   value={relatedTasksSelected}
                   onChange={selectedOption => setRelated(
-                    selectedOption.length ? selectedOption.map(selected => selected.value).join(',') : '')
-                  }
+                    selectedOption.length ? selectedOption.map(selected => selected.value).join(',') : '')}
                 />
               </div>
             </div>
@@ -151,8 +149,7 @@ export default ({ form = {}, teamNames = [], stories = [], tasks = [] }) => {
             </div>
           </div>
         </div>
-      </Form>
-      }
+      </Form>}
     </AppContext.Consumer>
   )
 }

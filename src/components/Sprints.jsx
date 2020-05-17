@@ -21,13 +21,16 @@ export default ({ tasks, componentFilter, taskFilter, BUFilter, sprints, setData
     }
   }
 
-  if(componentFilter && componentFilter.value) {
+  if (componentFilter && componentFilter.length) {
     filteredTasks = tasks.filter(task => {
-      let show = false;
+      let show = false
+      console.log(componentFilter)
+
       componentFilter.forEach(filter => {
-          if(show || task.components.includes(filter)) {
-            show = true
-          }
+        console.log(task.components, filter)
+        if (show || task.components.includes(filter.value)) {
+          show = true
+        }
       })
       return show
     })
