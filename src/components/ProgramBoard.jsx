@@ -52,7 +52,7 @@ export default ({ BUFilter, taskFilter, stories, tasks, sprints, taskStoryIndex,
   return (
     <AppContext.Consumer>{() => (
       <div>
-        <Panel name="Program board">
+        <Panel defaultOpen={true} name="Program board">
           <ProgramBoardColumnStories sprints={sprints} storyIndex={storyIndex} BUFilter={BUFilter} taskFilter={taskFilter} storySprintIndex={storySprintIndex} />
           {sprints && tasks && sprints.map(sprint => <SprintTable key={'pb-sprint' + sprint.teamName}>
             {sprint.columnOrder.map((columnId) => {
