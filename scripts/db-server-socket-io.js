@@ -238,10 +238,10 @@ app.get('/dbCSV', function (req, res) {
 let loadFromJiraInProgress = false
 app.get('/loadFromJira', async (req, res) => {
   info('loadFromJira')
+  
+  const jql = req.query.jql1 || 'filter=PIPL_EPICS'
 
-  const jql = req.query.jql1 || 'key=CKCS-81'
-
-  const jql2 = req.query.jql2 || 'key=CKCS-80 or KEY=VIB-10'
+  const jql2 = req.query.jql2 || 'filter=PIPL_TICKETS'
 
   info('loadFromJira jql', jql)
   info('loadFromJira jql2', jql2)
