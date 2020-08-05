@@ -12,7 +12,7 @@
     "cross-env": "^6.0.3",
     "date-fns": "^2.5.1",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.6-alpha.5",
+    "express-fileupload": "^1.1.9",
     "jest-coverage-badges": "^1.1.2",
     "jira-connector": "^2.16.1",
     "json2csv": "^4.5.4",
