@@ -16,7 +16,7 @@
     "jest-coverage-badges": "^1.1.2",
     "jira-connector": "^2.16.1",
     "json2csv": "^4.5.4",
-    "log4js": "^6.2.1",
+    "log4js": "^6.4.0",
     "lowdb": "^1.0.0",
     "material-ui-toggle-icon": "^1.0.6",
     "moment": "^2.24.0",
